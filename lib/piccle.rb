@@ -1,3 +1,4 @@
+require "piccle/photo"
 require "piccle/version"
 
 module Piccle
