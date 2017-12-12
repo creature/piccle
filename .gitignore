@@ -7,5 +7,6 @@
 /pkg/
 /spec/reports/
 /tmp/
+/images/
 .DS_Store
 *.swp
