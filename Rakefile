@@ -7,3 +7,4 @@ task :default => :spec
 
 import "./lib/tasks/development.rake"
 import "./lib/tasks/photos.rake"
+import "./lib/tasks/piccle.rake"
