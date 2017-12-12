@@ -8,6 +8,7 @@
 /spec/reports/
 /tmp/
 /images/
+/generated/
 photo_data.db
 .DS_Store
 *.swp
