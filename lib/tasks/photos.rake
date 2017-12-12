@@ -9,10 +9,20 @@ namespace :photos do
 
       puts "    Width: #{photo.width}"
       puts "    Height: #{photo.height}"
-      # puts "    Camera: #{photo.model}"
-      # puts "    Taken at: #{photo.date_time}"
+      puts "    Camera: #{photo.model}"
+      puts "    Taken at: #{photo.taken_at}"
       puts "    MD5: #{photo.md5}"
       puts "--------------------------"
+    end
+  end
+
+  desc "Update the database with photo info"
+  task :update_db do
+    Dir.glob("images/**").each do |filename|
+      print "Examining #{filename}..."
+      photo = Piccle::Photo.new(filename)
+      photo.save
+      puts " Done."
     end
   end
 end
