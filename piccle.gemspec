@@ -37,4 +37,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "slim", "~> 3.0"
   spec.add_dependency "exifr", "~> 1.3"
   spec.add_dependency "sqlite3", "~> 1.3"
+  spec.add_dependency "recursive-open-struct", "~> 1.0"
 end

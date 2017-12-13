@@ -32,9 +32,17 @@ end
 
 def generate_html
   Dir.mkdir("generated") unless Dir.exist?("generated")
-  File.write("generated/index.html", Piccle::TemplateHelpers.render("index", name: "Bob"))
+  File.write("generated/index.html", Piccle::TemplateHelpers.render("index", photos: photo_data))
+end
+
+def photo_data
+  query = "SELECT file_name AS thumbnail_src FROM photos ORDER BY taken_at DESC;"
+  result = database.execute(query)
+  result.map { |r| r.delete_if { |k, _| k.is_a? Fixnum } }
 end
 
 def database
   @db ||= SQLite3::Database.new("photo_data.db")
+  @db.results_as_hash = true
+  @db
 end
