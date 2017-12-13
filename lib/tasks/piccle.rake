@@ -1,6 +1,7 @@
 require 'json'
 require 'flavour_saver'
 require 'slim'
+require 'piccle'
 
 namespace :piccle do
   desc "Generate our website"
@@ -31,11 +32,7 @@ end
 
 def generate_html
   Dir.mkdir("generated") unless Dir.exist?("generated")
-  slim_template = Tilt['slim'].new { File.read("templates/index.html.handlebars.slim") }
-  template = Tilt['handlebars'].new { slim_template.render }
-
-  data = OpenStruct.new(name: "Frankie")
-  File.write("generated/index.html", template.render(data))
+  File.write("generated/index.html", Piccle::TemplateHelpers.render("index", name: "Bob"))
 end
 
 def database
