@@ -27,8 +27,13 @@ namespace :db do
         SQL
       puts "    ... Done."
     end
-
-    # Create a new DB
-    # Write a basic schema to it
   end
+
+  desc "Drop the database"
+  task :drop do
+    File.delete("photo_data.db")
+  end
+
+  desc "Recreate the database"
+  task recreate: [:drop, :initialise]
 end

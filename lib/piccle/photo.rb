@@ -68,7 +68,7 @@ class Piccle::Photo
     update_query = "UPDATE photos SET md5 = ?, width = ?, height = ?, camera_name = ?, taken_at = ? WHERE file_name = ?;"
 
     db = SQLite3::Database.new("photo_data.db")
-    result = db.execute(existence_query)
+    result = db.execute(existence_query, [@file_name])
     if result.empty?
       db.execute(creation_query, [@file_name, path, md5, width, height, model, taken_at])
     else
