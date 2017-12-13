@@ -6,3 +6,8 @@ html
   body
     h1 Hello World!
     p My name is {{name}} and I got rendered via Slim.
+
+    | {{#each photos}}
+    == Piccle::TemplateHelpers.render_partial "photo_thumbnail"
+    | {{/each}}
+
