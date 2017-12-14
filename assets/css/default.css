@@ -1,0 +1,32 @@
+body {
+  background-color: #EEE;
+  color: #111;
+  font-family: Helvetica, Arial, sans-serif;
+  margin: 0 100px;
+}
+
+header, footer {
+  max-width: 960px;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.thumbnail {
+  line-height: 0;
+}
+
+header {
+  border-bottom: 1px solid #777;
+  margin-bottom: 2em;
+}
+
+footer {
+  border-top: 1px solid #777;
+  font-size: 80%;
+  color: #444;
+  margin-top: 2em;
+  min-height: 100px;
+}

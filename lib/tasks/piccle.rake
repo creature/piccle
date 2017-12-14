@@ -1,4 +1,5 @@
 require 'json'
+require 'fileutils'
 require 'flavour_saver'
 require 'slim'
 require 'piccle'
@@ -12,7 +13,7 @@ namespace :piccle do
     generate_json
     generate_html
     generate_thumbnails
-    puts "    ... (one day) copying static assets..."
+    copy_assets
     puts "Done."
   end
 end
@@ -20,7 +21,7 @@ end
 # Stubby, hacky, prototype method that demos generating JSON files.
 def generate_json
   puts "    ... generating JSON files..."
-  ensure_dir_exists("generated/json")
+  FileUtils.mkdir_p("generated/json")
 
   # Read data from the database
   query = "SELECT file_name, path, width, height, taken_at, camera_name FROM photos;"
@@ -34,7 +35,7 @@ end
 # Stubby, hacky, prototype method that demos generating an HTML file.
 def generate_html
   puts "    ... generating HTML files..."
-  ensure_dir_exists("generated")
+  FileUtils.mkdir_p("generated")
   File.write("generated/index.html", Piccle::TemplateHelpers.render("index", photos: photo_data))
 end
 
@@ -42,8 +43,8 @@ end
 # Stubby, hacky method that demos generating thumbnails.
 def generate_thumbnails
   puts "    ... generating thumbnails..."
-  ensure_dir_exists("generated/images/thumbnails")
-  ensure_dir_exists("generated/images/photos")
+  FileUtils.mkdir_p("generated/images/thumbnails")
+  FileUtils.mkdir_p("generated/images/photos")
 
   query = "SELECT (path || '/' || file_name) AS file_name FROM photos;"
   database.execute(query).each do |photo|
@@ -56,13 +57,13 @@ def generate_thumbnails
   # Generate a (square) thumbnail
 end
 
-# Ensure a given directory exists, mkdir -p-style.
-def ensure_dir_exists(path)
-  components = path.split(File::SEPARATOR)
-  current = ""
-  components.each do |c|
-    current += c + File::SEPARATOR
-    Dir.mkdir(current) unless Dir.exist?(current)
+# Copy our static assets into the expected location.
+def copy_assets
+  puts "    ... copying static assets..."
+  puts "        ... copying CSS..."
+  FileUtils.mkdir_p("generated/css")
+  Dir.glob("assets/css/**").each do |f|
+    FileUtils.cp(f, "generated/css/#{File.basename(f)}")
   end
 end
 
