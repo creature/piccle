@@ -20,8 +20,7 @@ end
 # Stubby, hacky, prototype method that demos generating JSON files.
 def generate_json
   puts "    ... generating JSON files..."
-  Dir.mkdir("generated") unless Dir.exist?("generated")
-  Dir.mkdir("generated/json") unless Dir.exist?("generated/json")
+  ensure_dir_exists("generated/json")
 
   # Read data from the database
   query = "SELECT file_name, path, width, height, taken_at, camera_name FROM photos;"
@@ -35,7 +34,7 @@ end
 # Stubby, hacky, prototype method that demos generating an HTML file.
 def generate_html
   puts "    ... generating HTML files..."
-  Dir.mkdir("generated") unless Dir.exist?("generated")
+  ensure_dir_exists("generated")
   File.write("generated/index.html", Piccle::TemplateHelpers.render("index", photos: photo_data))
 end
 
@@ -43,10 +42,8 @@ end
 # Stubby, hacky method that demos generating thumbnails.
 def generate_thumbnails
   puts "    ... generating thumbnails..."
-  Dir.mkdir("generated") unless Dir.exist?("generated")
-  Dir.mkdir("generated/images") unless Dir.exist?("generated/images")
-  Dir.mkdir("generated/images/thumbnails") unless Dir.exist?("generated/images/thumbnails")
-  Dir.mkdir("generated/images/photos") unless Dir.exist?("generated/images/photos")
+  ensure_dir_exists("generated/images/thumbnails")
+  ensure_dir_exists("generated/images/photos")
 
   query = "SELECT (path || '/' || file_name) AS file_name FROM photos;"
   database.execute(query).each do |photo|
@@ -57,6 +54,16 @@ def generate_thumbnails
   end
   # Generate a full-size version of this image
   # Generate a (square) thumbnail
+end
+
+# Ensure a given directory exists, mkdir -p-style.
+def ensure_dir_exists(path)
+  components = path.split(File::SEPARATOR)
+  current = ""
+  components.each do |c|
+    current += c + File::SEPARATOR
+    Dir.mkdir(current) unless Dir.exist?(current)
+  end
 end
 
 def photo_data
