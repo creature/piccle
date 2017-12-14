@@ -36,7 +36,7 @@ end
 def generate_html
   puts "    ... generating HTML files..."
   FileUtils.mkdir_p("generated")
-  File.write("generated/index.html", Piccle::TemplateHelpers.render("index", photos: photo_data))
+  File.write("generated/index.html", Piccle::TemplateHelpers.render("index", photos: photo_data, site_metadata: site_metadata))
 end
 
 
@@ -71,6 +71,24 @@ def photo_data
   query = "SELECT file_name AS thumbnail_src FROM photos ORDER BY taken_at DESC;"
   result = database.execute(query)
   result.map { |r| r.delete_if { |k, _| k.is_a? Fixnum } }
+end
+
+# Gets information about our site.
+def site_metadata
+  OpenStruct.new(
+    author_name: Piccle::AUTHOR_NAME,
+    copyright_year: copyright_year
+  )
+end
+
+# Gets a string describing the copyright year - either with a hyphen for multiple year spans, or one number for one year.
+def copyright_year
+  result = database.execute("SELECT MIN(STRFTIME('%Y', taken_at)) AS min_year, MAX(STRFTIME('%Y', taken_at)) AS max_year FROM photos;").first
+  if result["min_year"] == result["max_year"]
+    result["max_year"]
+  else
+    "#{result["min_year"]} – #{result["max_year"]}"
+  end
 end
 
 def database
