@@ -7,8 +7,8 @@ class Piccle::Photo
 
   # For now, our image will always be initialised from a file_name.
   def initialize(file_name)
-    @file_name = file_name
-    @exif_info = EXIFR::JPEG.new(file_name)
+    @full_path = file_name
+    @exif_info = EXIFR::JPEG.new(@full_path)
   end
 
   # ---- EXIF accessors ----
@@ -35,7 +35,6 @@ class Piccle::Photo
 
   # ---- Image attributes (inferred from data) ----
 
-  # Is this image portrait?
   def portrait?
     height > width
   end
@@ -52,11 +51,15 @@ class Piccle::Photo
 
   # Gets an MD5 hash of this file's entire contents.
   def md5
-    Digest::MD5.file(@file_name).to_s
+    Digest::MD5.file(@full_path).to_s
   end
 
   def path
-    File.dirname(@file_name)
+    File.dirname(@full_path)
+  end
+
+  def file_name
+    File.basename(@full_path)
   end
 
   # ---- Piccle internals ----
@@ -68,11 +71,11 @@ class Piccle::Photo
     update_query = "UPDATE photos SET md5 = ?, width = ?, height = ?, camera_name = ?, taken_at = ? WHERE file_name = ?;"
 
     db = SQLite3::Database.new(Piccle::PHOTO_DATABASE_FILENAME)
-    result = db.execute(existence_query, [@file_name])
+    result = db.execute(existence_query, [file_name])
     if result.empty?
-      db.execute(creation_query, [@file_name, path, md5, width, height, model, taken_at])
+      db.execute(creation_query, [file_name, path, md5, width, height, model, taken_at])
     else
-      db.execute(update_query, [md5, width, height, model, taken_at, @file_name])
+      db.execute(update_query, [md5, width, height, model, taken_at, file_name])
     end
   end
 end

@@ -48,7 +48,7 @@ def generate_thumbnails
   Dir.mkdir("generated/images/thumbnails") unless Dir.exist?("generated/images/thumbnails")
   Dir.mkdir("generated/images/photos") unless Dir.exist?("generated/images/photos")
 
-  query = "SELECT file_name FROM photos;"
+  query = "SELECT (path || '/' || file_name) AS file_name FROM photos;"
   database.execute(query).each do |photo|
     puts "        ... thumbnailing #{photo["file_name"]}..."
     img = Magick::Image.read(photo["file_name"]).first
