@@ -66,7 +66,7 @@ def photo_data
 end
 
 def database
-  @db ||= SQLite3::Database.new("photo_data.db")
+  @db ||= SQLite3::Database.new(Piccle::PHOTO_DATABASE_FILENAME)
   @db.results_as_hash = true
   @db
 end

@@ -4,13 +4,11 @@ namespace :db do
   desc "Create a database for photo data"
   task :initialise do
     # If a DB already exists, do nothing.
-    filename = "photo_data.db"
-
-    if File.exist?(filename)
-      puts "Database #{filename} already exists; exiting."
+    if File.exist?(Piccle::PHOTO_DATABASE_FILENAME)
+      puts "Database #{Piccle::PHOTO_DATABASE_FILENAME} already exists; exiting."
     else
       puts "Creating an empty DB..."
-      db = SQLite3::Database.new(filename)
+      db = SQLite3::Database.new(Piccle::PHOTO_DATABASE_FILENAME)
       puts "    ... and writing a schema to it..."
       db.execute <<-SQL
         CREATE TABLE photos(
