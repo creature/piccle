@@ -7,33 +7,41 @@ DB = Piccle::Database.connect
 
 # Represents an image in the system. Reading info from an image? Inferring something based on the data? Put it here.
 class Piccle::Photo < Sequel::Model
+  def before_create
+    self.created_at ||= Time.now
+    super
+  end
 
-  # For now, our image will always be initialised from a file_name.
-  def initialize(file_name)
-    @full_path = file_name
-    @exif_info = EXIFR::JPEG.new(@full_path)
+  def self.from_file(path_to_file)
+    self.find_or_create(file_name: File.basename(path_to_file), path: File.dirname(path_to_file)) do |p|
+      p[:width] = p.width
+      p[:height] = p.height
+      p[:camera_name] = p.camera_model
+      p[:md5] = p.md5
+      p[:taken_at] = p.taken_at
+    end
   end
 
   # ---- EXIF accessors ----
 
   # How wide is this image, in pixels?
   def width
-    @exif_info.width
+    exif_info.width
   end
 
   # How tall is this image, in pixels?
   def height
-    @exif_info.height
+    exif_info.height
   end
 
   # What camera model took this image?
-  def model
-    @exif_info.model
+  def camera_model
+    exif_info.model
   end
 
   # When was this image taken?
   def taken_at
-    @exif_info.date_time.to_datetime.to_s
+    exif_info.date_time.to_datetime.to_s
   end
 
   # ---- Image attributes (inferred from data) ----
@@ -59,20 +67,16 @@ class Piccle::Photo < Sequel::Model
 
   # Gets an MD5 hash of this file's entire contents.
   def md5
-    @md5 ||= Digest::MD5.file(@full_path).to_s
-  end
-
-  def path
-    File.dirname(@full_path)
-  end
-
-  def file_name
-    File.basename(@full_path)
+    @md5 ||= Digest::MD5.file(original_photo_path).to_s
   end
 
   # Gets the full path to the thumbnail for this photo.
   def thumbnail_path
     "generated/images/thumbnails/#{md5}.#{file_name}"
+  end
+
+  def original_photo_path
+    "#{path}/#{file_name}"
   end
 
   # ---- Piccle internals ----
@@ -84,18 +88,9 @@ class Piccle::Photo < Sequel::Model
     img.write(thumbnail_path)
   end
 
-  # Persist info about this file to the DB.
-  def save
-    existence_query = "SELECT 1 FROM photos WHERE file_name = ?"
-    creation_query = "INSERT INTO photos (file_name, path, md5, width, height, camera_name, taken_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, DATETIME());"
-    update_query = "UPDATE photos SET md5 = ?, width = ?, height = ?, camera_name = ?, taken_at = ? WHERE file_name = ?;"
+  protected
 
-    db = SQLite3::Database.new(Piccle::PHOTO_DATABASE_FILENAME)
-    result = db.execute(existence_query, [file_name])
-    if result.empty?
-      db.execute(creation_query, [file_name, path, md5, width, height, model, taken_at])
-    else
-      db.execute(update_query, [md5, width, height, model, taken_at, file_name])
-    end
+  def exif_info
+    @exif_info ||= EXIFR::JPEG.new(original_photo_path)
   end
 end
