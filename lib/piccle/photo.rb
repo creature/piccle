@@ -1,10 +1,12 @@
 require 'exifr/jpeg'
 require 'digest'
-require 'sqlite3'
+require 'sequel'
 require 'rmagick'
 
+DB = Piccle::Database.connect
+
 # Represents an image in the system. Reading info from an image? Inferring something based on the data? Put it here.
-class Piccle::Photo
+class Piccle::Photo < Sequel::Model
 
   # For now, our image will always be initialised from a file_name.
   def initialize(file_name)
