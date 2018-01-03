@@ -35,7 +35,7 @@ end
 def generate_html
   puts "    ... generating HTML files..."
   FileUtils.mkdir_p("generated")
-  File.write("generated/index.html", Piccle::TemplateHelpers.render("index", photos: Piccle::Photo.all, site_metadata: site_metadata))
+  File.write("generated/index.html", Piccle::TemplateHelpers.render("index", photos: Piccle::Photo.reverse_order(:taken_at).all, site_metadata: site_metadata))
 end
 
 

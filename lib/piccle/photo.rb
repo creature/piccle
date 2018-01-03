@@ -88,7 +88,7 @@ class Piccle::Photo < Sequel::Model
 
   # Generate a thumbnail for this image.
   def generate_thumbnail!
-    img = Magick::Image.read(@full_path).first
+    img = Magick::Image.read(original_photo_path).first
     img.resize_to_fill!(Piccle::THUMBNAIL_SIZE)
     img.write(thumbnail_path)
   end
