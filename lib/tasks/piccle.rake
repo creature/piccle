@@ -3,7 +3,6 @@ require 'fileutils'
 require 'flavour_saver'
 require 'slim'
 require 'piccle'
-require 'rmagick'
 
 namespace :piccle do
   desc "Generate our website"
@@ -48,10 +47,14 @@ def generate_thumbnails
 
   query = "SELECT (path || '/' || file_name) AS file_name FROM photos;"
   database.execute(query).each do |photo|
-    puts "        ... thumbnailing #{photo["file_name"]}..."
-    img = Magick::Image.read(photo["file_name"]).first
-    img.resize_to_fill!(Piccle::THUMBNAIL_SIZE)
-    img.write("generated/images/thumbnails/#{File.basename(photo["file_name"])}")
+    photo = Piccle::Photo.new(photo["file_name"])
+    print "        ... generating #{photo.thumbnail_path}... "
+    if photo.thumbnail_exists?
+      puts "Already exists, skipping."
+    else
+      photo.generate_thumbnail!
+      puts "Done."
+    end
   end
   # Generate a full-size version of this image
   # Generate a (square) thumbnail

@@ -1,6 +1,7 @@
 require 'exifr/jpeg'
 require 'digest'
 require 'sqlite3'
+require 'rmagick'
 
 # Represents an image in the system. Reading info from an image? Inferring something based on the data? Put it here.
 class Piccle::Photo
@@ -49,9 +50,14 @@ class Piccle::Photo
     width == height
   end
 
+  # Have we already generated a thumbnail for this image?
+  def thumbnail_exists?
+    File.exist?(thumbnail_path)
+  end
+
   # Gets an MD5 hash of this file's entire contents.
   def md5
-    Digest::MD5.file(@full_path).to_s
+    @md5 ||= Digest::MD5.file(@full_path).to_s
   end
 
   def path
@@ -62,7 +68,19 @@ class Piccle::Photo
     File.basename(@full_path)
   end
 
+  # Gets the full path to the thumbnail for this photo.
+  def thumbnail_path
+    "generated/images/thumbnails/#{md5}.#{file_name}"
+  end
+
   # ---- Piccle internals ----
+
+  # Generate a thumbnail for this image.
+  def generate_thumbnail!
+    img = Magick::Image.read(@full_path).first
+    img.resize_to_fill!(Piccle::THUMBNAIL_SIZE)
+    img.write(thumbnail_path)
+  end
 
   # Persist info about this file to the DB.
   def save
