@@ -12,8 +12,10 @@
 # Development notes
 
 - The EXIF tag calls the camera model "model", but in the DB schema we called it "camera_name". We might want to unify this.
+  - NB. Sequel will throw a wobbly if we use "model" as a method name.
 - Add a meaningful "alt" tag in the photo thumbnail.
 - Remove byebug from the dependencies before publishing this as a gem (in the Gemspec and in lib/piccle.rb).
+- Did we break the update-the-database-for-existing-file functionality when we converted it over to Sequel? Look at the rake photos::update_db task to be sure.
 
 # Misc todo
 - Don't use display: inline-block for the nav/main photo section, use Flexbox instead
