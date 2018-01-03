@@ -35,7 +35,7 @@ end
 def generate_html
   puts "    ... generating HTML files..."
   FileUtils.mkdir_p("generated")
-  File.write("generated/index.html", Piccle::TemplateHelpers.render("index", photos: photo_data, site_metadata: site_metadata))
+  File.write("generated/index.html", Piccle::TemplateHelpers.render("index", photos: Piccle::Photo.all, site_metadata: site_metadata))
 end
 
 
@@ -45,9 +45,7 @@ def generate_thumbnails
   FileUtils.mkdir_p("generated/images/thumbnails")
   FileUtils.mkdir_p("generated/images/photos")
 
-  query = "SELECT (path || '/' || file_name) AS file_name FROM photos;"
-  database.execute(query).each do |photo|
-    photo = Piccle::Photo.new(photo["file_name"])
+  Piccle::Photo.all.each do |photo|
     print "        ... generating #{photo.thumbnail_path}... "
     if photo.thumbnail_exists?
       puts "Already exists, skipping."
@@ -70,12 +68,6 @@ def copy_assets
   end
 end
 
-def photo_data
-  query = "SELECT file_name AS thumbnail_src FROM photos ORDER BY taken_at DESC;"
-  result = database.execute(query)
-  result.map { |r| r.delete_if { |k, _| k.is_a? Fixnum } }
-end
-
 # Gets information about our site.
 def site_metadata
   OpenStruct.new(
@@ -95,7 +87,7 @@ def copyright_year
 end
 
 def database
-  @db ||= SQLite3::Database.new(Piccle::PHOTO_DATABASE_FILENAME)
+  @db ||= SQLite3::Database.new(Piccle::Database::PHOTO_DATABASE_FILENAME)
   @db.results_as_hash = true
   @db
 end
