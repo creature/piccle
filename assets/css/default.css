@@ -14,6 +14,29 @@ header, footer {
   padding-bottom: 1em;
 }
 
+nav {
+  display: inline-block;
+  max-width: 180px;
+  margin-right: 20px;
+  vertical-align: top;
+}
+
+nav h1 {
+  font-size: 16px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+nav ul {
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.photos {
+  display: inline-block;
+  max-width: calc(100% - 200px);
+}
+
 .thumbnail {
   line-height: 0;
   vertical-align: bottom;
