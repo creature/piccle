@@ -10,6 +10,7 @@
 - Config file, so users can define their own name/title/etc? 
 - Generate sidebar based on actual data, not just placeholder text
 - Convert database.rake tasks over to the Sequel way of doing things
+- Running rake db:initialise no longer works, and we're moving over to using Sequel migrations for DB access. Fix things up so that running the rake task uses the Sequel migrations. http://sequel.jeremyevans.net/rdoc/files/doc/migration_rdoc.html#label-Running+migrations+from+a+Rake+task
 
 
 # Development notes
