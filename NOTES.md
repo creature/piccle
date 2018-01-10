@@ -1,7 +1,10 @@
 # Priorities/things to do next 
+- Continue fleshing out the actual photo page.
+- Pull out aperture, shutter speed, ISO, and image description into the photo DB
+  - This might be a good time to figure out the logic for "If we have data already, amend it"
+- Pull out site header and site footer into a partial
+- Try to do "browse by stream"
 - Remove all raw sqlite3 access from piccle.rake
-- Generate a "full-size" image size in our generated images
-- Per-image display page (ie. make images clickable)
 - Look at doing some fancy JS lazy-loading??
 
 - Extract tags from files, and save them
@@ -10,6 +13,7 @@
 - Config file, so users can define their own name/title/etc? 
 - Generate sidebar based on actual data, not just placeholder text
 - Convert database.rake tasks over to the Sequel way of doing things
+- Running rake db:initialise no longer works, and we're moving over to using Sequel migrations for DB access. Fix things up so that running the rake task uses the Sequel migrations. http://sequel.jeremyevans.net/rdoc/files/doc/migration_rdoc.html#label-Running+migrations+from+a+Rake+task
 
 
 # Development notes
@@ -19,6 +23,18 @@
 - Add a meaningful "alt" tag in the photo thumbnail.
 - Remove byebug from the dependencies before publishing this as a gem (in the Gemspec and in lib/piccle.rb).
 - Did we break the update-the-database-for-existing-file functionality when we converted it over to Sequel? Look at the rake photos::update_db task to be sure.
+
+- Potential file structure: 
+
+  + generated
+  |-+ by-date
+  | |- 2018
+  | |- 2017
+  | |- 2016
+  |
+  |-+ by-camera
+    |- fuji-x100f
+    |- canon-350d
 
 # Misc todo
 - Don't use display: inline-block for the nav/main photo section, use Flexbox instead
