@@ -6,7 +6,7 @@ require 'piccle'
 
 namespace :piccle do
   desc "Generate our website"
-  task :generate do
+  task generate: "photos:update_db" do
     puts "Generating website..."
     puts "    ... (one day) ensuring that database is up to date..."
     generate_json
