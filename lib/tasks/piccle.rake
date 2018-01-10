@@ -61,9 +61,15 @@ def generate_thumbnails
       photo.generate_thumbnail!
       puts "Done."
     end
+
+    print "        ... generating #{photo.full_image_path}... "
+    if photo.full_image_exists?
+      puts "Already exists, skipping."
+    else
+      photo.generate_full_image!
+      puts "Done."
+    end
   end
-  # Generate a full-size version of this image
-  # Generate a (square) thumbnail
 end
 
 # Copy our static assets into the expected location.
