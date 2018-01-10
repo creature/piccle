@@ -1,6 +1,4 @@
 # Priorities/things to do next 
-- Make piccle:generate update the photo DB first
-- Why is our ordering almost correct, but not totally correct?
 - Remove all raw sqlite3 access from piccle.rake
 - Generate a "full-size" image size in our generated images
 - Per-image display page (ie. make images clickable)

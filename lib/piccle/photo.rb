@@ -41,7 +41,7 @@ class Piccle::Photo < Sequel::Model
 
   # When was this image taken?
   def taken_at
-    exif_info.date_time.to_datetime.to_s
+    exif_info.date_time_original.to_datetime.to_s
   end
 
   # ---- Image attributes (inferred from data) ----
