@@ -80,6 +80,11 @@ class Piccle::Photo < Sequel::Model
     "images/thumbnails/#{md5}.#{file_name}"
   end
 
+  # Gets the path to the photo page.
+  def photo_show_path
+    "photos/#{md5}.html"
+  end
+
   def original_photo_path
     "#{path}/#{file_name}"
   end

@@ -34,8 +34,16 @@ end
 # Stubby, hacky, prototype method that demos generating an HTML file.
 def generate_html
   puts "    ... generating HTML files..."
-  FileUtils.mkdir_p("generated")
-  File.write("generated/index.html", Piccle::TemplateHelpers.render("index", photos: Piccle::Photo.reverse_order(:taken_at).all, site_metadata: site_metadata))
+  FileUtils.mkdir_p("generated/photos") # For individual photo HTML pages, not the images themselves
+  photos = Piccle::Photo.reverse_order(:taken_at).all
+
+  # Generate the home page
+  File.write("generated/index.html", Piccle::TemplateHelpers.render("index", photos: photos, site_metadata: site_metadata, relative_path: "./"))
+
+  # Generate a page for every single image.
+  photos.each do |p|
+    File.write("generated/#{p.photo_show_path}", Piccle::TemplateHelpers.render("show", photo: p, site_metadata: site_metadata, relative_path: "../"))
+  end
 end
 
 
