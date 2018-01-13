@@ -1,4 +1,5 @@
 require 'exifr/jpeg'
+require 'xmp'
 require 'digest'
 require 'sequel'
 require 'rmagick'
@@ -14,11 +15,12 @@ class Piccle::Photo < Sequel::Model
 
   def self.from_file(path_to_file)
     self.find_or_create(file_name: File.basename(path_to_file), path: File.dirname(path_to_file)) do |p|
-      p[:width] = p.width
-      p[:height] = p.height
+      common_attrs = %i(width height md5 taken_at description title aperture iso)
+      common_attrs.each { |att| p[att] = p.send(att) }
       p[:camera_name] = p.camera_model
-      p[:md5] = p.md5
-      p[:taken_at] = p.taken_at
+      shutter_speed = p.shutter_speed
+      p[:shutter_speed_numerator] = shutter_speed.numerator
+      p[:shutter_speed_denominator] = shutter_speed.denominator
     end
   end
 
@@ -42,6 +44,33 @@ class Piccle::Photo < Sequel::Model
   # When was this image taken?
   def taken_at
     exif_info.date_time_original.to_datetime.to_s
+  end
+
+  # What's the title for this image?
+  def title
+    if xmp.namespaces.include?("dc") && xmp.dc.attributes.include?("title")
+      xmp.dc.title
+    else
+      nil
+    end
+  end
+
+  # What's the description (ie. the caption) for this image?
+  def description
+    exif_info.image_description
+  end
+
+  # What's the aperture for this image? You get this as a decimal, and should be expressed as f/{aperture}.
+  def aperture
+    exif_info.aperture_value
+  end
+
+  def iso
+    exif_info.iso_speed_ratings
+  end
+
+  def shutter_speed
+    exif_info.exposure_time
   end
 
   # ---- Image attributes (inferred from data) ----
@@ -123,5 +152,9 @@ class Piccle::Photo < Sequel::Model
 
   def exif_info
     @exif_info ||= EXIFR::JPEG.new(original_photo_path)
+  end
+
+  def xmp
+    @xmp ||= XMP.parse(exif_info)
   end
 end
