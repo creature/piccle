@@ -1,3 +1,4 @@
+require 'flavour_saver'
 require 'recursive-open-struct'
 
 class Piccle::TemplateHelpers

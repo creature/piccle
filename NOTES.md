@@ -1,4 +1,6 @@
 # Priorities/things to do next 
+- Image serving via Sinatra is MASSIVELY INSECURE and should be fixed up. 
+- Finish off the path_generators helper
 - Continue fleshing out the actual photo page.
 - Pull out aperture, shutter speed, ISO, and image description into the photo DB
   - This might be a good time to figure out the logic for "If we have data already, amend it"
