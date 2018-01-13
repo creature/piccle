@@ -1,13 +1,17 @@
 # Priorities/things to do next 
 - Image serving via Sinatra is MASSIVELY INSECURE and should be fixed up. 
-- Finish off the path_generators helper
+- Pull out lens focal length into photo data.
+- Ingest latitude and longitude too.
+- Ingest keywords into the DB, and store them for each photo.
+- Are we even reading from our database at all? Is our photo model always pulling data off the "raw" file?
 - Continue fleshing out the actual photo page.
-- Pull out aperture, shutter speed, ISO, and image description into the photo DB
-  - This might be a good time to figure out the logic for "If we have data already, amend it"
 - Pull out site header and site footer into a partial
 - Try to do "browse by stream"
 - Remove all raw sqlite3 access from piccle.rake
 - Look at doing some fancy JS lazy-loading??
+- Finish off the path_generators helper
+
+- Remove previous DB (and generated files??) when we generate a site.
 
 - Extract tags from files, and save them
   - Then display tags as categories on the site.
