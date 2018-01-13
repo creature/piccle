@@ -1,7 +1,12 @@
 # Priorities/things to do next 
+- Image serving via Sinatra is MASSIVELY INSECURE and should be fixed up. 
+- Finish off the path_generators helper
+- Continue fleshing out the actual photo page.
+- Pull out aperture, shutter speed, ISO, and image description into the photo DB
+  - This might be a good time to figure out the logic for "If we have data already, amend it"
+- Pull out site header and site footer into a partial
+- Try to do "browse by stream"
 - Remove all raw sqlite3 access from piccle.rake
-- Generate a "full-size" image size in our generated images
-- Per-image display page (ie. make images clickable)
 - Look at doing some fancy JS lazy-loading??
 
 - Extract tags from files, and save them
@@ -20,6 +25,18 @@
 - Add a meaningful "alt" tag in the photo thumbnail.
 - Remove byebug from the dependencies before publishing this as a gem (in the Gemspec and in lib/piccle.rb).
 - Did we break the update-the-database-for-existing-file functionality when we converted it over to Sequel? Look at the rake photos::update_db task to be sure.
+
+- Potential file structure: 
+
+  + generated
+  |-+ by-date
+  | |- 2018
+  | |- 2017
+  | |- 2016
+  |
+  |-+ by-camera
+    |- fuji-x100f
+    |- canon-350d
 
 # Misc todo
 - Don't use display: inline-block for the nav/main photo section, use Flexbox instead

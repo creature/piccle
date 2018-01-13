@@ -60,14 +60,14 @@ class Piccle::Photo < Sequel::Model
     width == height
   end
 
-  # Have we already generated a thumbnail for this image?
-  def thumbnail_exists?
-    File.exist?(thumbnail_path)
-  end
-
   # Gets an MD5 hash of this file's entire contents.
   def md5
     @md5 ||= Digest::MD5.file(original_photo_path).to_s
+  end
+
+  # Have we already generated a thumbnail for this image?
+  def thumbnail_exists?
+    File.exist?(thumbnail_path)
   end
 
   # Gets the full path to the thumbnail for this photo.
@@ -78,6 +78,26 @@ class Piccle::Photo < Sequel::Model
   # Gets the path to use in our generated HTML.
   def template_thumbnail_path
     "images/thumbnails/#{md5}.#{file_name}"
+  end
+
+  # Does a "full-size" image exist?
+  def full_image_exists?
+    File.exist?(full_image_path)
+  end
+
+  # Gets the full path to the "full" image for this photo.
+  def full_image_path
+    "generated/#{template_full_image_path}"
+  end
+
+  # Gets the path to use in our generated HTML."
+  def template_full_image_path
+    "images/photos/#{md5}.#{file_name}"
+  end
+
+  # Gets the path to the photo page.
+  def photo_show_path
+    "photos/#{md5}.html"
   end
 
   def original_photo_path
@@ -91,6 +111,12 @@ class Piccle::Photo < Sequel::Model
     img = Magick::Image.read(original_photo_path).first
     img.resize_to_fill!(Piccle::THUMBNAIL_SIZE)
     img.write(thumbnail_path)
+  end
+
+  def generate_full_image!
+    img = Magick::Image.read(original_photo_path).first
+    img.resize_to_fit!(Piccle::FULL_SIZE, Piccle::FULL_SIZE)
+    img.write(full_image_path)
   end
 
   protected
