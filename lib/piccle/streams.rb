@@ -1,0 +1,2 @@
+class Piccle::Streams
+end

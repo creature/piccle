@@ -1,6 +1,8 @@
 require "pry-byebug"
 require "piccle/database"
 require "piccle/photo"
+require "piccle/streams"
+require "piccle/streams/date_stream"
 require "piccle/template_helpers"
 require "piccle/version"
 
