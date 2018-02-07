@@ -14,6 +14,11 @@ header, footer {
   padding-bottom: 1em;
 }
 
+header a {
+  text-decoration: none;
+  color: #111;
+}
+
 nav {
   display: inline-block;
   max-width: 180px;
@@ -53,4 +58,9 @@ footer {
   color: #444;
   margin-top: 2em;
   min-height: 100px;
+}
+
+/* Styles for the photo_show template */
+.photo_show img {
+  max-width: 100%;
 }
