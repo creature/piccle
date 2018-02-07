@@ -15,6 +15,12 @@ namespace :piccle do
     copy_assets
     puts "Done."
   end
+
+  desc "Run a web server FOR PREVIEWING OUR OUTPUT ONLY"
+  task server: "photos:update_db" do
+    puts "Running server..."
+    sh %{ ruby lib/piccle/web_server.rb }
+  end
 end
 
 # Stubby, hacky, prototype method that demos generating JSON files.
