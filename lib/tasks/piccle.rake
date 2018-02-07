@@ -41,6 +41,7 @@ def generate_html
   puts "    ... generating HTML files..."
   FileUtils.mkdir_p("generated/photos") # For individual photo HTML pages, not the images themselves
   photos = Piccle::Photo.reverse_order(:taken_at).all
+  site_metadata = Piccle::TemplateHelpers.site_metadata
 
   # Generate the home page
   File.write("generated/index.html", Piccle::TemplateHelpers.render("index", photos: photos, site_metadata: site_metadata, relative_path: "./"))
@@ -84,24 +85,6 @@ def copy_assets
   FileUtils.mkdir_p("generated/css")
   Dir.glob("assets/css/**").each do |f|
     FileUtils.cp(f, "generated/css/#{File.basename(f)}")
-  end
-end
-
-# Gets information about our site.
-def site_metadata
-  OpenStruct.new(
-    author_name: Piccle::AUTHOR_NAME,
-    copyright_year: copyright_year
-  )
-end
-
-# Gets a string describing the copyright year - either with a hyphen for multiple year spans, or one number for one year.
-def copyright_year
-  result = database.execute("SELECT MIN(STRFTIME('%Y', taken_at)) AS min_year, MAX(STRFTIME('%Y', taken_at)) AS max_year FROM photos;").first
-  if result["min_year"] == result["max_year"]
-    result["max_year"]
-  else
-    "#{result["min_year"]} – #{result["max_year"]}"
   end
 end
 

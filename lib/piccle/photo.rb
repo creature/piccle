@@ -45,6 +45,16 @@ class Piccle::Photo < Sequel::Model
     end
   end
 
+  # The year our earliest photo was taken. Used by our copyright footer.
+  def self.earliest_photo_year
+    Date.parse(self.min(:taken_at)).year
+  end
+
+  # The year the last photo was taken. Used by the copyright footer.
+  def self.latest_photo_year
+    Date.parse(self.max(:taken_at)).year
+  end
+
   # ---- Image attributes (inferred from data) ----
 
   def portrait?

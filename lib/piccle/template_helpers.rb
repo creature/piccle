@@ -16,4 +16,20 @@ class Piccle::TemplateHelpers
 
     template.render(data)
   end
+
+  # Gets information about our site, used on pretty much every page.
+  def self.site_metadata
+    min_year = Piccle::Photo.earliest_photo_year
+    max_year = Piccle::Photo.latest_photo_year
+    copyright_year = if min_year == max_year
+                      max_year
+                    else
+                      "#{min_year} – #{max_year}"
+                    end
+
+    OpenStruct.new(
+      author_name: Piccle::AUTHOR_NAME,
+      copyright_year: copyright_year
+    )
+  end
 end

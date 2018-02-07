@@ -13,12 +13,15 @@ get '/images/:location/:file' do |location, file|
 end
 
 get '/' do
-  Piccle::TemplateHelpers.render("index", photos: Piccle::Photo.reverse_order(:taken_at).all, site_metadata: {}, relative_path: "/")
+  Piccle::TemplateHelpers.render("index", photos: Piccle::Photo.reverse_order(:taken_at).all, site_metadata: site_metadata, relative_path: "/")
 end
 
 get '/photos/:hash' do |hash|
   hash.sub!(/\.html$/, "")
   photo = Piccle::Photo.where(md5: hash).first
-  Piccle::TemplateHelpers.render("show", photo: photo, site_metadata: {}, relative_path: "/")
+  Piccle::TemplateHelpers.render("show", photo: photo, site_metadata: site_metadata, relative_path: "/")
 end
 
+def site_metadata
+  Piccle::TemplateHelpers.site_metadata
+end
