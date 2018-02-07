@@ -8,7 +8,6 @@ namespace :piccle do
   desc "Generate our website"
   task generate: "photos:update_db" do
     puts "Generating website..."
-    puts "    ... (one day) ensuring that database is up to date..."
     generate_json
     generate_html
     generate_thumbnails
