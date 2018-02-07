@@ -33,6 +33,10 @@ def generate_json
 
   # Write it out as JSON
   File.write("generated/json/all.json", result.to_json)
+
+  streams.each do |s|
+    s.generate_json("generated/json")
+  end
 end
 
 
@@ -92,4 +96,8 @@ def database
   @db ||= SQLite3::Database.new(Piccle::Database::PHOTO_DATABASE_FILENAME)
   @db.results_as_hash = true
   @db
+end
+
+def streams
+  [Piccle::Streams::DateStream.new]
 end

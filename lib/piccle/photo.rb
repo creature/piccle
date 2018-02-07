@@ -3,6 +3,7 @@ require 'xmp'
 require 'digest'
 require 'sequel'
 require 'rmagick'
+require 'json'
 
 DB = Piccle::Database.connect
 
@@ -108,6 +109,14 @@ class Piccle::Photo < Sequel::Model
 
   def original_photo_path
     "#{path}/#{file_name}"
+  end
+
+  def to_json
+    {
+      title: title,
+      description: description,
+      taken_at: taken_at,
+    }.to_json
   end
 
   # ---- Piccle internals ----

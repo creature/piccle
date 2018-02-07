@@ -1,3 +1,5 @@
+require 'json'
+
 # Enables browsing photos by date.
 
 class Piccle::Streams::DateStream
@@ -12,7 +14,17 @@ class Piccle::Streams::DateStream
   def generate_json(root_path)
     years.each do |year|
       photos = photos_for(year)
-      puts "#{photos.count} photos for #{year}"
+
+      result = {
+        metadata: {
+          total: photos.count
+        },
+        links: {
+          html: html_path_for(year)
+        },
+        photos: photos.map(&:to_json)
+      }
+      File.write(json_path_for(root_path, year), result.to_json)
     end
   end
 
@@ -31,7 +43,7 @@ class Piccle::Streams::DateStream
   end
 
   #generated/json/by-date/2008.json
-  def json_path(root, year)
+  def json_path_for(root, year)
     File.join(root, namespace, "#{year}.json")
   end
 
