@@ -15,62 +15,34 @@ class Piccle::Photo < Sequel::Model
 
   def self.from_file(path_to_file)
     self.find_or_create(file_name: File.basename(path_to_file), path: File.dirname(path_to_file)) do |p|
-      common_attrs = %i(width height md5 taken_at description title aperture iso)
-      common_attrs.each { |att| p[att] = p.send(att) }
-      p[:camera_name] = p.camera_model
-      shutter_speed = p.shutter_speed
-      p[:shutter_speed_numerator] = shutter_speed.numerator
-      p[:shutter_speed_denominator] = shutter_speed.denominator
+      # Block executes when creating a new record.
+      exif_info = EXIFR::JPEG.new(path_to_file)
+      xmp = XMP.parse(exif_info)
+
+      p[:md5] = Digest::MD5.file(path_to_file).to_s
+      p[:width] = exif_info.width
+      p[:height] = exif_info.height
+      p[:camera_name] = exif_info.model
+      p[:description] = exif_info.image_description
+      p[:aperture] = exif_info.aperture_value
+      p[:iso] = exif_info.iso_speed_ratings
+      p[:shutter_speed_numerator] = exif_info.exposure_time.numerator
+      p[:shutter_speed_denominator] = exif_info.exposure_time.denominator
+      p[:focal_length] = exif_info.focal_length.to_f
+      p[:taken_at] = exif_info.date_time_original.to_datetime.to_s
+
+      p[:latitude] = if exif_info.gps_latitude && exif_info.gps_latitude_ref
+                       exif_info.gps_latitude_ref == "S" ? (exif_info.gps_latitude.to_f * -1) : exif_info.gps_latitude.to_f
+                     end
+
+      p[:longitude] = if exif_info.gps_longitude && exif_info.gps_longitude_ref
+                        exif_info.gps_longitude_ref == "W" ? (exif_info.gps_longitude.to_f * -1) : exif_info.gps_longitude.to_f
+                      end
+
+      p[:title] = if xmp.namespaces.include?("dc") && xmp.dc.attributes.include?("title")
+                    xmp.dc.title
+                  end
     end
-  end
-
-  # ---- EXIF accessors ----
-
-  # How wide is this image, in pixels?
-  def width
-    exif_info.width
-  end
-
-  # How tall is this image, in pixels?
-  def height
-    exif_info.height
-  end
-
-  # What camera model took this image?
-  def camera_model
-    exif_info.model
-  end
-
-  # When was this image taken?
-  def taken_at
-    exif_info.date_time_original.to_datetime.to_s
-  end
-
-  # What's the title for this image?
-  def title
-    if xmp.namespaces.include?("dc") && xmp.dc.attributes.include?("title")
-      xmp.dc.title
-    else
-      nil
-    end
-  end
-
-  # What's the description (ie. the caption) for this image?
-  def description
-    exif_info.image_description
-  end
-
-  # What's the aperture for this image? You get this as a decimal, and should be expressed as f/{aperture}.
-  def aperture
-    exif_info.aperture_value
-  end
-
-  def iso
-    exif_info.iso_speed_ratings
-  end
-
-  def shutter_speed
-    exif_info.exposure_time
   end
 
   # ---- Image attributes (inferred from data) ----
@@ -87,11 +59,6 @@ class Piccle::Photo < Sequel::Model
   # Is this image square?
   def square?
     width == height
-  end
-
-  # Gets an MD5 hash of this file's entire contents.
-  def md5
-    @md5 ||= Digest::MD5.file(original_photo_path).to_s
   end
 
   # Have we already generated a thumbnail for this image?
@@ -146,15 +113,5 @@ class Piccle::Photo < Sequel::Model
     img = Magick::Image.read(original_photo_path).first
     img.resize_to_fit!(Piccle::FULL_SIZE, Piccle::FULL_SIZE)
     img.write(full_image_path)
-  end
-
-  protected
-
-  def exif_info
-    @exif_info ||= EXIFR::JPEG.new(original_photo_path)
-  end
-
-  def xmp
-    @xmp ||= XMP.parse(exif_info)
   end
 end

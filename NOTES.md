@@ -1,9 +1,6 @@
 # Priorities/things to do next 
 - Image serving via Sinatra is MASSIVELY INSECURE and should be fixed up. 
-- Pull out lens focal length into photo data.
-- Ingest latitude and longitude too.
 - Ingest keywords into the DB, and store them for each photo.
-- Are we even reading from our database at all? Is our photo model always pulling data off the "raw" file?
 - Continue fleshing out the actual photo page.
 - Pull out site header and site footer into a partial
 - Try to do "browse by stream"
@@ -20,6 +17,8 @@
 - Generate sidebar based on actual data, not just placeholder text
 - Convert database.rake tasks over to the Sequel way of doing things
 - Running rake db:initialise no longer works, and we're moving over to using Sequel migrations for DB access. Fix things up so that running the rake task uses the Sequel migrations. http://sequel.jeremyevans.net/rdoc/files/doc/migration_rdoc.html#label-Running+migrations+from+a+Rake+task
+- Our current find-or-create for photos relates to the file name/path. It should probably use that, and/or the MD5. 
+- Focal length is currently available as a fraction in the EXIF, but we're storing it as a float. Maybe we'd like to store it as a fraction instead?
 
 
 # Development notes
