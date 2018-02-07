@@ -15,12 +15,10 @@ body
         li More...
       h1 Dates
       ul
-        li 2018
-        li 2017
-        li 2016
-        li 2015
-        li 2014
-        li More...
+        - date_stream = Piccle::Streams::DateStream.new
+        - date_stream.navigation_items.each do |label, link|
+          li
+            a href=link = label
       h1 Cameras
       ul
         li Fujifilm X100F
