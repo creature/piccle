@@ -13,20 +13,21 @@ body
         li Doors
         li Birds
         li More...
+
       h1 Dates
       ul
         - date_stream = Piccle::Streams::DateStream.new
         - date_stream.navigation_items.each do |label, link|
           li
             a href=link = label
+
       h1 Cameras
       ul
-        li Fujifilm X100F
-        li Fujifilm X100T
-        li Canon 350D
-        li Canon 5D3
-        li Sony a7
-        li More...
+        - camera_stream = Piccle::Streams::CameraStream.new
+        - camera_stream.navigation_items.each do |label, link|
+          li
+            a href=link = label
+
       h1 Places
       ul
         li Canada

@@ -104,5 +104,5 @@ def database
 end
 
 def streams
-  [Piccle::Streams::DateStream.new]
+  [Piccle::Streams::DateStream.new, Piccle::Streams::CameraStream.new]
 end
