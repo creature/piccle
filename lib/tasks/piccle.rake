@@ -54,6 +54,11 @@ def generate_html
   photos.each do |p|
     File.write("generated/#{p.photo_show_path}", Piccle::TemplateHelpers.render("show", photo: p, site_metadata: site_metadata, relative_path: "../"))
   end
+
+  # Generate pages for each feature stream.
+  streams.each do |s|
+    s.generate_html("generated")
+  end
 end
 
 
