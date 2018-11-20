@@ -1,5 +1,6 @@
 require "pry-byebug"
 require "piccle/database"
+require "piccle/keyword"
 require "piccle/photo"
 require "piccle/streams"
 require "piccle/streams/camera_stream"

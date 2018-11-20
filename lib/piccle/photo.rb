@@ -9,14 +9,21 @@ DB = Piccle::Database.connect
 
 # Represents an image in the system. Reading info from an image? Inferring something based on the data? Put it here.
 class Piccle::Photo < Sequel::Model
+  many_to_many :keywords
+
   def before_create
     self.created_at ||= Time.now
     super
   end
 
   def self.from_file(path_to_file)
-    self.find_or_create(file_name: File.basename(path_to_file), path: File.dirname(path_to_file)) do |p|
+    freshly_created = false
+    exif_info = nil
+    xmp = nil
+
+    photo = self.find_or_create(file_name: File.basename(path_to_file), path: File.dirname(path_to_file)) do |p|
       # Block executes when creating a new record.
+      freshly_created = true
       exif_info = EXIFR::JPEG.new(path_to_file)
       xmp = XMP.parse(exif_info)
 
@@ -43,6 +50,14 @@ class Piccle::Photo < Sequel::Model
       p[:title] = if xmp.namespaces.include?("dc") && xmp.dc.attributes.include?("title")
                     xmp.dc.title
                   end
+    end
+
+    # Pull out keywords for this file, if we're creating it for the first time.
+    if freshly_created && xmp.namespaces.include?("dc") && xmp.dc.attributes.include?("subject")
+      xmp.dc.subject.each do |keyword|
+        keyword = Piccle::Keyword.find_or_create(name: keyword)
+        photo.add_keyword(keyword) unless photo.keywords.include?(keyword)
+      end
     end
   end
 
