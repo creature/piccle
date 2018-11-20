@@ -5,6 +5,11 @@ body
     h1 Photography by {{site_metadata.author_name}}
   main
     nav
+      | {{#if stream}}
+      p
+        a href="/" Home
+      | {{/if}}
+
       h1 Topics
       ul
         li Portraits
