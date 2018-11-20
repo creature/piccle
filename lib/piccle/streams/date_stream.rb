@@ -30,10 +30,14 @@ class Piccle::Streams::DateStream
 
   def generate_html(root_path)
     years.each do |year|
-      photos = photos_for(year).all
-      site_metadata = Piccle::TemplateHelpers.site_metadata
-      File.write("#{root_path}/#{html_path_for(year)}", Piccle::TemplateHelpers.render("index", photos: photos, site_metadata: site_metadata, relative_path: "../"))
+      File.write("#{root_path}/#{html_path_for(year)}", html_for_year(year))
     end
+  end
+
+  def html_for_year(year)
+    photos = photos_for(year.to_i).all
+    site_metadata = Piccle::TemplateHelpers.site_metadata
+    Piccle::TemplateHelpers.render("index", photos: photos, site_metadata: site_metadata, stream: self, relative_path: "../")
   end
 
   def html_path_for(year)
