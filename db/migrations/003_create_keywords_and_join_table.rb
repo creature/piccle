@@ -5,10 +5,10 @@ Sequel.migration do
       String :name, null: false, unique: true
     end
 
-    create_table(:photo_keywords) do
+    create_table(:keywords_photos) do
       Integer :photo_id, null: false
       Integer :keyword_id, null: false
-      primary_key [:photo_id, :keyword_id], name: :photo_keywords_pk
+      primary_key [:photo_id, :keyword_id], name: :keywords_photos_pk
     end
   end
 end
