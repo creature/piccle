@@ -8,7 +8,7 @@ require 'sinatra/reloader' if development?
 set :public_dir, "#{File.dirname(__FILE__)}/../../assets"
 
 get '/images/:location/:file' do |location, file|
-  # NOtE: MASSIVELY INSECURE
+  # NOTE: MASSIVELY INSECURE
   send_file "#{File.dirname(__FILE__)}/../../generated/images/#{location}/#{file}"
 end
 
@@ -20,6 +20,12 @@ get '/photos/:hash' do |hash|
   hash.sub!(/\.html$/, "")
   photo = Piccle::Photo.where(md5: hash).first
   Piccle::TemplateHelpers.render("show", photo: photo, site_metadata: site_metadata, relative_path: "/")
+end
+
+# TODO: pull this out to work via some kind of extension in the date-stream itself.
+get '/by-date/:year' do |year|
+  stream = Piccle::Streams::DateStream.new
+  stream.html_for_year(year)
 end
 
 def site_metadata
