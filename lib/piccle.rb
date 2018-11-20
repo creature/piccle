@@ -6,6 +6,7 @@ require "piccle/streams"
 require "piccle/streams/camera_stream"
 require "piccle/streams/date_stream"
 require "piccle/template_helpers"
+require "piccle/template_paths"
 require "piccle/version"
 
 module Piccle

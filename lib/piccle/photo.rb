@@ -47,13 +47,13 @@ class Piccle::Photo < Sequel::Model
                         exif_info.gps_longitude_ref == "W" ? (exif_info.gps_longitude.to_f * -1) : exif_info.gps_longitude.to_f
                       end
 
-      p[:title] = if xmp.namespaces.include?("dc") && xmp.dc.attributes.include?("title")
+      p[:title] = if xmp && xmp.namespaces && xmp.namespaces.include?("dc") && xmp.dc.attributes.include?("title")
                     xmp.dc.title
                   end
     end
 
     # Pull out keywords for this file, if we're creating it for the first time.
-    if freshly_created && xmp.namespaces.include?("dc") && xmp.dc.attributes.include?("subject")
+    if freshly_created && xmp && xmp.namespaces && xmp.namespaces.include?("dc") && xmp.dc.attributes.include?("subject")
       xmp.dc.subject.each do |keyword|
         keyword = Piccle::Keyword.find_or_create(name: keyword)
         photo.add_keyword(keyword) unless photo.keywords.include?(keyword)
@@ -99,7 +99,7 @@ class Piccle::Photo < Sequel::Model
 
   # Gets the path to use in our generated HTML.
   def template_thumbnail_path
-    "images/thumbnails/#{md5}.#{file_name}"
+    Piccle::TemplatePaths.thumbnail_path(self)
   end
 
   # Does a "full-size" image exist?
@@ -119,7 +119,7 @@ class Piccle::Photo < Sequel::Model
 
   # Gets the path to the photo page.
   def photo_show_path
-    "photos/#{md5}.html"
+    Piccle::TemplatePaths.show_photo_path(self)
   end
 
   def original_photo_path

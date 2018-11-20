@@ -8,7 +8,7 @@ class Piccle::Streams::DateStream
   end
 
   def navigation_items
-    years.map { |year| [year, html_path_for(year)] }
+    years.map { |year| [year, Piccle::TemplatePaths.browse_by_date_path(year)] }
   end
 
   def generate_json(root_path)
@@ -20,7 +20,7 @@ class Piccle::Streams::DateStream
           total: photos.count
         },
         links: {
-          html: html_path_for(year)
+          html: Piccle::TemplatePaths.browse_by_date_path(year)
         },
         photos: photos.map(&:to_json)
       }
@@ -30,7 +30,7 @@ class Piccle::Streams::DateStream
 
   def generate_html(root_path)
     years.each do |year|
-      File.write("#{root_path}/#{html_path_for(year)}", html_for_year(year))
+      File.write("#{root_path}/#{Piccle::TemplatePaths.browse_by_date_path(year)}", html_for_year(year))
     end
   end
 
@@ -38,10 +38,6 @@ class Piccle::Streams::DateStream
     photos = photos_for(year.to_i).all
     site_metadata = Piccle::TemplateHelpers.site_metadata
     Piccle::TemplateHelpers.render("index", photos: photos, site_metadata: site_metadata, stream: self, relative_path: "../")
-  end
-
-  def html_path_for(year)
-    "#{namespace}/#{year}.html"
   end
 
   protected
