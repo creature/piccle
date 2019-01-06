@@ -28,6 +28,11 @@ get '/by-date/:year' do |year|
   stream.html_for_year(year)
 end
 
+get '/by-topic/:keyword' do |keyword|
+  stream = Piccle::Streams::KeywordStream.new
+  stream.html_for_keyword(keyword)
+end
+
 def site_metadata
   Piccle::TemplateHelpers.site_metadata
 end
