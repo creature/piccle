@@ -19,8 +19,12 @@ header a {
   color: #111;
 }
 
+main {
+  display: flex;
+}
+
 nav {
-  display: inline-block;
+  flex: none;
   max-width: 180px;
   margin-right: 20px;
   vertical-align: top;
@@ -37,9 +41,15 @@ nav ul {
   margin-bottom: 2rem;
 }
 
+/* This is both a flexbox item (of the main element) and a Flexbox container itself (for the photos). */
 .photos {
-  display: inline-block;
-  max-width: calc(100% - 200px);
+  flex: auto;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.photos a {
+  max-width: 33%;
 }
 
 .thumbnail {
