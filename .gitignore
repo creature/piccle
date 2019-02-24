@@ -10,5 +10,7 @@
 /images/
 /generated/
 photo_data.db
+photo_data_test.db
+query.log
 .DS_Store
 *.swp
