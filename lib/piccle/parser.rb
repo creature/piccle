@@ -31,14 +31,34 @@ module Piccle
 
       @streams.each do |stream|
         to_add = stream.data_for(photo)
-        @data.merge! to_add
+        @data = merge_into(@data, to_add)
       end
-
-
     end
 
     def links_for(md5)
       []
+    end
+
+    protected
+
+    def merge_into(destination, source)
+      # If the source has a photos key, make sure one exists in the destination, and then append the source's contents.
+      if source.has_key? :photos
+        destination[:photos] ||= []
+        destination[:photos] += source[:photos]
+      end
+
+      # For all the other keys, see if the destination has them. If it does, combine them using OURSELF. Otherwise, just set it to our version.
+      source.keys.each do |key|
+        next if :photos == key
+        if destination.has_key? key
+          destination[key] = merge_into(destination[key], source[key])
+        else
+          destination[key] = source[key]
+        end
+      end
+
+      destination
     end
   end
 end
