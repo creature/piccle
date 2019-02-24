@@ -1,5 +1,6 @@
 # Priorities/things to do next 
 - Image serving via Sinatra is MASSIVELY INSECURE and should be fixed up. 
+- Empty test DB between runs. 
 
 - Continue fleshing out the actual photo page.
 - Remove all raw sqlite3 access from piccle.rake
@@ -48,6 +49,11 @@
   |-+ by-camera
     |- fuji-x100f
     |- canon-350d
+
+- Each stream really needs to be able to generate:
+  - individual photo pages (that are basically the normal photo pages, but they indicate its current position and the next/previous image, potentially with a stream of other images to jump to), 
+  - Index pages, that show that particular pool's photo. 
+- Streams should maybe be able to generate "top-level" pages, so we could have paths like "example.com/2008" rather than "example.com/by-date/2008".
 
 - Potential way of doing pre-pass: 
   - Read each photo metadata into a hash
