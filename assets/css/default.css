@@ -19,7 +19,7 @@ header a {
   color: #111;
 }
 
-main {
+.photos_index main {
   display: flex;
 }
 
@@ -73,4 +73,5 @@ footer {
 /* Styles for the photo_show template */
 .photo_show img {
   max-width: 100%;
+  display: block;
 }
