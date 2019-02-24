@@ -22,6 +22,11 @@
 - Focal length is currently available as a fraction in the EXIF, but we're storing it as a float. Maybe we'd like to store it as a fraction instead?
 - Convert some string munging to build paths over to use File.join instead.
 - Teach the Sinatra app to interface with feature streams.
+- Do a pre-generation pass to build a data store, and then generate files from that?
+- Generate rel=canonical links?
+- Navigation (previous/ext)
+- Unit tests
+- Add face detection, add perceptual hashing
 
 
 # Development notes
@@ -43,6 +48,11 @@
   |-+ by-camera
     |- fuji-x100f
     |- canon-350d
+
+- Potential way of doing pre-pass: 
+  - Read each photo metadata into a hash
+  - Pass each photo data, in turn, into a "stream" 
+  - Each stream returns a hash to be merged into a main one, with keys for each photo by MD5.
 
 # Misc todo
 - Don't use display: inline-block for the nav/main photo section, use Flexbox instead
