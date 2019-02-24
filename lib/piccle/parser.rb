@@ -14,7 +14,7 @@ module Piccle
 
     # Register a "stream", a thing that can extract extra data from a photo and add it to our data array, for later generation.
     def add_stream(stream)
-      @streams << stream
+      @streams << stream.new
     end
 
     # Do we have any photos in this parsed data yet?
@@ -24,10 +24,17 @@ module Piccle
 
     # Parse a photo. Also parses it to any registered streams,
     def parse(photo)
+      @photos[photo.md5] = photo
       @data[:photos] ||= {}
 
       @data[:photos][photo.md5] = { title: photo.title, description: photo.description, width: photo.width, height: photo.height, taken_at: photo.taken_at }
-      @photos[photo.md5] = photo
+
+      @streams.each do |stream|
+        to_add = stream.data_for(photo)
+        @data.merge! to_add
+      end
+
+
     end
 
     def links_for(md5)
