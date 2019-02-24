@@ -32,6 +32,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.0" # Testing library
   spec.add_development_dependency "sinatra", "~> 2.0" # Serve pages via "the web"
   spec.add_development_dependency "sinatra-contrib", "~> 2.0" # Sinatra contributed packages
+  spec.add_development_dependency "simplecov" # Code coverage calculator
+  spec.add_development_dependency "simplecov-console" # Output stats on the console
 
   spec.add_dependency "exifr", "~> 1.3" # EXIF reading library
   spec.add_dependency "flavour_saver", "~> 0.3" # Handlebars templating in Ruby
