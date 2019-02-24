@@ -34,6 +34,7 @@ class Piccle::Photo < Sequel::Model
       p[:description] = exif_info.image_description
       p[:aperture] = exif_info.aperture_value
       p[:iso] = exif_info.iso_speed_ratings
+      p[:iso] = p[:iso].first if p[:iso].is_a? Array
       p[:shutter_speed_numerator] = exif_info.exposure_time.numerator
       p[:shutter_speed_denominator] = exif_info.exposure_time.denominator
       p[:focal_length] = exif_info.focal_length.to_f
@@ -59,6 +60,8 @@ class Piccle::Photo < Sequel::Model
         photo.add_keyword(keyword) unless photo.keywords.include?(keyword)
       end
     end
+
+    photo
   end
 
   # The year our earliest photo was taken. Used by our copyright footer.
