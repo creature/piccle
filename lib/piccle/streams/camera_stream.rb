@@ -6,6 +6,18 @@ class Piccle::Streams::CameraStream
     "by-camera"
   end
 
+  # Standard method called by the parser object. Returns a hash of photos by subcategory.
+  def data_for(photo)
+    camera_name = photo.camera_name || "unknown"
+    {
+      namespace => {
+      camera_name => {
+        photos: [photo.md5]
+      },
+    }
+    }
+  end
+
   def navigation_items
     cameras.map { |camera| [camera, html_path_for(camera)] }
   end

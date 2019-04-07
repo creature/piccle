@@ -45,7 +45,7 @@ describe Piccle::Parser do
       expect(data["by-date"]["2015"]).to have_key "10"
     end
 
-    it "can cross_link photos" do
+    it "can cross_link photos", skip: "not implemented yet" do
       subject.parse(photo_1)
 
       result = subject.links_for(photo_1_md5)
@@ -90,6 +90,18 @@ describe Piccle::Parser do
       }
 
       expect(data).to be >= expected_result
+    end
+  end
+
+  context "with a camera stream" do
+    before(:each) { subject.add_stream(Piccle::Streams::CameraStream) }
+
+    it "extracts camera maker data" do
+      subject.parse(photo_1)
+      subject.parse(photo_2)
+
+      expect(data).to have_key("by-camera")
+      expect(data["by-camera"].keys).to contain_exactly("NIKON D810", "NIKON D3100")
     end
   end
 
