@@ -92,4 +92,67 @@ describe Piccle::Parser do
       expect(data).to be >= expected_result
     end
   end
+
+  context "#merge_into" do
+    it "merges an array into an empty array correctly" do
+      destination = {}
+      source = { "foo" => {} }
+      result = subject.send(:merge_into, destination, source)
+
+      expect(result).to eq({ "foo" => {} })
+    end
+
+    it "merges array contents, if the key is called photos" do
+      destination = { photos: ["foo", "bar"] }
+      source = { photos: ["boat"] }
+      result = subject.send(:merge_into, destination, source)
+      expect(result).to eq({ photos: ["foo", "bar", "boat"] })
+    end
+
+    it "preserves extra keys in the two hashes" do
+      source = { photos: ["a", "b"], another: "plastic" }
+      destination = { photos: ["c", "d"], other: "whatever"}
+      result = subject.send(:merge_into, destination, source)
+
+      expect(result).to include(another: "plastic")
+      expect(result).to include(other: "whatever")
+      expect(result[:photos]).to match_array(%w(a b c d))
+    end
+
+    it "merges nested hashes fine" do
+      source = {
+        photos: [photo_1_md5],
+        "by-date" => {
+          "2015" => {
+            "10" => {
+              "23" => { photos: [photo_1_md5] },
+              :photos => [photo_1_md5]
+            },
+            :photos => [photo_1_md5]
+          }
+        }
+      }
+      destination = {
+        photos: [photo_2_md5],
+        "by-date" => {
+          "2015" => {
+            "7" => {
+              "16" => { photos: [photo_2_md5] },
+              :photos => [photo_2_md5]
+            },
+            :photos => [photo_2_md5]
+          }
+        }
+      }
+
+      result = subject.send(:merge_into, destination, source)
+
+      expect(result[:photos]).to match_array([photo_1_md5, photo_2_md5])
+      expect(result["by-date"]).to have_key("2015")
+      expect(result["by-date"]["2015"].keys).to contain_exactly("10", "7", :photos)
+      expect(result["by-date"]["2015"][:photos]).to contain_exactly(photo_1_md5, photo_2_md5)
+      expect(result["by-date"]["2015"]["10"][:photos]).to contain_exactly(photo_1_md5)
+      expect(result["by-date"]["2015"]["7"][:photos]).to contain_exactly(photo_2_md5)
+    end
+  end
 end
