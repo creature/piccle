@@ -1,4 +1,15 @@
 # Priorities/things to do next 
+- Right now, you're in the middle of doing things in a parse-then-generate cycle. The parser is pretty close to working fully. Your sensible next steps will probably be: 
+  - Finish up the links_for function so we can generate cross-linkable photos
+  - Write a separate generator that takes our parser's data and generates HTML from it
+  - Delete all the old code that was aimed at doing a DB-backed render instead of from our data object
+  - Update our Rake tasks so they use this parse-then-generate flow instead. 
+  - Kill the Sinatra server entirely? 
+
+
+----- All the notes below are kind of outdated ------
+
+
 - Image serving via Sinatra is MASSIVELY INSECURE and should be fixed up. 
 - Empty test DB between runs. 
 
