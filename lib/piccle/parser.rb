@@ -1,5 +1,8 @@
 # The "base parser" for Piccle. Repeatedly call parser.parse(Photo), and it pulls out the metadata necessary to generate pages.
-# It'll figure out which details to pull out, links between individual photos, details like ordering, etc. #
+# It'll figure out which details to pull out, links between individual photos, details like ordering, etc.
+#
+# Essentially, we end up building a big @data array that's got all the photo metadata, and the streams populate the various
+# facets of the data. And then another module can render our site from this big specially-structured hash.
 
 module Piccle
   class Parser
@@ -22,7 +25,7 @@ module Piccle
       @data.empty?
     end
 
-    # Parse a photo. Also parses it to any registered streams,
+    # Parse a photo. Also passes it to any registered streams, which can subcategorise each photo into sections under its own namespace.
     def parse(photo)
       @photos[photo.md5] = photo
       @data[:photos] ||= {}
@@ -35,6 +38,16 @@ module Piccle
       end
     end
 
+    # Asks each stream in turn to order its data. Call this after you've parsed all the photos, to generate an ordered list of photos
+    # (so you can generate sensible previous/next links). TODO.
+    def order!
+
+    end
+
+    # Given an MD5 hash, returns an array of arrays. Each array is a set of strings that, combined with the MD5, gives a link to the photo.
+    # So for instance, with a date stream parser, if a photo was taken on 2016-04-19 you'll get back:
+    # [["by-date", "2016"], ["by-date", "2016", "4"], ["by-date", "2016", "4", "19"]]
+    # And you could use that to generate a links akin to /by-date/2016/4/19/abcdef1234567890.html.
     def links_for(md5)
       []
     end
