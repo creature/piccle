@@ -44,14 +44,6 @@ describe Piccle::Parser do
       expect(data["by-date"]).to have_key "2015"
       expect(data["by-date"]["2015"]).to have_key "10"
     end
-
-    it "can cross_link photos", skip: "not implemented yet" do
-      subject.parse(photo_1)
-
-      result = subject.links_for(photo_1_md5)
-      expect(result).to be_instance_of Array
-    end
-
     it "extracts the expected data for a year" do
       subject.parse(photo_1)
 
@@ -102,6 +94,35 @@ describe Piccle::Parser do
 
       expect(data).to have_key("by-camera")
       expect(data["by-camera"].keys).to contain_exactly("NIKON D810", "NIKON D3100")
+    end
+  end
+
+  context "with both a camera and a date stream" do
+    before(:each) do
+      subject.add_stream(Piccle::Streams::CameraStream)
+      subject.add_stream(Piccle::Streams::DateStream)
+      subject.parse(photo_1)
+      subject.parse(photo_2)
+    end
+
+    it "Extracts both camera and date info" do
+      expect(data).to have_key("by-camera")
+      expect(data).to have_key("by-date")
+
+      expect(data["by-camera"].keys).not_to be_empty
+      expect(data["by-date"].keys).not_to be_empty
+    end
+
+    it "can cross-link streams" do
+      result = subject.links_for(photo_1_md5)
+      expected_links = [
+        ["by-date", "2015"],
+        ["by-date", "2015", "10"],
+        ["by-date", "2015", "10", "23"],
+        ["by-camera", "NIKON D810"]
+      ]
+
+      expect(result).to match_array(expected_links)
     end
   end
 
