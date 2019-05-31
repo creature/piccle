@@ -21,17 +21,14 @@ body.photos_index
 
       h1 Dates
       ul
-        - date_stream = Piccle::Streams::DateStream.new
-        - date_stream.navigation_items.each do |label, link|
-          li
-            a href=link = label
+        li 2019
+        li 2018
+        li etc
 
       h1 Cameras
       ul
-        - camera_stream = Piccle::Streams::CameraStream.new
-        - camera_stream.navigation_items.each do |label, link|
-          li
-            a href=link = label
+        li Camera 1
+        li Camera 2
 
       h1 Places
       ul
@@ -43,8 +40,9 @@ body.photos_index
         li More...
 
     .photos
-      | {{#each photos}}
-      == Piccle::TemplateHelpers.render_partial "photo_thumbnail"
+      | {{#each photos as |data hash|}}
+      a href="{{this.photo_show_path}}"
+        img.thumbnail src="images/thumbnails/{{hash}}.{{data.file_name}}" alt="{{data.title}}"
       | {{/each}}
 
 == Piccle::TemplateHelpers.render_partial "footer"
