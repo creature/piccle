@@ -30,7 +30,7 @@ module Piccle
       @photos[photo.md5] = photo
       @data[:photos] ||= {}
 
-      @data[:photos][photo.md5] = { title: photo.title, description: photo.description, width: photo.width, height: photo.height, taken_at: photo.taken_at }
+      @data[:photos][photo.md5] = { file_name: photo.file_name, title: photo.title, description: photo.description, width: photo.width, height: photo.height, taken_at: photo.taken_at }
 
       @streams.each do |stream|
         to_add = stream.data_for(photo)
@@ -49,10 +49,24 @@ module Piccle
     # [["by-date", "2016"], ["by-date", "2016", "4"], ["by-date", "2016", "4", "19"]]
     # And you could use that to generate a links akin to /by-date/2016/4/19/abcdef1234567890.html.
     def links_for(md5)
-      []
+      links = []
+      faceted_data = @data.select { |k, _| k.is_a? String } # Only look at data from streams
+
+      prefix = []
+      faceted_data.each do |k, v|
+        links << dig_for_links_for(prefix, md5, v)
+      end
+
+      links
     end
 
     protected
+
+    # Recursive function that digs into a subtree of our data. If we find the supplied MD5, we return the prefix
+    # array plus our found element. If we don't, we look in the subtree for it.
+    def dig_for_links_for(prefix, md5, subtree)
+        prefix if subtree.dig(:photos, md5)
+    end
 
     def merge_into(destination, source)
       # If the source has a photos key, make sure one exists in the destination, and then append the source's contents.
