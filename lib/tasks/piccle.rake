@@ -20,6 +20,44 @@ namespace :piccle do
     puts "Running server..."
     sh %{ ruby lib/piccle/web_server.rb }
   end
+
+  desc "A newer, better generator"
+  task new_generate: "photos:update_db" do
+    puts "Generating website..."
+
+    parser = new_parser_with_streams
+    parse_photos(parser)
+    puts parser.inspect
+    generate_html_indexes(parser)
+    generate_html_photos(parser)
+  end
+end
+
+# Get a parser, with a couple of registered streams as a demo.
+def new_parser_with_streams
+  Piccle::Parser.new.tap do |p|
+    p.add_stream(Piccle::Streams::DateStream)
+    p.add_stream(Piccle::Streams::CameraStream)
+  end
+end
+
+# Load all the photos, and parse them all.
+def parse_photos(parser)
+  Piccle::Photo.all.each do |p|
+    parser.parse(p)
+  end
+
+end
+
+# Given a parser object, generate some HTML index pages from the data it contains.
+def generate_html_indexes(parser)
+  renderer = Piccle::Renderer.new(parser)
+  File.write("generated/index.html", renderer.render_main_index)
+end
+
+# Given a parser object, generate photo pages from the data it contains.
+def generate_html_photos(parser)
+
 end
 
 # Stubby, hacky, prototype method that demos generating JSON files.
