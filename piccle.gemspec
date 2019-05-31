@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov-console" # Output stats on the console
 
   spec.add_dependency "exifr", "~> 1.3" # EXIF reading library
-  spec.add_dependency "flavour_saver", "~> 0.3" # Handlebars templating in Ruby
+  spec.add_dependency "handlebars"
   spec.add_dependency "pry-byebug", "~> 3.5" # Debugging aid; only needed by developers.
   spec.add_dependency "rake", "~> 10.0" # Ruby task runner
   spec.add_dependency "recursive-open-struct", "~> 1.0" # Blesses database results into objects compatible with flavour-saver

@@ -1,6 +1,6 @@
 require 'json'
 require 'fileutils'
-require 'flavour_saver'
+require 'handlebars'
 require 'slim'
 require 'piccle'
 

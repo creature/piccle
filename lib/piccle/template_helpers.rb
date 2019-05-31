@@ -1,5 +1,4 @@
-require 'flavour_saver'
-require 'recursive-open-struct'
+require 'handlebars'
 
 class Piccle::TemplateHelpers
   # Renders a partial template. Partial templates do NOT have their variables interpolated via Handlebars.
@@ -10,11 +9,11 @@ class Piccle::TemplateHelpers
 
   # Renders an entire template out
   def self.render(template_name, data = {})
-    data = RecursiveOpenStruct.new(data, recurse_over_arrays: true)
-    slim_template = Tilt['slim'].new { File.read("templates/#{template_name}.html.handlebars.slim") }
-    template = Tilt['handlebars'].new { slim_template.render }
-
-    template.render(data)
+    options = { code_attr_delims: { '(' => ')', '[' => ']'}, attr_list_delims: { '(' => ')', '[' => ']' } }
+    slim_template = Tilt['slim'].new(options) { File.read("templates/#{template_name}.html.handlebars.slim") }
+    handlebars = Handlebars::Context.new
+    template = handlebars.compile(slim_template.render)
+    template.call(data)
   end
 
   # Gets information about our site, used on pretty much every page.
