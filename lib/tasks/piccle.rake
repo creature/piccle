@@ -30,6 +30,8 @@ namespace :piccle do
     puts parser.inspect
     generate_html_indexes(parser)
     generate_html_photos(parser)
+    generate_thumbnails
+    copy_assets
   end
 end
 
@@ -46,7 +48,7 @@ def parse_photos(parser)
   Piccle::Photo.all.each do |p|
     parser.parse(p)
   end
-
+  parser.order
 end
 
 # Given a parser object, generate some HTML index pages from the data it contains.
