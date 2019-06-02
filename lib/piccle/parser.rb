@@ -3,6 +3,13 @@
 #
 # Essentially, we end up building a big @data array that's got all the photo metadata, and the streams populate the various
 # facets of the data. And then another module can render our site from this big specially-structured hash.
+#
+# Our hash looks like this:
+# {
+#   title: "Foo", # The title of this section
+#   photos: { md5_string => Hash[photo_data }, # Data needed to display
+#   order: [md5_string, md5_string, md5_string], # An ordered list of hashes to display.
+#
 
 module Piccle
   class Parser
@@ -30,7 +37,14 @@ module Piccle
       @photos[photo.md5] = photo
       @data[:photos] ||= {}
 
-      @data[:photos][photo.md5] = { file_name: photo.file_name, title: photo.title, description: photo.description, width: photo.width, height: photo.height, taken_at: photo.taken_at }
+      @data[:photos][photo.md5] = { hash: photo.md5,
+                                    file_name: photo.file_name,
+                                    title: photo.title,
+                                    description: photo.description,
+                                    width: photo.width,
+                                    height: photo.height,
+                                    taken_at: photo.taken_at
+      }
 
       @streams.each do |stream|
         to_add = stream.data_for(photo)
@@ -38,10 +52,10 @@ module Piccle
       end
     end
 
-    # Asks each stream in turn to order its data. Call this after you've parsed all the photos, to generate an ordered list of photos
-    # (so you can generate sensible previous/next links). TODO.
-    def order!
-
+    # Asks each stream in turn to order its data. Call this after you've parsed all the photos, to generate an ordered list of photo hashes.
+    # You can iterate over this list to display things.
+    def order
+      @data[:order] = @data[:photos].sort_by { |k, v| v[:taken_at] }.reverse.map { |a| a[0] }
     end
 
     # Given an MD5 hash, returns an array of arrays. Each array is a set of strings that, combined with the MD5, gives a link to the photo.
