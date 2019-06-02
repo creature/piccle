@@ -16,4 +16,5 @@ module Piccle
   FULL_SIZE = 1737 # Longest edge
   THUMBNAIL_SIZE = 300 # Thumbnail, square
   AUTHOR_NAME = "Alex Pounds" # TODO: extract this out to a config file.
+  DEBUG = true # Output some debug info on web pages when true.
 end
