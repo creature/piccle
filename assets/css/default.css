@@ -52,6 +52,26 @@ nav ul {
   max-width: 33%;
 }
 
+.event_block {
+  width: 33%;
+  margin: 0;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 36px;
+  font-weight: bold;
+  color: #ddd;
+  background-color: #222;
+}
+
+.event_block.event_start:after {
+  content: '\27fb';
+}
+
+.event_block.event_end:after {
+  content: '\27fc';
+}
+
 .thumbnail {
   line-height: 0;
   vertical-align: bottom;

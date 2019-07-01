@@ -40,9 +40,11 @@ body.photos_index
         li More...
 
     .photos
-      | {{#each photos as |data hash|}}
+      | {{#each order as |hash|}}
+      | {{#with (lookup ../photos hash)}}
       a href="{{this.photo_show_path}}"
-        img.thumbnail src="images/thumbnails/{{hash}}.{{data.file_name}}" alt="{{data.title}}"
+        img.thumbnail src="images/thumbnails/{{hash}}.{{this.file_name}}" alt="{{this.title}}"
+      | {{/with}}
       | {{/each}}
 
 == Piccle::TemplateHelpers.render_partial "footer"
