@@ -22,7 +22,7 @@ module Piccle
       debug = if Piccle::DEBUG
                 debug = [{ title: "Number of photos", value: photos.length }]
               end
-      Piccle::TemplateHelpers.render("index", photos: photos, order: @parser.data[:order], site_metadata: site_metadata, debug: debug)
+      Piccle::TemplateHelpers.render("index", photos: photos, order: @parser.data[:order], sentinels: @parser.data[:sentinels], site_metadata: site_metadata, debug: debug)
     end
   end
 end

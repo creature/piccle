@@ -48,6 +48,7 @@ def parse_photos(parser)
   Piccle::Photo.all.each do |p|
     parser.parse(p)
   end
+  parser.load_events
   parser.order
 end
 

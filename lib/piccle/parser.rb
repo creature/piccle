@@ -7,8 +7,10 @@
 # Our hash looks like this:
 # {
 #   title: "Foo", # The title of this section
-#   photos: { md5_string => Hash[photo_data }, # Data needed to display
+#   photos: { md5_string => Hash[photo_data] }, # Data needed to display
 #   order: [md5_string, md5_string, md5_string], # An ordered list of hashes to display.
+#   events: [ Hash[event_data] ] # Details about named events. These get special tiles on
+#                                # the front page, but are implemented via a stream.
 #
 
 module Piccle
@@ -56,6 +58,30 @@ module Piccle
     # You can iterate over this list to display things.
     def order
       @data[:order] = @data[:photos].sort_by { |k, v| v[:taken_at] }.reverse.map { |a| a[0] }
+    end
+
+    # Loads the event data from the EventStream. It also finds "sentinels", which are photos where we should display a special
+    # tile beforehand to indicate the start/end of the event.
+    def load_events
+      order
+      @data[:events] = Piccle::Streams::EventStream.new.events
+      @data[:sentinels] = {}
+
+      # Look at each 2 pics, try to figure out if there's an event that falls between them.
+      @data[:order].each_cons(2) do |first_hash, second_hash|
+        # TODO: Make all this way less error prone.
+        first_photo_date = @data[:photos][first_hash][:taken_at].to_datetime
+        second_photo_date = @data[:photos][second_hash][:taken_at].to_datetime
+
+        if event = @data[:events].find { |ev| first_photo_date > ev[:from].to_datetime && second_photo_date < ev[:from].to_datetime }
+          @data[:sentinels][second_hash] = { name: event[:name], type: :event_start }
+        end
+
+        if event = @data[:events].find { |ev| first_photo_date > ev[:to].to_datetime && second_photo_date < ev[:to].to_datetime }
+          @data[:sentinels][second_hash] = { name: event[:name], type: :event_end }
+        end
+      end
+      puts @data[:sentinels].inspect
     end
 
     # Given an MD5 hash, returns an array of arrays. Each array is a set of strings that, combined with the MD5, gives a link to the photo.

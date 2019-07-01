@@ -7,6 +7,7 @@ require "piccle/renderer"
 require "piccle/streams"
 require "piccle/streams/camera_stream"
 require "piccle/streams/date_stream"
+require "piccle/streams/event_stream"
 require "piccle/streams/keyword_stream"
 require "piccle/template_helpers"
 require "piccle/template_paths"
@@ -17,4 +18,5 @@ module Piccle
   THUMBNAIL_SIZE = 300 # Thumbnail, square
   AUTHOR_NAME = "Alex Pounds" # TODO: extract this out to a config file.
   DEBUG = true # Output some debug info on web pages when true.
+  EVENT_YAML_FILE = "events.yaml" #
 end
