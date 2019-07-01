@@ -27,7 +27,6 @@ namespace :piccle do
 
     parser = new_parser_with_streams
     parse_photos(parser)
-    puts parser.inspect
     generate_html_indexes(parser)
     generate_html_photos(parser)
     generate_thumbnails
@@ -60,6 +59,11 @@ end
 
 # Given a parser object, generate photo pages from the data it contains.
 def generate_html_photos(parser)
+  renderer = Piccle::Renderer.new(parser)
+  parser.photo_hashes.each do |hash|
+    File.write("generated/photos/#{hash}.html", renderer.render_photo(hash))
+  end
+
 
 end
 

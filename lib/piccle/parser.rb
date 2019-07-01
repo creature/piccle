@@ -42,10 +42,14 @@ module Piccle
       @data[:photos][photo.md5] = { hash: photo.md5,
                                     file_name: photo.file_name,
                                     title: photo.title,
+                                    photo_show_path: photo.photo_show_path,
                                     description: photo.description,
                                     width: photo.width,
                                     height: photo.height,
-                                    taken_at: photo.taken_at
+                                    taken_at: photo.taken_at,
+                                    aperture: photo.aperture,
+                                    shutter_speed: photo.friendly_shutter_speed,
+                                    iso: photo.iso
       }
 
       @streams.each do |stream|
@@ -98,6 +102,11 @@ module Piccle
       end
 
       links
+    end
+
+    # Accessor for the photo hashes.
+    def photo_hashes
+      @photos.keys
     end
 
     protected

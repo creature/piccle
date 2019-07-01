@@ -15,14 +15,6 @@ class Piccle::TemplatePaths
     end
   end
 
-  def self.browse_by_camera_path
-    "/by-camera"
-  end
-
-  def self.show_photo_path(photo)
-    "/photos/#{photo.md5}.html"
-  end
-
   def self.thumbnail_path(photo)
     "/images/thumbnails/#{photo.md5}.#{photo.file_name}"
   end

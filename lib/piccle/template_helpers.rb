@@ -2,9 +2,9 @@ require 'handlebars'
 
 class Piccle::TemplateHelpers
   # Renders a partial template. Partial templates do NOT have their variables interpolated via Handlebars.
-  def self.render_partial(template_name)
+  def self.render_partial(template_name, args = {})
     slim_template = Tilt['slim'].new { File.read("templates/_#{template_name}.handlebars.slim") }
-    slim_template.render
+    slim_template.render(Object.new, args)
   end
 
   # Renders an entire template out
@@ -13,6 +13,7 @@ class Piccle::TemplateHelpers
     slim_template = Tilt['slim'].new(options) { File.read("templates/#{template_name}.html.handlebars.slim") }
     handlebars = Handlebars::Context.new
     template = handlebars.compile(slim_template.render)
+    data.merge!({ site_metadata: site_metadata })
     template.call(data)
   end
 

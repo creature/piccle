@@ -18,11 +18,17 @@ module Piccle
     # Renders the "main" index – the front page of our site.
     def render_main_index
       photos = @parser.data[:photos]
-      site_metadata = Piccle::TemplateHelpers.site_metadata
       debug = if Piccle::DEBUG
                 debug = [{ title: "Number of photos", value: photos.length }]
               end
-      Piccle::TemplateHelpers.render("index", photos: photos, order: @parser.data[:order], sentinels: @parser.data[:sentinels], site_metadata: site_metadata, debug: debug)
+      Piccle::TemplateHelpers.render("index", photos: photos, order: @parser.data[:order], sentinels: @parser.data[:sentinels], debug: debug)
+    end
+
+    # Render a page for a specific photo.
+    def render_photo(hash)
+      photo_data = @parser.data[:photos][hash]
+      puts photo_data.inspect
+      Piccle::TemplateHelpers.render("show", photo: photo_data, debug: [])
     end
   end
 end

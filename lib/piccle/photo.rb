@@ -122,11 +122,16 @@ class Piccle::Photo < Sequel::Model
 
   # Gets the path to the photo page.
   def photo_show_path
-    Piccle::TemplatePaths.show_photo_path(self)
+    "photos/#{md5}.html"
   end
 
   def original_photo_path
     "#{path}/#{file_name}"
+  end
+
+  # Munge the shutter speed data into a human-readable string.
+  def friendly_shutter_speed
+    "#{shutter_speed_numerator}/#{shutter_speed_denominator}s"
   end
 
   def to_json

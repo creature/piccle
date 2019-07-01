@@ -1,16 +1,16 @@
-== Piccle::TemplateHelpers.render_partial "header"
+== Piccle::TemplateHelpers.render_partial "header", { base: "../" }
 
 body.photo_show
   header
     h1
-      a href="../index.html" Photography by {{site_metadata.author_name}}
+      a href="index.html" Photography by {{site_metadata.author_name}}
   main
     h2
       | {{photo.title}}
-    img src="{{relative_path}}{{photo.template_full_image_path}}"
+    img src="images/photos/{{photo.hash}}.{{photo.file_name}}"
     p.description
       | {{photo.description}}
-    p.settings f/{{photo.aperture}}, {{photo.shutter_speed_numerator}}/{{photo.shutter_speed_denominator}}s, ISO {{photo.iso}}
+    p.settings f/{{photo.aperture}}, {{photo.shutter_speed}}, ISO {{photo.iso}}
     p.camera
       | {{p.camera_name}}
 
