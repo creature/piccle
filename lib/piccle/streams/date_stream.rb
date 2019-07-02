@@ -11,6 +11,7 @@ class Piccle::Streams::DateStream
   def data_for(photo)
     year, month, day = photo.taken_at.year, photo.taken_at.month, photo.taken_at.day
     { namespace => {
+      :friendly_name => "By date",
       year.to_s => {
         month.to_s => {
           day.to_s => { photos: [photo.md5] },
@@ -20,10 +21,6 @@ class Piccle::Streams::DateStream
       }
     }
     }
-  end
-
-  def navigation_items
-    years.map { |year| [year, Piccle::TemplatePaths.browse_by_date_path(year)] }
   end
 
   def generate_json(root_path)

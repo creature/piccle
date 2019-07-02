@@ -5,25 +5,21 @@ require 'yaml'
 # dates, and whether it should be collapsed or not on the front page.
 
 class Piccle::Streams::EventStream
+  attr_accessor :events
+
   def namespace
     :events
   end
 
   def initialize
-    @events = []
-    @loaded = false
+    if File.exists?(Piccle::EVENT_YAML_FILE)
+      @events = YAML.load_file(Piccle::EVENT_YAML_FILE)
+      @events.map! do |event| # Make keys into symbols.
+        event.map { |k, v| [k.to_sym, v] }.to_h
+      end
+    end
   end
 
-  def events
-    unless @loaded
-      if File.exists?(Piccle::EVENT_YAML_FILE)
-        @events = YAML.load_file(Piccle::EVENT_YAML_FILE)
-        @events.map! do |event| # Make keys into symbols.
-          event.map { |k, v| [k.to_sym, v] }.to_h
-        end
-      end
-      @loaded = true
-    end
-    @events
+  def data_for(photo)
   end
 end
