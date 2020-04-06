@@ -11,7 +11,7 @@ class Piccle::Streams::DateStream
   def data_for(photo)
     year, month, day = photo.taken_at.year, photo.taken_at.month, photo.taken_at.day
     { namespace => {
-      :friendly_name => "By date",
+      :friendly_name => "By Date",
       year.to_s => {
         month.to_s => {
           day.to_s => { photos: [photo.md5] },
