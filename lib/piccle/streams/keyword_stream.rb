@@ -6,10 +6,6 @@ class Piccle::Streams::KeywordStream
     "by-topic"
   end
 
-  def navigation_items
-    keywords.map { |keyword| [keyword, html_path_for(keyword)] }
-  end
-
   def generate_json(root_path)
 
   end

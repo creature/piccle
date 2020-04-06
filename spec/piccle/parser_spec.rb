@@ -64,6 +64,7 @@ describe Piccle::Parser do
 
       expected_result = {
         "by-date" => {
+          :friendly_name => "By Date",
           "2015" => {
             "10" => {
               "23" => { photos: [photo_1_md5] },
@@ -93,7 +94,7 @@ describe Piccle::Parser do
       subject.parse(photo_2)
 
       expect(data).to have_key("by-camera")
-      expect(data["by-camera"].keys).to contain_exactly("NIKON D810", "NIKON D3100")
+      expect(data["by-camera"].keys.select { |k| k.is_a?(String) }).to contain_exactly("NIKON D810", "NIKON D3100")
     end
   end
 
@@ -187,5 +188,9 @@ describe Piccle::Parser do
       expect(result["by-date"]["2015"]["10"][:photos]).to contain_exactly(photo_1_md5)
       expect(result["by-date"]["2015"]["7"][:photos]).to contain_exactly(photo_2_md5)
     end
+  end
+
+  context "#navigation" do
+    it "Extracts navigation entries correctly"
   end
 end

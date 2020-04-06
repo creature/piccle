@@ -19,10 +19,6 @@ class Piccle::Streams::CameraStream
     }
   end
 
-  def navigation_items
-    cameras.map { |camera| [camera, html_path_for(camera)] }
-  end
-
   def generate_json(root_path)
 
   end

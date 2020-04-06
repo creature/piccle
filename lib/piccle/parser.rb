@@ -93,20 +93,33 @@ module Piccle
     # [["by-date", "2016"], ["by-date", "2016", "4"], ["by-date", "2016", "4", "19"]]
     # And you could use that to generate a links akin to /by-date/2016/4/19/abcdef1234567890.html.
     def links_for(md5)
-      links = []
-      prefix = []
-      faceted_data.each do |k, v|
-        links << dig_for_links_for(prefix, md5, v)
+      previous_size = 0
+      potential_links = faceted_data.keys.map { |el| [el] }
+      size = potential_links.count
+
+      # Find all the string keys in our data.
+      loop do
+        potential_links.each do |key_path|
+          new_keys = string_keys_only(@data.dig(*key_path)).keys
+          new_keys.each { |k| potential_links << key_path + [k] }
+        end
+
+        # Clean up our state - remove dupes, update counts.
+        potential_links.uniq!
+        previous_size = size
+        size = potential_links.count
+        break if previous_size == size
       end
 
-      links
+      # Return each key that includes the photos.
+      potential_links.select { |path| @data.dig(*path).fetch(:photos, []).include?(md5) }
     end
 
 
     def navigation
       faceted_data.map do |k, v|
         { friendly_name: v[:friendly_name],
-          entries: [{ name: "Fuji X100F", link: "by-camera/fuji-x100f" }, { name: "Canon 350D", link: "by-camera/canon-350d" }],
+          entries: entries_for(v, k)
         }
       end
     end
@@ -120,13 +133,17 @@ module Piccle
 
     # Gets the data that we faceted - the things broken down by stream.
     def faceted_data
-      @data.select { |k, _| k.is_a? String } # Only look at data from streams
+      string_keys_only(@data)
     end
 
-    # Recursive function that digs into a subtree of our data. If we find the supplied MD5, we return the prefix
-    # array plus our found element. If we don't, we look in the subtree for it.
-    def dig_for_links_for(prefix, md5, subtree)
-        prefix if subtree.dig(:photos, md5)
+    def string_keys_only(data)
+      data.select { |k, _| k.is_a? String }
+    end
+
+    def entries_for(data_hash, namespace)
+      string_keys_only(data_hash).map do |k, v|
+        { name: k, link: "#{namespace}/#{k}" }
+      end
     end
 
     def merge_into(destination, source)
@@ -141,6 +158,7 @@ module Piccle
         next if :photos == key
         if destination.key?(key) && destination[key].is_a?(Hash)
           destination[key] = merge_into(destination[key], source[key])
+
         else
           destination[key] = source[key]
         end
