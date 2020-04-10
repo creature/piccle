@@ -1,7 +1,13 @@
 # Priorities/things to do next 
-- Right now, you're in the middle of doing things in a parse-then-generate cycle. The parser is pretty close to working fully. Your sensible next steps will probably be: 
-  - Finish up the links_for function so we can generate cross-linkable photos
-  - Write a separate generator that takes our parser's data and generates HTML from it
+- Right now, you're in the middle of doing things in a parse-then-generate cycle. The parser is probably fully working. 
+  It also generates subindex pages, and canonical pages for photos. These are reasonably well-advanced.
+  Your sensible next steps will probably be: 
+  - Also generate individual photo pages for each facet.
+  - Add some breadcrumbs or similar to the subindex pages that show where you are in the nav.
+  - Show a faceted stream on the photo page. 
+  - Generate an RSS feed.
+
+  And we're not too far from:
   - Delete all the old code that was aimed at doing a DB-backed render instead of from our data object
   - Update our Rake tasks so they use this parse-then-generate flow instead. 
   - Kill the Sinatra server entirely? 
