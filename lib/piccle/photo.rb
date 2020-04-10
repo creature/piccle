@@ -97,7 +97,7 @@ class Piccle::Photo < Sequel::Model
 
   # Gets the full path to the thumbnail for this photo.
   def thumbnail_path
-    "generated/#{template_thumbnail_path}"
+    "generated#{template_thumbnail_path}"
   end
 
   # Gets the path to use in our generated HTML.

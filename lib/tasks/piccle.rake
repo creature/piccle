@@ -23,6 +23,7 @@ namespace :piccle do
 
   desc "A newer, better generator"
   task new_generate: "photos:update_db" do
+    start_time = Time.now
     puts "Generating website..."
 
     parser = new_parser_with_streams
@@ -31,6 +32,7 @@ namespace :piccle do
     generate_html_photos(parser)
     generate_thumbnails
     copy_assets
+    puts "Website generated in #{(Time.now - start_time)} seconds."
   end
 end
 
@@ -53,18 +55,32 @@ end
 
 # Given a parser object, generate some HTML index pages from the data it contains.
 def generate_html_indexes(parser)
+  puts "    ... generating HTML indexes ..."
   renderer = Piccle::Renderer.new(parser)
+  print "        ... generating main index ... "
   File.write("generated/index.html", renderer.render_main_index)
+  puts "Done."
+
+  parser.subsections.each do |subsection|
+    if parser.subsection_photo_hashes(subsection).any?
+      subdir = "generated/#{subsection.join("/")}"
+      print "        ... generating #{subdir} index ... "
+      FileUtils.mkdir_p(subdir)
+      File.write("#{subdir}/index.html", renderer.render_index(subsection))
+      puts "Done."
+    end
+  end
 end
 
 # Given a parser object, generate photo pages from the data it contains.
 def generate_html_photos(parser)
+  puts "    ... generating HTML photo pages ..."
   renderer = Piccle::Renderer.new(parser)
   parser.photo_hashes.each do |hash|
+    print "        ... generating canonical page for #{hash}... "
     File.write("generated/photos/#{hash}.html", renderer.render_photo(hash))
+    puts "Done."
   end
-
-
 end
 
 # Stubby, hacky, prototype method that demos generating JSON files.
