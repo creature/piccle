@@ -4,40 +4,7 @@ body.photos_index
   header
     h1 Photography by {{site_metadata.author_name}}
   main
-    nav
-      | {{#if stream}}
-      p
-        a href=Piccle::TemplatePaths.index_path Home
-      | {{/if}}
-
-      h1 Topics
-      ul
-        li Portraits
-        li Landscapes
-        li Black and White
-        li Doors
-        li Birds
-        li More...
-
-      h1 Dates
-      ul
-        li 2019
-        li 2018
-        li etc
-
-      h1 Cameras
-      ul
-        li Camera 1
-        li Camera 2
-
-      h1 Places
-      ul
-        li Canada
-        li United Kingdom
-        li Norway
-        li The Netherlands
-        li Serbia
-        li More...
+    | {{{navigation}}}
 
     .photos
       |
@@ -48,11 +15,11 @@ body.photos_index
               <p class="event_block {{type}}">{{name}}</p>
               {{/with}}
             {{/if}}
-            <a href="{{this.photo_show_path}}">
-              <img class="thumbnail" src="images/thumbnails/{{hash}}.{{this.file_name}}" alt="{{this.title}}" />
+            <a href="{{../../include_prefix}}{{this.photo_show_path}}">
+              <img class="thumbnail" src="{{../../include_prefix}}images/thumbnails/{{hash}}.{{this.file_name}}" alt="{{this.title}}" />
             </a>
-           {{/with}}
-         {{/each}}
+          {{/with}}
+        {{/each}}
 
 == Piccle::TemplateHelpers.render_partial "footer"
 

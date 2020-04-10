@@ -1,0 +1,12 @@
+nav
+  |
+    {{#each nav_items as |nav_item|}}
+      <section>
+      <h2>{{nav_item.friendly_name}}</h2>
+      <ul>
+        {{#each nav_item.entries as |entry|}}
+          <li><a href="{{../../include_prefix}}{{entry.link}}">{{entry.name}}</a></li>
+        {{/each}}
+      </ul>
+      </section>
+    {{/each}}

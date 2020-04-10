@@ -85,7 +85,40 @@ module Piccle
           @data[:sentinels][second_hash] = { name: event[:name], type: :event_end }
         end
       end
-      puts @data[:sentinels].inspect
+    end
+
+    # Gets a list of all subsections (ie. all the subindexes that we should render).
+    # It's an array of hash keys, suitable for passing via @data.dig(*keys).
+    def subsections
+      previous_size = 0
+      subsection_list = faceted_data.keys.map { |el| [el] }
+      size = subsection_list.count
+
+      # Find all the string keys in our data.
+      loop do
+        subsection_list.each do |key_path|
+          new_keys = string_keys_only(@data.dig(*key_path)).keys
+          new_keys.each { |k| subsection_list << key_path + [k] }
+        end
+
+        # Clean up our state - remove dupes, update counts.
+        subsection_list.uniq!
+        previous_size = size
+        size = subsection_list.count
+        break if previous_size == size
+      end
+
+      subsection_list
+    end
+
+    # Get photo hashes in a given subsection, given a diggable path.
+    def subsection_photo_hashes(subsection_path)
+      @data.dig(*subsection_path).fetch(:photos, [])
+    end
+
+    # Gets the actual photo objects for a given subsection.
+    def subsection_photos(subsection_path)
+      subsection_photo_hashes(subsection_path).map { |hash| [hash, @data[:photos][hash]] }.to_h
     end
 
     # Given an MD5 hash, returns an array of arrays. Each array is a set of strings that, combined with the MD5, gives a link to the photo.
@@ -93,29 +126,11 @@ module Piccle
     # [["by-date", "2016"], ["by-date", "2016", "4"], ["by-date", "2016", "4", "19"]]
     # And you could use that to generate a links akin to /by-date/2016/4/19/abcdef1234567890.html.
     def links_for(md5)
-      previous_size = 0
-      potential_links = faceted_data.keys.map { |el| [el] }
-      size = potential_links.count
-
-      # Find all the string keys in our data.
-      loop do
-        potential_links.each do |key_path|
-          new_keys = string_keys_only(@data.dig(*key_path)).keys
-          new_keys.each { |k| potential_links << key_path + [k] }
-        end
-
-        # Clean up our state - remove dupes, update counts.
-        potential_links.uniq!
-        previous_size = size
-        size = potential_links.count
-        break if previous_size == size
-      end
-
       # Return each key that includes the photos.
-      potential_links.select { |path| @data.dig(*path).fetch(:photos, []).include?(md5) }
+      subsections.select { |path| @data.dig(*path).fetch(:photos, []).include?(md5) }
     end
 
-
+    # Gets a (currently top-level only) navigation structure. All entries have at least one photo.
     def navigation
       faceted_data.map do |k, v|
         { friendly_name: v[:friendly_name],
@@ -142,7 +157,7 @@ module Piccle
 
     def entries_for(data_hash, namespace)
       string_keys_only(data_hash).map do |k, v|
-        { name: k, link: "#{namespace}/#{k}" }
+        { name: k, link: "#{namespace}/#{k}/index.html" }
       end
     end
 

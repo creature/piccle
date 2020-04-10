@@ -5,5 +5,5 @@ html
     title Photography by {{site_metadata.author_name}}
     - if defined?(locals[:base])
       base href="#{locals[:base]}"
-    link rel="stylesheet" href="css/normalize.css"
-    link rel="stylesheet" href="css/default.css"
+    link rel="stylesheet" href="{{include_prefix}}css/normalize.css"
+    link rel="stylesheet" href="{{include_prefix}}css/default.css"
