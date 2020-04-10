@@ -13,6 +13,7 @@ class Piccle::TemplateHelpers
     slim_template = Tilt['slim'].new(options) { File.read("templates/#{template_name}.html.handlebars.slim") }
     handlebars = Handlebars::Context.new
     template = handlebars.compile(slim_template.render)
+    data['debug'] ||= []
     data.merge!({ site_metadata: site_metadata })
     template.call(data)
   end
