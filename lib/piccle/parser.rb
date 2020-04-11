@@ -58,7 +58,7 @@ module Piccle
       end
     end
 
-    # Asks each stream in turn to order its data. Call this after you've parsed all the photos, to generate an ordered list of photo hashes.
+    # TODO: Asks each stream in turn to order its data. Call this after you've parsed all the photos, to generate an ordered list of photo hashes.
     # You can iterate over this list to display things.
     def order
       @data[:order] = @data[:photos].sort_by { |k, v| v[:taken_at] }.reverse.map { |a| a[0] }
