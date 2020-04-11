@@ -9,18 +9,21 @@ class Piccle::Streams::DateStream
 
   # Standard method called by the parser object. This should return a hash that contains sub-categories (optionally) and a list of :photos for each tier.
   def data_for(photo)
-    year, month, day = photo.taken_at.year, photo.taken_at.month, photo.taken_at.day
-    { namespace => {
-      :friendly_name => "By Date",
-      year.to_s => {
-        month.to_s => {
-          day.to_s => { photos: [photo.md5] },
+    year, month, day = photo.taken_at&.year, photo.taken_at&.month, photo.taken_at&.day
+    if year && month && day
+      { namespace => {
+        :friendly_name => "By Date",
+        year.to_s => {
+          month.to_s => {
+            day.to_s => { photos: [photo.md5] },
+            photos: [photo.md5]
+          },
           photos: [photo.md5]
-        },
-        photos: [photo.md5]
-      }
-    }
-    }
+        }
+      }}
+    else
+      {}
+    end
   end
 
   def generate_json(root_path)

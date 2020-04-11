@@ -30,15 +30,15 @@ class Piccle::Photo < Sequel::Model
       p[:md5] = Digest::MD5.file(path_to_file).to_s
       p[:width] = exif_info.width
       p[:height] = exif_info.height
-      p[:camera_name] = exif_info.model
+      p[:camera_name] = exif_info.model || "Unknown"
       p[:description] = exif_info.image_description
       p[:aperture] = exif_info.aperture_value
       p[:iso] = exif_info.iso_speed_ratings
       p[:iso] = p[:iso].first if p[:iso].is_a? Array
-      p[:shutter_speed_numerator] = exif_info.exposure_time.numerator
-      p[:shutter_speed_denominator] = exif_info.exposure_time.denominator
+      p[:shutter_speed_numerator] = exif_info.exposure_time&.numerator
+      p[:shutter_speed_denominator] = exif_info.exposure_time&.denominator
       p[:focal_length] = exif_info.focal_length.to_f
-      p[:taken_at] = exif_info.date_time_original.to_datetime.to_s
+      p[:taken_at] = (exif_info.date_time_original&.to_datetime || Time.new(1970, 1, 1)).to_s
 
       p[:latitude] = if exif_info.gps_latitude && exif_info.gps_latitude_ref
                        exif_info.gps_latitude_ref == "S" ? (exif_info.gps_latitude.to_f * -1) : exif_info.gps_latitude.to_f
