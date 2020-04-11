@@ -3,5 +3,7 @@ html
   head
     meta charset="utf-8"
     title Photography by {{site_metadata.author_name}}
+    - if defined?(locals[:base])
+      base href="#{locals[:base]}"
     link rel="stylesheet" href="{{include_prefix}}css/normalize.css"
     link rel="stylesheet" href="{{include_prefix}}css/default.css"
