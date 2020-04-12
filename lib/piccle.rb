@@ -1,4 +1,3 @@
-require "pry-byebug"
 require "piccle/database"
 require "piccle/keyword"
 require "piccle/parser"
