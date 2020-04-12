@@ -29,8 +29,6 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.13"
   spec.add_development_dependency "rspec", "~> 3.0" # Testing library
-  spec.add_development_dependency "sinatra", "~> 2.0" # Serve pages via "the web"
-  spec.add_development_dependency "sinatra-contrib", "~> 2.0" # Sinatra contributed packages
   spec.add_development_dependency "simplecov" # Code coverage calculator
   spec.add_development_dependency "simplecov-console" # Output stats on the console
   spec.add_development_dependency "pry-byebug", "~> 3.5" # Debugging aid; only needed by developers.

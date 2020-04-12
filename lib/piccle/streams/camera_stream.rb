@@ -19,19 +19,6 @@ class Piccle::Streams::CameraStream
     }
   end
 
-  def generate_json(root_path)
-
-  end
-
-  def generate_html(root_path)
-
-  end
-
-  def html_path_for(camera)
-    url_safe_camera = camera.downcase.gsub(/[_ ]/, "-")
-    "#{namespace}/#{url_safe_camera}.html"
-  end
-
   protected
 
   def cameras

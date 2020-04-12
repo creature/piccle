@@ -26,29 +26,6 @@ class Piccle::Streams::DateStream
     end
   end
 
-  def generate_json(root_path)
-    years.each do |year|
-      photos = photos_for(year)
-
-      result = {
-        metadata: {
-          total: photos.count
-        },
-        links: {
-          html: Piccle::TemplatePaths.browse_by_date_path(year)
-        },
-        photos: photos.map(&:to_json)
-      }
-      File.write(json_path_for(root_path, year), result.to_json)
-    end
-  end
-
-  def generate_html(root_path)
-    years.each do |year|
-      File.write("#{root_path}/#{Piccle::TemplatePaths.browse_by_date_path(year)}", html_for_year(year))
-    end
-  end
-
   def html_for_year(year)
     photos = photos_for(year.to_i).all
     site_metadata = Piccle::TemplateHelpers.site_metadata
