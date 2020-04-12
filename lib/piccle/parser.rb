@@ -53,7 +53,7 @@ module Piccle
       }
 
       @streams.each do |stream|
-        to_add = stream.data_for(photo)
+        to_add = stream.data_for(photo) if stream.respond_to?(:data_for)
         @data = merge_into(@data, to_add)
       end
     end
@@ -62,6 +62,10 @@ module Piccle
     # You can iterate over this list to display things.
     def order
       @data[:order] = @data[:photos].sort_by { |k, v| v[:taken_at] }.reverse.map { |a| a[0] }
+
+      @streams.each do |stream|
+        @data = stream.order(@data) if stream.respond_to?(:order)
+      end
     end
 
     # Loads the event data from the EventStream. It also finds "sentinels", which are photos where we should display a special

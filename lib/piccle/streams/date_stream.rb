@@ -7,7 +7,8 @@ class Piccle::Streams::DateStream
     "by-date"
   end
 
-  # Standard method called by the parser object. This should return a hash that contains sub-categories (optionally) and a list of :photos for each tier.
+  # Standard method called by the parser object. This should return a hash that contains sub-categories (optionally)
+  # and a list of :photos for each tier.
   def data_for(photo)
     year, month, day = photo.taken_at&.year, photo.taken_at&.month, photo.taken_at&.day
     if year && month && day
@@ -26,10 +27,15 @@ class Piccle::Streams::DateStream
     end
   end
 
-  def html_for_year(year)
-    photos = photos_for(year.to_i).all
-    site_metadata = Piccle::TemplateHelpers.site_metadata
-    Piccle::TemplateHelpers.render("index", photos: photos, site_metadata: site_metadata, stream: self, relative_path: "../")
+  # Standard method called by the parser object. Gives this stream an option to re-order its data. The stream is on
+  # its honour to only meddle within its own namespace.
+  def order(data)
+    sort_proc = Proc.new { |k, v| k.is_a?(String) ? k : "" }
+    data[namespace] = data[namespace].sort_by(&sort_proc).to_h # Sort years
+    data[namespace].each do |k, v|
+      data[namespace][k].sort_by(&sort_proc).to_h if k.is_a?(String) # Sort months
+    end
+    data
   end
 
   protected
@@ -40,15 +46,5 @@ class Piccle::Streams::DateStream
     end_of_year = Date.new(year + 1)
 
     Piccle::Photo.where { taken_at >= start_of_year && taken_at < end_of_year }
-  end
-
-  #generated/json/by-date/2008.json
-  def json_path_for(root, year)
-    File.join(root, namespace, "#{year}.json")
-  end
-
-  # Which years do we have photos for?
-  def years
-    @years ||= Piccle::Photo.db['SELECT DISTINCT STRFTIME("%Y", taken_at) AS year FROM photos ORDER BY year DESC'].all.map(&:values).flatten.map(&:to_i)
   end
 end

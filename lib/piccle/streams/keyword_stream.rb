@@ -17,6 +17,13 @@ class Piccle::Streams::KeywordStream
     result
   end
 
+  # Standard method called by the parser object. Gives this stream an option to re-order its data. The stream is on
+  # its honour to only meddle within its own namespace.
+  def order(data)
+    data[namespace] = data[namespace].sort_by { |k, v| k.is_a?(String) ? data.dig(namespace, k, :photos)&.length : 0 }.reverse.to_h
+    data
+  end
+
   protected
 
   def keywords
