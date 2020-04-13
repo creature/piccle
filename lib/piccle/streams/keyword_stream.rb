@@ -23,10 +23,4 @@ class Piccle::Streams::KeywordStream
     data[namespace] = data[namespace].sort_by { |k, v| k.is_a?(String) ? data.dig(namespace, k, :photos)&.length : 0 }.reverse.to_h
     data
   end
-
-  protected
-
-  def keywords
-    @keywords ||= Piccle::Keyword.all
-  end
 end

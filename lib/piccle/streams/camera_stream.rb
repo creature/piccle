@@ -25,11 +25,4 @@ class Piccle::Streams::CameraStream
     data[namespace] = data[namespace].sort_by { |k, v| k.is_a?(String) ? data.dig(namespace, k, :photos)&.length : 0 }.reverse.to_h
     data
   end
-
-  protected
-
-  def cameras
-    # TODO: make this waaaaaay less long and ugly.
-    @cameras ||= Piccle::Photo.db['SELECT camera_name, COUNT(*) AS photo_count FROM photos GROUP BY camera_name ORDER BY photo_count DESC'].all.map { |el| el.values.first }
-  end
 end

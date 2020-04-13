@@ -37,14 +37,4 @@ class Piccle::Streams::DateStream
     end
     data
   end
-
-  protected
-
-  # Get the photos for a given year
-  def photos_for(year)
-    start_of_year = Date.new(year)
-    end_of_year = Date.new(year + 1)
-
-    Piccle::Photo.where { taken_at >= start_of_year && taken_at < end_of_year }
-  end
 end
