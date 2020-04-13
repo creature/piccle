@@ -31,6 +31,23 @@ describe Piccle::Parser do
     end
   end
 
+  context "#substream_for" do
+    before(:each) do
+      subject.parse(photo_1)
+      subject.parse(photo_2)
+    end
+
+    it "returns an empty array when no hash is found" do
+      expect(subject.substream_for("123abc")).to eq([])
+    end
+
+    it "returns both photos when the hash is found" do
+      expect(subject.substream_for(photo_1_md5)).not_to be_empty
+      expect(subject.substream_for(photo_1_md5).length).to eq(2)
+    end
+
+  end
+
   context "with a date stream" do
     before(:each) { subject.add_stream(Piccle::Streams::DateStream) }
 
