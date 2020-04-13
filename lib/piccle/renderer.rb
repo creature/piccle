@@ -33,9 +33,16 @@ module Piccle
     end
 
     # Render a page for a specific photo.
-    def render_photo(hash)
+    def render_photo(hash, selector=[])
       photo_data = @parser.data[:photos][hash]
-      Piccle::TemplateHelpers.render("show", photo: photo_data)
+      template_vars = {
+        photo: photo_data,
+        selector: selector,
+        canonical: "generated/photos/#{hash}.html" # TODO: Other paths live in piccle.rake. Why's this one here?
+      }
+      template_vars[:include_prefix] = include_prefix(selector) if selector.any?
+
+      Piccle::TemplateHelpers.render("show", template_vars)
     end
 
     protected
