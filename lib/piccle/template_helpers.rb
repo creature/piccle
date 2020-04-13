@@ -12,6 +12,11 @@ class Piccle::TemplateHelpers
     options = { code_attr_delims: { '(' => ')', '[' => ']'}, attr_list_delims: { '(' => ')', '[' => ']' } }
     slim_template = Tilt['slim'].new(options) { File.read("templates/#{template_name}.html.handlebars.slim") }
     handlebars = Handlebars::Context.new
+    handlebars.register_helper(:ifEqual) do |context, arg1, arg2, block|
+      if arg1 == arg2
+        block.fn(context)
+      end
+    end
     template = handlebars.compile(slim_template.render)
     data['debug'] ||= []
     data.merge!({ site_metadata: site_metadata })

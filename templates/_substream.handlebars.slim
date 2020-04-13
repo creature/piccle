@@ -1,0 +1,9 @@
+|
+  {{#each stream as |substream_photo|}}
+    <a href="{{../../include_prefix}}{{substream_photo.photo_show_path}}">
+      <img
+        class="stamp{{#ifEqual substream_photo.hash ../../photo.hash}} current{{/ifEqual}}"
+        src="{{../../include_prefix}}images/thumbnails/{{substream_photo.hash}}.{{substream_photo.file_name}}"
+        alt="{{substream_photo.title}}" />
+    </a>
+  {{/each}}

@@ -10,8 +10,17 @@ body.photo_show
     img src="images/photos/{{photo.hash}}.{{photo.file_name}}"
     p.description
       | {{photo.description}}
-    p.settings f/{{photo.aperture}}, {{photo.shutter_speed}}, ISO {{photo.iso}}
+    p.settings f/{{photo.aperture}}, {{photo.shutter_speed}}, ISO {{photo.iso}}.
     p.camera
-      | {{p.camera_name}}
+      | {{photo.camera_name}}
+
+    .streams
+      |
+        {{#each substreams as |stream|}}
+        <div class="stream">
+      == Piccle::TemplateHelpers.render_partial "substream"
+      |
+        </div>
+        {{/each}}
 
 == Piccle::TemplateHelpers.render_partial "footer"
