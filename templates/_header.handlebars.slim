@@ -9,3 +9,7 @@ html
       base href="#{locals[:base]}"
     link rel="stylesheet" href="{{include_prefix}}css/normalize.css"
     link rel="stylesheet" href="{{include_prefix}}css/default.css"
+    |
+      {{#if canonical}}
+      <link rel="canonical" href="{{include_prefix}}{{canonical}}" />
+      {{/if}}
