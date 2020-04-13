@@ -49,12 +49,11 @@ nav ul {
   align-content: flex-start;
 }
 
-.photos a {
-  max-width: 33%;
+.photos a, .event_block {
+  width: 300px;
 }
 
 .event_block {
-  width: 33%;
   margin: 0;
   display: inline-block;
   text-align: center;
