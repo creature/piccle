@@ -134,14 +134,6 @@ class Piccle::Photo < Sequel::Model
     "#{shutter_speed_numerator}/#{shutter_speed_denominator}s"
   end
 
-  def to_json
-    {
-      title: title,
-      description: description,
-      taken_at: taken_at,
-    }.to_json
-  end
-
   # ---- Piccle internals ----
 
   # Generate a thumbnail for this image.
