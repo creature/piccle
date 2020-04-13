@@ -2,10 +2,18 @@
 - Right now, you're in the middle of doing things in a parse-then-generate cycle. The parser is probably fully working. 
   It also generates subindex pages, and canonical pages for photos. These are reasonably well-advanced.
   Your sensible next steps will probably be: 
+  - Fix change detection (files aren't being reingested when they change.)
   - Also generate individual photo pages for each facet.
   - Add some breadcrumbs or similar to the subindex pages that show where you are in the nav.
-  - Show a faceted stream on the photo page. 
+  - Show a faceted stream on the photo page.  (In progress)
+    - Add labels to each facet. 
+    - Filter out small facets (< 3 photos?)
+    - Show keywords as tags on photo page.
   - Generate an RSS feed.
+  - Add opengraph tags.
+  - Add link prev next on photo pages.
+  - Add link back to home page on photo page.
+  - Figure out what to do about 1970 datestamp.
 
 
 ----- All the notes below are kind of outdated ------
