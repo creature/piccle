@@ -147,7 +147,8 @@ module Piccle
     # returns an array with *up to* 5 previous/next photos, as well as this image. It's ideal for rendering small
     # strips of neighbouring images.
     def substream_hashes_for(hash, selector = [])
-      relevant_hashes = (@data.dig(*selector, :photos) || {}).keys
+      relevant_hashes = (@data.dig(*selector, :photos) || {})
+      relevant_hashes = relevant_hashes.keys if relevant_hashes.respond_to?(:keys)
       if photo_index = relevant_hashes.find_index(hash)
         before_index = [0, photo_index-5].max
         after_index = [photo_index + 5, relevant_hashes.length - 1].min
