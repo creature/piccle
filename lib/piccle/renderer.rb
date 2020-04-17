@@ -40,7 +40,7 @@ module Piccle
       template_vars = {
         photo: photo_data,
         selector: selector,
-        substreams: substreams.select { |stream| stream.length > 1 },
+        substreams: substreams.select { |stream| stream[:photos].length > 1 },
         canonical: "photos/#{hash}.html" # TODO: Other paths live in piccle.rake. Why's this one here?
       }
       template_vars[:include_prefix] = include_prefix(selector) if selector.any?

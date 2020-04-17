@@ -1,5 +1,8 @@
 |
-  {{#each stream as |substream_photo|}}
+  {{#if stream.previous}}
+    <p>Previous</p>
+  {{/if}}
+  {{#each stream.photos as |substream_photo|}}
     <a href="{{../../include_prefix}}{{substream_photo.photo_show_path}}">
       <img
         class="stamp{{#ifEqual substream_photo.hash ../../photo.hash}} current{{/ifEqual}}"
@@ -7,3 +10,6 @@
         alt="{{substream_photo.title}}" />
     </a>
   {{/each}}
+  {{#if stream.next}}
+    <p>Next</p>
+  {{/if}}

@@ -17,10 +17,13 @@ body.photo_show
     .streams
       |
         {{#each substreams as |stream|}}
-        <div class="stream">
+        <section>
+          <h2>{{stream.title}}</h2>
+          <div class="stream">
       == Piccle::TemplateHelpers.render_partial "substream"
       |
-        </div>
+          </div>
+        </section>
         {{/each}}
 
 == Piccle::TemplateHelpers.render_partial "footer"

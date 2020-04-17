@@ -158,8 +158,22 @@ module Piccle
       end
     end
 
+    # Returns a substream hash. This is a bundle of data suitable for rendering a navigation strip within this stream.
+    # It includes a title for the substream, previous/next photos where applicable (ie. for nav arrows), and a set of
+    # photos including the current photo.
     def substream_for(hash, selector = [])
-      substream_hashes_for(hash, selector).map { |h| @data[:photos][h] }
+      photo_hashes = substream_hashes_for(hash, selector)
+      if photo_hashes.any?
+        substream = {}
+        photo_i = photo_hashes.find_index(hash)
+        substream[:title] = @data.dig(*selector, :friendly_name)
+        substream[:photos] = photo_hashes.map { |h| @data[:photos][h] }
+        substream[:previous] = @data[:photos][photo_hashes[photo_i - 1]] if photo_i > 0
+        substream[:next] = @data[:photos][photo_hashes[photo_i + 1]] if photo_i < photo_hashes.length - 1
+        substream
+      else
+        nil
+      end
     end
 
     # Accessor for the photo hashes.

@@ -15,9 +15,11 @@ class Piccle::Streams::DateStream
       { namespace => {
         :friendly_name => "By Date",
         year.to_s => {
+          :friendly_name => "By Date – #{year}",
           month.to_s => {
-            day.to_s => { photos: [photo.md5] },
-            photos: [photo.md5]
+            :friendly_name => "By Date - #{Date::MONTHNAMES[month]} #{year}",
+            day.to_s => { friendly_name: "By Date – #{day} #{Date::MONTHNAMES[month]} #{year}", photos: [photo.md5] },
+            :photos => [photo.md5]
           },
           photos: [photo.md5]
         }
