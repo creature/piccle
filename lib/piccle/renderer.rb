@@ -35,10 +35,12 @@ module Piccle
     # Render a page for a specific photo.
     def render_photo(hash, selector=[])
       photo_data = @parser.data[:photos][hash]
+      substreams = [@parser.substream_for(hash)] + @parser.links_for(hash).map { |selector| @parser.substream_for(hash, selector) }
+
       template_vars = {
         photo: photo_data,
         selector: selector,
-        substreams: [@parser.substream_for(hash)] + @parser.links_for(hash).map { |selector| @parser.substream_for(hash, selector) },
+        substreams: substreams.select { |stream| stream.length > 1 },
         canonical: "photos/#{hash}.html" # TODO: Other paths live in piccle.rake. Why's this one here?
       }
       template_vars[:include_prefix] = include_prefix(selector) if selector.any?
