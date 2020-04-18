@@ -14,11 +14,18 @@ class Piccle::Streams::DateStream
     if year && month && day
       { namespace => {
         :friendly_name => "By Date",
+        :interesting => false,
         year.to_s => {
           :friendly_name => "By Date – #{year}",
+          :interesting => false,
           month.to_s => {
             :friendly_name => "By Date - #{Date::MONTHNAMES[month]} #{year}",
-            day.to_s => { friendly_name: "By Date – #{day} #{Date::MONTHNAMES[month]} #{year}", photos: [photo.md5] },
+            :interesting => false,
+            day.to_s => {
+              :friendly_name => "By Date – #{day}#{ordinal_for(day)} #{Date::MONTHNAMES[month]} #{year}",
+              :interesting => false,
+              :photos => [photo.md5]
+            },
             :photos => [photo.md5]
           },
           photos: [photo.md5]
@@ -38,5 +45,19 @@ class Piccle::Streams::DateStream
       data[namespace][k].sort_by(&sort_proc).to_h if k.is_a?(String) # Sort months
     end
     data
+  end
+
+  protected
+
+  def ordinal_for(num)
+    if num % 10 == 1 && num != 11
+      "st"
+    elsif num % 10 == 2 && num != 12
+      "nd"
+    elsif num % 10 == 3 && num != 13
+      "rd"
+    else
+      "th"
+    end
   end
 end

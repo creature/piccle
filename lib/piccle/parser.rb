@@ -158,6 +158,15 @@ module Piccle
       end
     end
 
+    # Same as the above, but only returns hashes for "interesting" substreams.
+    def interesting_substream_hashes_for(hash, selector = [])
+      if @data.dig(*selector, :interesting)
+        substream_hashes_for(hash, selector)
+      else
+        []
+      end
+    end
+
     # Returns a substream hash. This is a bundle of data suitable for rendering a navigation strip within this stream.
     # It includes a title for the substream, previous/next photos where applicable (ie. for nav arrows), and a set of
     # photos including the current photo.
@@ -174,6 +183,11 @@ module Piccle
       else
         nil
       end
+    end
+
+    # Same as the above, but only if this stream is flagged as interesting.
+    def interesting_substream_for(hash, selector = [])
+      substream_for(hash, selector) if @data.dig(*selector, :interesting)
     end
 
     # Accessor for the photo hashes.

@@ -35,7 +35,7 @@ module Piccle
     # Render a page for a specific photo.
     def render_photo(hash, selector=[])
       photo_data = @parser.data[:photos][hash]
-      substreams = [@parser.substream_for(hash)] + @parser.links_for(hash).map { |selector| @parser.substream_for(hash, selector) }
+      substreams = [@parser.substream_for(hash)] + @parser.links_for(hash).map { |selector| @parser.interesting_substream_for(hash, selector) }.compact
 
       template_vars = {
         photo: photo_data,
