@@ -10,6 +10,7 @@ DB = Piccle::Database.connect
 # Represents an image in the system. Reading info from an image? Inferring something based on the data? Put it here.
 class Piccle::Photo < Sequel::Model
   many_to_many :keywords
+  attr_accessor :modified # Has this file been modified?
 
   def before_create
     self.created_at ||= Time.now
@@ -18,50 +19,53 @@ class Piccle::Photo < Sequel::Model
 
   def self.from_file(path_to_file)
     freshly_created = false
-    exif_info = nil
-    xmp = nil
+    md5 = Digest::MD5.file(path_to_file).to_s
 
     photo = self.find_or_create(file_name: File.basename(path_to_file), path: File.dirname(path_to_file)) do |p|
       # Block executes when creating a new record.
       freshly_created = true
-      exif_info = EXIFR::JPEG.new(path_to_file)
-      xmp = XMP.parse(exif_info)
-
-      p[:md5] = Digest::MD5.file(path_to_file).to_s
-      p[:width] = exif_info.width
-      p[:height] = exif_info.height
-      p[:camera_name] = exif_info.model || "Unknown"
-      p[:description] = exif_info.image_description
-      p[:aperture] = exif_info.aperture_value
-      p[:iso] = exif_info.iso_speed_ratings
-      p[:iso] = p[:iso].first if p[:iso].is_a? Array
-      p[:shutter_speed_numerator] = exif_info.exposure_time&.numerator
-      p[:shutter_speed_denominator] = exif_info.exposure_time&.denominator
-      p[:focal_length] = exif_info.focal_length.to_f
-      p[:taken_at] = (exif_info.date_time_original&.to_datetime || Time.new(1970, 1, 1)).to_s
-
-      p[:latitude] = if exif_info.gps_latitude && exif_info.gps_latitude_ref
-                       exif_info.gps_latitude_ref == "S" ? (exif_info.gps_latitude.to_f * -1) : exif_info.gps_latitude.to_f
-                     end
-
-      p[:longitude] = if exif_info.gps_longitude && exif_info.gps_longitude_ref
-                        exif_info.gps_longitude_ref == "W" ? (exif_info.gps_longitude.to_f * -1) : exif_info.gps_longitude.to_f
-                      end
-
-      p[:title] = if xmp && xmp.namespaces && xmp.namespaces.include?("dc") && xmp.dc.attributes.include?("title")
-                    xmp.dc.title
-                  end
+      p = data_hash(path_to_file)
     end
+    photo.modified = md5 != photo.md5
 
-    # Pull out keywords for this file, if we're creating it for the first time.
-    if freshly_created && xmp && xmp.namespaces && xmp.namespaces.include?("dc") && xmp.dc.attributes.include?("subject")
-      xmp.dc.subject.each do |keyword|
-        keyword = Piccle::Keyword.find_or_create(name: keyword)
-        photo.add_keyword(keyword) unless photo.keywords.include?(keyword)
-      end
-    end
+    # Pull out keywords for this file, if it's new or changed.
+    photo.generate_keywords if freshly_created || photo.modified?
 
     photo
+  end
+
+  # Gets a dataset of properties to save to the file. We reuse this between from_file (above) and update_from_file
+  # (below).
+  def self.data_hash(path_to_file)
+    exif_info = EXIFR::JPEG.new(path_to_file)
+    xmp = XMP.parse(exif_info)
+    p = {}
+
+    p[:md5] = Digest::MD5.file(path_to_file).to_s
+    p[:width] = exif_info.width
+    p[:height] = exif_info.height
+    p[:camera_name] = exif_info.model || "Unknown"
+    p[:description] = exif_info.image_description
+    p[:aperture] = exif_info.aperture_value
+    p[:iso] = exif_info.iso_speed_ratings
+    p[:iso] = p[:iso].first if p[:iso].is_a? Array
+    p[:shutter_speed_numerator] = exif_info.exposure_time&.numerator
+    p[:shutter_speed_denominator] = exif_info.exposure_time&.denominator
+    p[:focal_length] = exif_info.focal_length.to_f
+    p[:taken_at] = (exif_info.date_time_original&.to_datetime || Time.new(1970, 1, 1)).to_s
+
+    p[:latitude] = if exif_info.gps_latitude && exif_info.gps_latitude_ref
+                      exif_info.gps_latitude_ref == "S" ? (exif_info.gps_latitude.to_f * -1) : exif_info.gps_latitude.to_f
+                    end
+
+    p[:longitude] = if exif_info.gps_longitude && exif_info.gps_longitude_ref
+                      exif_info.gps_longitude_ref == "W" ? (exif_info.gps_longitude.to_f * -1) : exif_info.gps_longitude.to_f
+                    end
+
+    p[:title] = if xmp && xmp.namespaces && xmp.namespaces.include?("dc") && xmp.dc.attributes.include?("title")
+                  xmp.dc.title
+                end
+    p
   end
 
   # The year our earliest photo was taken. Used by our copyright footer.
@@ -135,6 +139,30 @@ class Piccle::Photo < Sequel::Model
   end
 
   # ---- Piccle internals ----
+
+  # Has this file been modified? You probably want to call update if so.
+  def modified?
+    modified
+  end
+
+  # Re-read the photo data, and save it to the DB.
+  def update_from_file
+    update(Piccle::Photo.data_hash(original_photo_path))
+  end
+
+  # Read the keywords from the photo file, and ensure they're included in the DB.
+  # TODO: remove any keywords that aren't currently in the file.
+  def generate_keywords
+    exif_info = EXIFR::JPEG.new(original_photo_path)
+    xmp = XMP.parse(exif_info)
+
+    if xmp && xmp.namespaces && xmp.namespaces.include?("dc") && xmp.dc.attributes.include?("subject")
+      xmp.dc.subject.each do |keyword|
+        keyword = Piccle::Keyword.find_or_create(name: keyword)
+        add_keyword(keyword) unless keywords.include?(keyword)
+      end
+    end
+  end
 
   # Generate a thumbnail for this image.
   def generate_thumbnail!

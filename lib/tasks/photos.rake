@@ -18,8 +18,14 @@ namespace :photos do
   task :update_db do
     Dir.glob("images/**").each do |filename|
       print "Examining #{filename}..."
-      Piccle::Photo.from_file(filename)
-      puts " Done."
+      photo = Piccle::Photo.from_file(filename)
+      if photo.modified?
+        print " updating..."
+        photo.update_from_file
+        puts " done."
+      else
+        puts " created."
+      end
     end
   end
 end
