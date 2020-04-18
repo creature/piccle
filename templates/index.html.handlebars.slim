@@ -1,25 +1,27 @@
-== Piccle::TemplateHelpers.render_partial "header"
+doctype html
+html
+  == Piccle::TemplateHelpers.render_partial "header"
 
-body.photos_index
-  header
-    h1 Photography by {{site_metadata.author_name}}
-  main
-    | {{{navigation}}}
+  body.photos_index
+    header
+      h1 Photography by {{site_metadata.author_name}}
+    main
+      | {{{navigation}}}
 
-    .photos
-      |
-        {{#each order as |hash|}}
-          {{#with (lookup ../photos hash)}}
-            {{#if (lookup ../../sentinels hash)}}
-              {{#with (lookup ../../sentinels hash)}}
-              <p class="event_block {{type}}">{{name}}</p>
-              {{/with}}
-            {{/if}}
-            <a href="{{../../include_prefix}}{{this.photo_show_path}}">
-              <img class="thumbnail" src="{{../../include_prefix}}images/thumbnails/{{hash}}.{{this.file_name}}" alt="{{this.title}}" />
-            </a>
-          {{/with}}
-        {{/each}}
+      .photos
+        |
+          {{#each order as |hash|}}
+            {{#with (lookup ../photos hash)}}
+              {{#if (lookup ../../sentinels hash)}}
+                {{#with (lookup ../../sentinels hash)}}
+                <p class="event_block {{type}}">{{name}}</p>
+                {{/with}}
+              {{/if}}
+              <a href="{{../../include_prefix}}{{this.photo_show_path}}">
+                <img class="thumbnail" src="{{../../include_prefix}}images/thumbnails/{{hash}}.{{this.file_name}}" alt="{{this.title}}" />
+              </a>
+            {{/with}}
+          {{/each}}
 
-  == Piccle::TemplateHelpers.render_partial "footer"
+    == Piccle::TemplateHelpers.render_partial "footer"
 
