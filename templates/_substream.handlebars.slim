@@ -1,6 +1,9 @@
 |
+  {{#if stream.photos}}
+    <h2>All Photos</h2>
+  {{/if}}
   {{#if stream.previous}}
-    <p>Previous</p>
+    <a class="navigation_arrow" href="{{../include_prefix}}{{stream.previous.photo_show_path}}">&laquo;</a>
   {{/if}}
   {{#each stream.photos as |substream_photo|}}
     <a href="{{../../include_prefix}}{{substream_photo.photo_show_path}}">
@@ -11,5 +14,5 @@
     </a>
   {{/each}}
   {{#if stream.next}}
-    <p>Next</p>
+    <a class="navigation_arrow" href="{{../include_prefix}}{{stream.next.photo_show_path}}">&raquo;</a>
   {{/if}}

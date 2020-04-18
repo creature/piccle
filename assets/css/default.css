@@ -87,6 +87,14 @@ nav ul {
   border: 3px solid lightblue;
 }
 
+
+.navigation_arrow {
+  text-decoration: none;
+  font-size: 72px;
+  padding: 0 15px;
+  color: black;
+}
+
 .streams {
   border-top: 1px solid #777;
 }
