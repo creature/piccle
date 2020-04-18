@@ -19,7 +19,7 @@ module Piccle
     attr_accessor :streams
 
     def initialize
-      @data = {} # The extracted metadata that we'll use to generate our photo gallery.
+      @data = { friendly_name: "All Photos" } # The extracted metadata that we'll use to generate our photo gallery.
       @photos = {} # An array of MD5 -> Photo object, in case we want to get back to them easily at some point.
       @streams = [] # Any extra processors that we want to use.
     end
@@ -58,7 +58,6 @@ module Piccle
       end
     end
 
-    # TODO: Asks each stream in turn to order its data. Call this after you've parsed all the photos, to generate an ordered list of photo hashes.
     # You can iterate over this list to display things.
     def order
       @data[:order] = @data[:photos].sort_by { |k, v| v[:taken_at] }.reverse.map { |a| a[0] }
