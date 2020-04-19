@@ -31,10 +31,11 @@ module Piccle
 
     # Do we have any photos in this parsed data yet?
     def empty?
-      @data.empty?
+      @photos.empty?
     end
 
     # Parse a photo. Also passes it to any registered streams, which can subcategorise each photo into sections under its own namespace.
+    # Streams can also return a metadata element, that we can display specially in the photo page.
     def parse(photo)
       @photos[photo.md5] = photo
       @data[:photos] ||= {}
@@ -49,12 +50,13 @@ module Piccle
                                     taken_at: photo.taken_at,
                                     aperture: photo.aperture,
                                     shutter_speed: photo.friendly_shutter_speed,
-                                    iso: photo.iso
+                                    iso: photo.iso,
+                                    metadata: []
       }
 
       @streams.each do |stream|
-        to_add = stream.data_for(photo) if stream.respond_to?(:data_for)
-        @data = merge_into(@data, to_add)
+        @data = merge_into(@data, stream.data_for(photo)) if stream.respond_to?(:data_for)
+        @data[:photos][photo.md5][:metadata] += stream.metadata_for(photo) if stream.respond_to?(:metadata_for)
       end
     end
 
