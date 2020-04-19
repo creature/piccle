@@ -16,6 +16,7 @@ namespace :piccle do
     generate_html_photos(parser)
     generate_json(parser)
     generate_thumbnails
+    generate_templates
     copy_assets
     puts "Website generated in #{(Time.now - start_time)} seconds."
   end
@@ -99,6 +100,13 @@ def generate_thumbnails
       puts "Done."
     end
   end
+end
+
+def generate_templates
+  puts '    ... generating templates...'
+  FileUtils.mkdir_p('generated/js/')
+  File.write('generated/js/index.handlebars.js', Piccle::TemplateHelpers.compile_template('index'))
+  File.write('generated/js/show.handlebars.js', Piccle::TemplateHelpers.compile_template('show'))
 end
 
 # Copy our static assets into the expected location.

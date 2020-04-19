@@ -23,6 +23,12 @@ class Piccle::TemplateHelpers
     template.call(data)
   end
 
+  # Gets a Handlebars version of the template. No variable replacement!
+  def self.compile_template(name)
+    slim_template = Tilt['slim'].new { File.read("templates/#{name}.html.handlebars.slim") }
+    slim_template.render(Object.new, {})
+  end
+
   # Gets information about our site, used on pretty much every page.
   def self.site_metadata
     min_year = Piccle::Photo.earliest_photo_year
