@@ -92,6 +92,11 @@ module Piccle
       end
     end
 
+    # Gets the metadata for a given photo hash.
+    def metadata_for(photo_hash)
+      @data.dig(:photos, photo_hash, :metadata)
+    end
+
     # Gets a list of all subsections (ie. all the subindexes that we should render).
     # It's an array of hash keys, suitable for passing via @data.dig(*keys).
     def subsections

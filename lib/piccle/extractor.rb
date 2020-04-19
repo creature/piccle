@@ -12,21 +12,12 @@ module Piccle
 
     # Gets data for constructing a camera link for a particular photo.
     def camera_link(photo_hash, selector)
-      { friendly_name: "Camera", link: "Hi" }
+      template_ready_metadata(metadata_of_type(:camera, photo_hash).first)
     end
 
     # Gets data suitable for constructing a "tag cloud" on a photo page.
     def keywords(photo_hash, selector)
-    end
-
-    # Given a selector array, convert it into a file path prefix.
-    # eg. ["by-date", "2017", "03"] → "../../../"
-    def include_prefix(selector)
-      if selector.any?
-        "#{(['..'] * selector.length).join('/')}/"
-      else
-        ""
-      end
+      metadata_of_type(:keyword, photo_hash).map { |m| template_ready_metadata(m) }
     end
 
     # Gets a (currently top-level only) navigation structure. All entries have at least one photo.
@@ -40,6 +31,16 @@ module Piccle
 
     protected
 
+    def metadata_of_type(type, photo_hash)
+      metadata = @parser.metadata_for(photo_hash) || []
+      metadata.select { |data| type == data[:type] }
+    end
+
+    # Process the given metadata into something more directly usable by the template.
+    def template_ready_metadata(metadata)
+      { friendly_name: metadata[:friendly_name], link: "#{metadata[:selector].join("/")}/index.html" } if metadata
+    end
+
     def entries_for(data_hash, namespace)
       string_keys_only(data_hash).map do |k, v|
         { name: k, link: "#{namespace}/#{k}/index.html" }
@@ -49,6 +50,11 @@ module Piccle
     # TODO: duplicated from the parser. Can we centralise this somehow?
     def string_keys_only(data)
       data.select { |k, _| k.is_a? String }
+    end
+
+    # Proxy through to the template helper here.
+    def include_prefix(selector)
+      Piccle::TemplateHelpers.include_prefix(selector)
     end
   end
 end

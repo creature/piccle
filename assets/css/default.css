@@ -72,6 +72,19 @@ nav ul {
   content: '\27fc';
 }
 
+.keywords {
+  margin: 72px 72px 18px;
+}
+
+.keywords a {
+  text-decoration: none;
+  font-size: 90%;
+  color: white;
+  background: grey;
+  border-radius: 20px;
+  padding: 5px 10px;
+}
+
 .thumbnail, .stamp {
   line-height: 0;
   vertical-align: bottom;

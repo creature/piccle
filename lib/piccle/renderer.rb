@@ -18,7 +18,7 @@ module Piccle
         sentinels: [],
         navigation: render_nav(selector),
         selector: selector,
-        include_prefix: include_prefix(selector)
+        include_prefix: Piccle::TemplateHelpers.include_prefix(selector)
       }
 
       Piccle::TemplateHelpers.render("index", template_vars)
@@ -44,9 +44,9 @@ module Piccle
         substreams: substreams.select { |stream| stream[:photos].length > 1 },
         camera_link: @extractor.camera_link(hash, selector),
         keywords: @extractor.keywords(hash, selector),
+        include_prefix: Piccle::TemplateHelpers.include_prefix(selector),
         canonical: "photos/#{hash}.html" # TODO: Other paths live in piccle.rake. Why's this one here?
       }
-      template_vars[:include_prefix] = include_prefix(selector) if selector.any?
 
       Piccle::TemplateHelpers.render("show", template_vars)
     end
@@ -55,15 +55,8 @@ module Piccle
 
     # Gets the navigation info from the parser data.
     def render_nav(selector = [])
-      template_vars = { nav_items: @extractor.navigation }
-      template_vars[:include_prefix] = include_prefix(selector) if selector.any?
+      template_vars = { nav_items: @extractor.navigation, include_prefix: Piccle::TemplateHelpers.include_prefix(selector) }
       Piccle::TemplateHelpers.render("navigation", template_vars)
-    end
-
-    # Given a selector array, convert it into a file path prefix.
-    # eg. ["by-date", "2017", "03"] → "../../../"
-    def include_prefix(selector)
-      "#{(['..'] * selector.length).join('/')}/"
     end
   end
 end

@@ -13,11 +13,19 @@ body.photo_show
     p.settings
       | {{#if camera_link }}<a href="{{camera_link.link}}">{{camera_link.friendly_name}}</a>, {{/if}}f/{{photo.aperture}}, {{photo.shutter_speed}}, ISO {{photo.iso}}.
     | {{#if photo.taken_at}}
-      <p class="date">
-        {{#if day_link}}{{day_link}}{{/if}}
-        {{#if month_link}}{{month_link}}, {{/if}}
-        {{#if year_link}}{{year_link}}.{{/if}}
-      </p>
+        <p class="date">
+          {{#if day_link}}{{day_link}}{{/if}}
+          {{#if month_link}}{{month_link}}, {{/if}}
+          {{#if year_link}}{{year_link}}.{{/if}}
+        </p>
+      {{/if}}
+
+    | {{#if keywords}}
+        <div class="keywords">
+          {{#each keywords as |keyword|}}
+            <a href="{{keyword.link}}">{{keyword.friendly_name}}</a>
+          {{/each}}
+        </div>
       {{/if}}
 
     .streams

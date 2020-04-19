@@ -44,4 +44,15 @@ class Piccle::TemplateHelpers
       copyright_year: copyright_year
     )
   end
+
+  # Given a "selector" (an array of string path components), returns an "include prefix" (a relative path that
+  # gets us back to the top level).
+  # eg. ["by-date", "2017", "03"] → "../../../"
+  def self.include_prefix(selector)
+    if selector.any?
+      "#{(['..'] * selector.length).join('/')}/"
+    else
+      ""
+    end
+  end
 end

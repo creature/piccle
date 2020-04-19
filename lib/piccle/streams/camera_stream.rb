@@ -22,9 +22,9 @@ class Piccle::Streams::CameraStream
 
   def metadata_for(photo)
     [{
-      :friendly_name => camera_name(photo),
-      :type => :camera,
-      :selector => [namespace, camera_name(photo)]
+      friendly_name: camera_name(photo),
+      type: :camera,
+      selector: [namespace, camera_name(photo)]
     }]
   end
 

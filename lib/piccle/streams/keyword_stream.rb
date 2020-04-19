@@ -18,6 +18,10 @@ class Piccle::Streams::KeywordStream
     result
   end
 
+  def metadata_for(photo)
+    photo.keywords.map { |kw| { friendly_name: kw.name, type: :keyword, selector: [namespace, kw.name] } }
+  end
+
   # Standard method called by the parser object. Gives this stream an option to re-order its data. The stream is on
   # its honour to only meddle within its own namespace.
   def order(data)
