@@ -135,15 +135,6 @@ module Piccle
       subsections.select { |path| @data.dig(*path).fetch(:photos, []).include?(md5) }
     end
 
-    # Gets a (currently top-level only) navigation structure. All entries have at least one photo.
-    def navigation
-      faceted_data.map do |k, v|
-        { friendly_name: v[:friendly_name],
-          entries: entries_for(v, k)
-        }
-      end
-    end
-
     # Given a photo hash, and a substream selector (which may be omitted, for the main list of photos),
     # returns an array with *up to* 5 previous/next photos, as well as this image. It's ideal for rendering small
     # strips of neighbouring images.
@@ -196,21 +187,16 @@ module Piccle
       @photos.keys
     end
 
-    protected
 
     # Gets the data that we faceted - the things broken down by stream.
     def faceted_data
       string_keys_only(@data)
     end
 
+    protected
+
     def string_keys_only(data)
       data.select { |k, _| k.is_a? String }
-    end
-
-    def entries_for(data_hash, namespace)
-      string_keys_only(data_hash).map do |k, v|
-        { name: k, link: "#{namespace}/#{k}/index.html" }
-      end
     end
 
     def merge_into(destination, source)

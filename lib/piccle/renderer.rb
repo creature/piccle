@@ -3,6 +3,7 @@ module Piccle
   class Renderer
     def initialize(parser)
       @parser = parser
+      @extractor = Piccle::Extractor.new(parser)
     end
 
     # Given an array that contains a path (not including a :photos key), get that photo
@@ -41,6 +42,8 @@ module Piccle
         photo: photo_data,
         selector: selector,
         substreams: substreams.select { |stream| stream[:photos].length > 1 },
+        camera_link: @extractor.camera_link(hash, selector),
+        keywords: @extractor.keywords(hash, selector),
         canonical: "photos/#{hash}.html" # TODO: Other paths live in piccle.rake. Why's this one here?
       }
       template_vars[:include_prefix] = include_prefix(selector) if selector.any?
@@ -52,7 +55,7 @@ module Piccle
 
     # Gets the navigation info from the parser data.
     def render_nav(selector = [])
-      template_vars = { nav_items: @parser.navigation }
+      template_vars = { nav_items: @extractor.navigation }
       template_vars[:include_prefix] = include_prefix(selector) if selector.any?
       Piccle::TemplateHelpers.render("navigation", template_vars)
     end
