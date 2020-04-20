@@ -29,6 +29,20 @@ module Piccle
       end
     end
 
+    # Given a selector, generate breadcrumbs data for it. Basically link up all the elements except the first
+    # (which is a namespace, and linkless).
+    def breadcrumbs_for(selector)
+      result = []
+      if selector.first
+        result << { friendly_name: @parser.friendly_name_for([selector.first]) }
+      end
+      (1..selector.length-1).map do |i|
+        result << { friendly_name: @parser.friendly_name_for(selector[0..i]), link: "#{selector[0..i].join("/")}/index.html" }
+      end
+
+      result
+    end
+
     protected
 
     def metadata_of_type(type, photo_hash)
