@@ -13,7 +13,7 @@ class Piccle::Streams::KeywordStream
                :interesting => true
              }}
     photo.keywords.each do |kw|
-      result[namespace][kw.name] = { friendly_name: "By Topic – #{kw.name}", interesting: true, photos: [photo.md5] }
+      result[namespace][kw.name] = { friendly_name: kw.name, interesting: true, photos: [photo.md5] }
     end
     result
   end

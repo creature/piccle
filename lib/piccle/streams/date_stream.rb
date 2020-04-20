@@ -16,13 +16,13 @@ class Piccle::Streams::DateStream
         :friendly_name => "By Date",
         :interesting => false,
         year.to_s => {
-          :friendly_name => "By Date – #{year}",
+          :friendly_name => "#{year}",
           :interesting => false,
           month.to_s => {
-            :friendly_name => "By Date - #{Date::MONTHNAMES[month]} #{year}",
+            :friendly_name => "#{Date::MONTHNAMES[month]} #{year}",
             :interesting => false,
             day.to_s => {
-              :friendly_name => "By Date – #{day}#{ordinal_for(day)} #{Date::MONTHNAMES[month]} #{year}",
+              :friendly_name => "#{day}#{ordinal_for(day)} #{Date::MONTHNAMES[month]} #{year}",
               :interesting => false,
               :photos => [photo.md5]
             },

@@ -5,6 +5,7 @@ html
   body.photos_index
     header
       h1 Photography by {{site_metadata.author_name}}
+      == Piccle::TemplateHelpers.render_partial "breadcrumbs"
     main
       | {{{navigation}}}
 

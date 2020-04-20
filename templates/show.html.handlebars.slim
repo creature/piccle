@@ -4,6 +4,7 @@ body.photo_show
   header
     h1
       a href="index.html" Photography by {{site_metadata.author_name}}
+    == Piccle::TemplateHelpers.render_partial "breadcrumbs"
   main
     h2
       | {{photo.title}}
@@ -11,7 +12,7 @@ body.photo_show
     p.description
       | {{photo.description}}
     p.settings
-      | {{#if camera_link }}<a href="{{camera_link.link}}">{{camera_link.friendly_name}}</a>, {{/if}}f/{{photo.aperture}}, {{photo.shutter_speed}}, ISO {{photo.iso}}.
+      | {{#if camera_link}}<a href="{{camera_link.link}}">{{camera_link.friendly_name}}</a>, {{/if}}f/{{photo.aperture}}, {{photo.shutter_speed}}, ISO {{photo.iso}}.
     | {{#if photo.taken_at}}
         <p class="date">
           {{#if day_link}}{{day_link}}{{/if}}

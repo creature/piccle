@@ -97,6 +97,11 @@ module Piccle
       @data.dig(:photos, photo_hash, :metadata)
     end
 
+    # Get the friendly name for the given selector.
+    def friendly_name_for(selector)
+      @data.dig(*selector, :friendly_name)
+    end
+
     # Gets a list of all subsections (ie. all the subindexes that we should render).
     # It's an array of hash keys, suitable for passing via @data.dig(*keys).
     def subsections
@@ -172,7 +177,7 @@ module Piccle
       if photo_hashes.any?
         substream = {}
         photo_i = photo_hashes.find_index(hash)
-        substream[:title] = @data.dig(*selector, :friendly_name)
+        substream[:title] = friendly_name_for(selector)
         substream[:photos] = photo_hashes.map { |h| @data[:photos][h] }
         substream[:previous] = @data[:photos][photo_hashes[photo_i - 1]] if photo_i > 0
         substream[:next] = @data[:photos][photo_hashes[photo_i + 1]] if photo_i < photo_hashes.length - 1

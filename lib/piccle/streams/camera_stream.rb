@@ -13,7 +13,7 @@ class Piccle::Streams::CameraStream
         :friendly_name => "By Camera",
         :interesting => false,
         camera_name(photo) => {
-          friendly_name: "By Camera – #{camera_name(photo)}",
+          friendly_name: camera_name(photo),
           photos: [photo.md5]
         },
       }

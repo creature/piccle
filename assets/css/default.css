@@ -19,6 +19,31 @@ header a {
   color: #111;
 }
 
+header ol {
+  list-style-type: none;
+  margin-bottom: 0;
+}
+
+header ol li {
+  display: inline-block;
+  margin: inherit 5px;
+  text-transform: capitalize;
+}
+
+header ol li:after {
+  content: ">";
+  padding: 0 5px 0 10px;
+}
+
+header ol li:last-child:after {
+  content: "";
+  padding: 0;
+}
+
+header ol li a {
+  text-decoration: underline;
+}
+
 .photos_index main {
   display: flex;
 }

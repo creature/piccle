@@ -18,6 +18,7 @@ module Piccle
         sentinels: [],
         navigation: render_nav(selector),
         selector: selector,
+        breadcrumbs: @extractor.breadcrumbs_for(selector),
         include_prefix: Piccle::TemplateHelpers.include_prefix(selector)
       }
 
@@ -41,12 +42,14 @@ module Piccle
       template_vars = {
         photo: photo_data,
         selector: selector,
+        breadcrumbs: @extractor.breadcrumbs_for(selector),
         substreams: substreams.select { |stream| stream[:photos].length > 1 },
         camera_link: @extractor.camera_link(hash, selector),
         keywords: @extractor.keywords(hash, selector),
         include_prefix: Piccle::TemplateHelpers.include_prefix(selector),
         canonical: "photos/#{hash}.html" # TODO: Other paths live in piccle.rake. Why's this one here?
       }
+      template_vars[:breadcrumbs] += "Photo" if selector.any?
 
       Piccle::TemplateHelpers.render("show", template_vars)
     end
