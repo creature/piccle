@@ -2,12 +2,13 @@
 - Right now, you're in the middle of doing things in a parse-then-generate cycle. The parser is probably fully working. 
   It also generates subindex pages, and canonical pages for photos. These are reasonably well-advanced.
   Your sensible next steps will probably be: 
-  - Also generate individual photo pages for each facet.
-  - Add some breadcrumbs or similar to the subindex pages that show where you are in the nav.
-  - Split out parser into "parser"/"extractor" classes. 
-  - Show keywords as tags on photo page.
+  - Also generate individual photo pages for each facet. (In progress, kinda broken. Should probably remove "base". 
+  - Check whether individual photos have been changed since the filesystem date before generating subpages.
+  - Add date metadata to extractor.
+  - Fix ordering in "all photos" stream.
   - Generate an RSS feed.
   - Add opengraph tags.
+    - Requires configuring a URL for it.
   - Add link prev next on photo pages.
   - Add link back to home page on photo page.
   - Add an events stream
