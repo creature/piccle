@@ -23,8 +23,10 @@ namespace :photos do
         print " updating..."
         photo.update_from_file
         puts " done."
-      else
+      elsif photo.freshly_created?
         puts " created."
+      else
+        puts " done."
       end
     end
   end

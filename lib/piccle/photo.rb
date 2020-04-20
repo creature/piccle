@@ -11,6 +11,7 @@ DB = Piccle::Database.connect
 class Piccle::Photo < Sequel::Model
   many_to_many :keywords
   attr_accessor :modified # Has this file been modified?
+  attr_accessor :freshly_created # Have we just generated this file?
 
   def before_create
     self.created_at ||= Time.now
@@ -27,6 +28,7 @@ class Piccle::Photo < Sequel::Model
       p = data_hash(path_to_file)
     end
     photo.modified = md5 != photo.md5
+    photo.freshly_created = freshly_created
 
     # Pull out keywords for this file, if it's new or changed.
     photo.generate_keywords if freshly_created || photo.modified?
@@ -143,6 +145,11 @@ class Piccle::Photo < Sequel::Model
   # Has this file been modified? You probably want to call update if so.
   def modified?
     modified
+  end
+
+  # Have we just created this file?
+  def freshly_created?
+    freshly_created
   end
 
   # Re-read the photo data, and save it to the DB.
