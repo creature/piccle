@@ -61,7 +61,7 @@ module Piccle
 
     # You can iterate over this list to display things.
     def order
-      @data[:photos] = @data[:photos].sort_by { |k, v| v[:taken_at] }.reverse.to_h
+      @data[:photos] = @data[:photos].sort_by { |k, v| v[:taken_at] || Time.new(1970, 1, 1) }.reverse.to_h
 
       @streams.each do |stream|
         @data = stream.order(@data) if stream.respond_to?(:order)
@@ -78,8 +78,8 @@ module Piccle
       # Look at each 2 pics, try to figure out if there's an event that falls between them.
       @data[:photos].keys.each_cons(2) do |first_hash, second_hash|
         # TODO: Make all this way less error prone.
-        first_photo_date = @data[:photos][first_hash][:taken_at].to_datetime
-        second_photo_date = @data[:photos][second_hash][:taken_at].to_datetime
+        first_photo_date = @data[:photos][first_hash][:taken_at]&.to_datetime || DateTime.new(1970, 1, 1)
+        second_photo_date = @data[:photos][second_hash][:taken_at]&.to_datetime || DateTime.new(1970, 1, 1)
 
         if event = @data[:events].find { |ev| first_photo_date > ev[:from].to_datetime && second_photo_date < ev[:from].to_datetime }
           @data[:sentinels][second_hash] = { name: event[:name], type: :event_start }

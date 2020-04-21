@@ -54,7 +54,7 @@ class Piccle::Photo < Sequel::Model
     p[:shutter_speed_numerator] = exif_info.exposure_time&.numerator
     p[:shutter_speed_denominator] = exif_info.exposure_time&.denominator
     p[:focal_length] = exif_info.focal_length.to_f
-    p[:taken_at] = (exif_info.date_time_original&.to_datetime || Time.new(1970, 1, 1)).to_s
+    p[:taken_at] = exif_info.date_time_original&.to_datetime
 
     p[:latitude] = if exif_info.gps_latitude && exif_info.gps_latitude_ref
                       exif_info.gps_latitude_ref == "S" ? (exif_info.gps_latitude.to_f * -1) : exif_info.gps_latitude.to_f
