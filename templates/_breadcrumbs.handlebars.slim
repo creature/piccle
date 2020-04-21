@@ -6,7 +6,7 @@
         <li>{{crumb.friendly_name}}</li>
       {{else}}
         {{#if crumb.link}}
-          <li><a href="{{crumb.link}}">{{crumb.friendly_name}}</a></li>
+          <li><a href="{{../include_prefix}}{{crumb.link}}">{{crumb.friendly_name}}</a></li>
         {{else}}
           <li>{{crumb.friendly_name}}</li>
         {{/if}}

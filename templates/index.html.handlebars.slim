@@ -18,7 +18,7 @@ html
                 <p class="event_block {{type}}">{{name}}</p>
                 {{/with}}
               {{/if}}
-              <a href="{{../../include_prefix}}{{this.photo_show_path}}">
+              <a href="{{../../include_prefix}}{{../../selector_path}}{{hash}}.html">
                 <img class="thumbnail" src="{{../../include_prefix}}images/thumbnails/{{hash}}.{{this.file_name}}" alt="{{this.title}}" />
               </a>
             {{/with}}

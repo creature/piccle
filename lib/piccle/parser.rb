@@ -179,6 +179,7 @@ module Piccle
         photo_i = photo_hashes.find_index(hash)
         substream[:title] = friendly_name_for(selector)
         substream[:photos] = photo_hashes.map { |h| @data[:photos][h] }
+        substream[:selector_path] = "#{selector.join('/')}/" if selector.any?
         substream[:previous] = @data[:photos][photo_hashes[photo_i - 1]] if photo_i > 0
         substream[:next] = @data[:photos][photo_hashes[photo_i + 1]] if photo_i < photo_hashes.length - 1
         substream

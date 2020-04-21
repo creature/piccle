@@ -1,13 +1,11 @@
-  head
-    meta charset="utf-8"
-    / Just while I'm developing this. TODO: Remove me.
-    meta name="robots" content="noindex"
-    title Photography by {{site_metadata.author_name}}
-    - if defined?(locals[:base])
-      base href="#{locals[:base]}"
-    link rel="stylesheet" href="{{include_prefix}}css/normalize.css"
-    link rel="stylesheet" href="{{include_prefix}}css/default.css"
-    |
-      {{#if canonical}}
-      <link rel="canonical" href="{{include_prefix}}{{canonical}}" />
-      {{/if}}
+head
+  meta charset="utf-8"
+  / Just while I'm developing this. TODO: Remove me.
+  meta name="robots" content="noindex"
+  title Photography by {{site_metadata.author_name}}
+  link rel="stylesheet" href="{{include_prefix}}css/normalize.css"
+  link rel="stylesheet" href="{{include_prefix}}css/default.css"
+  |
+    {{#if canonical}}
+    <link rel="canonical" href="{{include_prefix}}{{canonical}}" />
+    {{/if}}

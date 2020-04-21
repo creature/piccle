@@ -65,8 +65,15 @@ def generate_html_photos(parser)
   renderer = Piccle::Renderer.new(parser)
   parser.photo_hashes.each do |hash|
     print "        ... generating canonical page for #{hash}... "
-    File.write("generated/photos/#{hash}.html", renderer.render_photo(hash))
+    File.write("generated/#{hash}.html", renderer.render_photo(hash))
     puts "Done."
+
+    parser.links_for(hash).each do |selector|
+      destination_page = "generated/#{selector.join('/')}/#{hash}.html"
+      print "            ... generating stream page #{destination_page}..."
+      File.write(destination_page, renderer.render_photo(hash, selector))
+      puts "Done."
+    end
   end
 end
 

@@ -1,14 +1,14 @@
-== Piccle::TemplateHelpers.render_partial "header", { base: "../" }
+== Piccle::TemplateHelpers.render_partial "header"
 
 body.photo_show
   header
     h1
-      a href="index.html" Photography by {{site_metadata.author_name}}
+      a href="{{include_prefix}}index.html" Photography by {{site_metadata.author_name}}
     == Piccle::TemplateHelpers.render_partial "breadcrumbs"
   main
     h2
       | {{photo.title}}
-    img src="images/photos/{{photo.hash}}.{{photo.file_name}}"
+    img src="{{include_prefix}}images/photos/{{photo.hash}}.{{photo.file_name}}"
     p.description
       | {{photo.description}}
     p.settings
@@ -24,7 +24,7 @@ body.photo_show
     | {{#if keywords}}
         <div class="keywords">
           {{#each keywords as |keyword|}}
-            <a href="{{keyword.link}}">{{keyword.friendly_name}}</a>
+            <a href="{{../include_prefix}}{{keyword.link}}">{{keyword.friendly_name}}</a>
           {{/each}}
         </div>
       {{/if}}
