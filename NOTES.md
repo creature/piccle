@@ -2,10 +2,8 @@
 - Right now, you're in the middle of doing things in a parse-then-generate cycle. The parser is probably fully working. 
   It also generates subindex pages, and canonical pages for photos. These are reasonably well-advanced.
   Your sensible next steps will probably be: 
-  - Also generate individual photo pages for each facet. (In progress, kinda broken. Should probably remove "base". 
   - Check whether individual photos have been changed since the filesystem date before generating subpages.
   - Add date metadata to extractor.
-  - Fix ordering in "all photos" stream.
   - Generate an RSS feed.
   - Add opengraph tags.
     - Requires configuring a URL for it.
@@ -13,6 +11,7 @@
   - Add link back to home page on photo page.
   - Add an events stream
   - Add a location stream
+  - Figure out what's causing some photo pages to slow down (and speed it up)
   - Figure out what to do about 1970 datestamp.
   - Update the photo update method so it also REMOVES keywords from files.
     - Store changed MD5 hashes, generate redirect pages for those.
