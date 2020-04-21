@@ -14,7 +14,6 @@ module Piccle
     def render_index(selector)
       template_vars = {
         photos: @parser.subsection_photos(selector),
-        order: @parser.data[:photos].keys,
         sentinels: [],
         navigation: render_nav(selector),
         selector: selector,
@@ -32,7 +31,7 @@ module Piccle
       debug = if Piccle::DEBUG
                 debug = [{ title: "Number of photos", value: photos.length }]
               end
-      Piccle::TemplateHelpers.render("index", photos: photos, order: @parser.data[:photos].keys, sentinels: @parser.data[:sentinels], navigation: render_nav, debug: debug)
+      Piccle::TemplateHelpers.render("index", photos: photos, sentinels: @parser.data[:sentinels], navigation: render_nav, debug: debug)
     end
 
     # Render a page for a specific photo.
