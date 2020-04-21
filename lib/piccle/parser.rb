@@ -8,7 +8,6 @@
 # {
 #   title: "Foo", # The title of this section
 #   photos: { md5_string => Hash[photo_data] }, # Data needed to display
-#   order: [md5_string, md5_string, md5_string], # An ordered list of hashes to display.
 #   events: [ Hash[event_data] ] # Details about named events. These get special tiles on
 #                                # the front page, but are implemented via a stream.
 #
@@ -62,7 +61,7 @@ module Piccle
 
     # You can iterate over this list to display things.
     def order
-      @data[:order] = @data[:photos].sort_by { |k, v| v[:taken_at] }.reverse.map { |a| a[0] }
+      @data[:photos] = @data[:photos].sort_by { |k, v| v[:taken_at] }.reverse.to_h
 
       @streams.each do |stream|
         @data = stream.order(@data) if stream.respond_to?(:order)
@@ -77,7 +76,7 @@ module Piccle
       @data[:sentinels] = {}
 
       # Look at each 2 pics, try to figure out if there's an event that falls between them.
-      @data[:order].each_cons(2) do |first_hash, second_hash|
+      @data[:photos].keys.each_cons(2) do |first_hash, second_hash|
         # TODO: Make all this way less error prone.
         first_photo_date = @data[:photos][first_hash][:taken_at].to_datetime
         second_photo_date = @data[:photos][second_hash][:taken_at].to_datetime
