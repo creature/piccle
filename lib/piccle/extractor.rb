@@ -11,13 +11,25 @@ module Piccle
     end
 
     # Gets data for constructing a camera link for a particular photo.
-    def camera_link(photo_hash, selector)
+    def camera_link(photo_hash)
       template_ready_metadata(metadata_of_type(:camera, photo_hash).first)
     end
 
     # Gets data suitable for constructing a "tag cloud" on a photo page.
-    def keywords(photo_hash, selector)
+    def keywords(photo_hash)
       metadata_of_type(:keyword, photo_hash).map { |m| template_ready_metadata(m) }
+    end
+
+    def day_link(photo_hash)
+      template_ready_metadata(metadata_of_type(:date_day, photo_hash).first)
+    end
+
+    def month_link(photo_hash)
+      template_ready_metadata(metadata_of_type(:date_month, photo_hash).first)
+    end
+
+    def year_link(photo_hash)
+      template_ready_metadata(metadata_of_type(:date_year, photo_hash).first)
     end
 
     # Gets a (currently top-level only) navigation structure. All entries have at least one photo.

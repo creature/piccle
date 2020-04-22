@@ -15,9 +15,9 @@ body.photo_show
       | {{#if camera_link}}<a href="{{camera_link.link}}">{{camera_link.friendly_name}}</a>, {{/if}}f/{{photo.aperture}}, {{photo.shutter_speed}}, ISO {{photo.iso}}.
     | {{#if photo.taken_at}}
         <p class="date">
-          {{#if day_link}}{{day_link}}{{/if}}
-          {{#if month_link}}{{month_link}}, {{/if}}
-          {{#if year_link}}{{year_link}}.{{/if}}
+          {{#if day_link}}<a href="{{include_prefix}}{{day_link.link}}">{{day_link.friendly_name}}</a>{{/if}}
+          {{#if month_link}}<a href="{{include_prefix}}{{month_link.link}}">{{month_link.friendly_name}}</a>, {{/if}}
+          {{#if year_link}}<a href="{{include_prefix}}{{year_link.link}}">{{year_link.friendly_name}}</a>.{{/if}}
         </p>
       {{/if}}
 

@@ -103,6 +103,7 @@ module Piccle
 
     # Gets a list of all subsections (ie. all the subindexes that we should render).
     # It's an array of hash keys, suitable for passing via @data.dig(*keys).
+    # TODO: This could probably be sped up.
     def subsections
       previous_size = 0
       subsection_list = faceted_data.keys.map { |el| [el] }
@@ -200,7 +201,7 @@ module Piccle
 
     # Gets the data that we faceted - the things broken down by stream.
     def faceted_data
-      string_keys_only(@data)
+      @faceted_data ||= string_keys_only(@data)
     end
 
     protected

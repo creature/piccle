@@ -19,10 +19,10 @@ class Piccle::Streams::DateStream
           :friendly_name => "#{year}",
           :interesting => false,
           month.to_s => {
-            :friendly_name => "#{Date::MONTHNAMES[month]} #{year}",
+            :friendly_name => "#{Date::MONTHNAMES[month]}",
             :interesting => false,
             day.to_s => {
-              :friendly_name => "#{day}#{ordinal_for(day)} #{Date::MONTHNAMES[month]} #{year}",
+              :friendly_name => "#{day}#{ordinal_for(day)}",
               :interesting => false,
               :photos => [photo.md5]
             },
@@ -33,6 +33,26 @@ class Piccle::Streams::DateStream
       }}
     else
       {}
+    end
+  end
+
+  def metadata_for(photo)
+    year, month, day = photo.taken_at&.year, photo.taken_at&.month, photo.taken_at&.day
+    if year && month && day
+      [{ friendly_name: "#{day}#{ordinal_for(day)}",
+        type: :date_day,
+        selector: [namespace, year, month, day]
+      }, {
+        friendly_name: "#{Date::MONTHNAMES[month]}",
+        type: :date_month,
+        selector: [namespace, year, month]
+      }, {
+        friendly_name: year.to_s,
+        type: :date_year,
+        selector: [namespace, year]
+      }]
+    else
+      []
     end
   end
 

@@ -45,8 +45,11 @@ module Piccle
         selector_path: selector.any? ? "#{selector.join('/')}/" : "",
         breadcrumbs: @extractor.breadcrumbs_for(selector),
         substreams: substreams.select { |stream| stream[:photos].length > 1 },
-        camera_link: @extractor.camera_link(hash, selector),
-        keywords: @extractor.keywords(hash, selector),
+        camera_link: @extractor.camera_link(hash),
+        keywords: @extractor.keywords(hash),
+        day_link: @extractor.day_link(hash),
+        month_link: @extractor.month_link(hash),
+        year_link: @extractor.year_link(hash),
         include_prefix: Piccle::TemplateHelpers.include_prefix(selector),
         canonical: "photos/#{hash}.html" # TODO: Other paths live in piccle.rake. Why's this one here?
       }
