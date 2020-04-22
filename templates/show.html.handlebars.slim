@@ -12,7 +12,7 @@ body.photo_show
     p.description
       | {{photo.description}}
     p.settings
-      | {{#if camera_link}}<a href="{{camera_link.link}}">{{camera_link.friendly_name}}</a>, {{/if}}f/{{photo.aperture}}, {{photo.shutter_speed}}, ISO {{photo.iso}}.
+      | {{#if camera_link}}<a href="{{include_prefix}}{{camera_link.link}}">{{camera_link.friendly_name}}</a>, {{/if}}f/{{photo.aperture}}, {{photo.shutter_speed}}, ISO {{photo.iso}}.
     | {{#if photo.taken_at}}
         <p class="date">
           {{#if day_link}}<a href="{{include_prefix}}{{day_link.link}}">{{day_link.friendly_name}}</a>{{/if}}
