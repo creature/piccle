@@ -81,11 +81,11 @@ module Piccle
         first_photo_date = @data[:photos][first_hash][:taken_at]&.to_datetime || DateTime.new(1970, 1, 1)
         second_photo_date = @data[:photos][second_hash][:taken_at]&.to_datetime || DateTime.new(1970, 1, 1)
 
-        if event = @data[:events].find { |ev| first_photo_date > ev[:from].to_datetime && second_photo_date < ev[:from].to_datetime }
+        if event = @data[:events].find { |ev| first_photo_date > ev[:from] && second_photo_date < ev[:from] }
           @data[:sentinels][second_hash] = { name: event[:name], type: :event_start }
         end
 
-        if event = @data[:events].find { |ev| first_photo_date > ev[:to].to_datetime && second_photo_date < ev[:to].to_datetime }
+        if event = @data[:events].find { |ev| first_photo_date > ev[:to] && second_photo_date < ev[:to] }
           @data[:sentinels][second_hash] = { name: event[:name], type: :event_end }
         end
       end
