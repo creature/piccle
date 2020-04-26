@@ -1,10 +1,9 @@
-require 'json'
 require 'yaml'
 
 # A special-case stream that handles named "events". You can define details in events.yaml - with things like a name,
 # dates, and whether it should be collapsed or not on the front page.
 
-class Piccle::Streams::EventStream
+class Piccle::Streams::EventStream < Piccle::Streams::BaseStream
   attr_accessor :events
 
   def namespace
@@ -35,5 +34,10 @@ class Piccle::Streams::EventStream
     else
       {}
     end
+  end
+
+  # Sorts most recent events first; then organises photos by date. TODO
+  def order(data)
+    super(data)
   end
 end

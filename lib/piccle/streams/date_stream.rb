@@ -1,8 +1,8 @@
-require 'json'
+# frozen_string_literal: true
 
 # Enables browsing photos by date.
 
-class Piccle::Streams::DateStream
+class Piccle::Streams::DateStream < Piccle::Streams::BaseStream
   def namespace
     "by-date"
   end
@@ -62,7 +62,7 @@ class Piccle::Streams::DateStream
     sort_proc = Proc.new { |k, v| k.is_a?(String) ? k : "" }
     data[namespace] = data[namespace].sort_by(&sort_proc).to_h # Sort years
     data[namespace].each do |k, v|
-      data[namespace][k].sort_by(&sort_proc).to_h if k.is_a?(String) # Sort months
+      data[namespace][k] = data[namespace][k].sort_by(&sort_proc).to_h if k.is_a?(String) # Sort months
     end
     data
   end
