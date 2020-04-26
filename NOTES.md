@@ -4,6 +4,7 @@
     - Switching to handlebars-ruby requires adding support for {with} and {lookup}
 - Add ordering to all the various substreams.
 - Add link prev next on photo pages.
+  - And clickable links.
 - Check whether individual photos have been changed since the filesystem date before generating subpages.
 - Generate an RSS feed.
 - Add opengraph tags.
@@ -13,8 +14,14 @@
 - Update the photo update method so it also REMOVES keywords from files.
   - Store changed MD5 hashes, generate redirect pages for those.
 - Add a cleanup function that removes old images/HTML.
-- Make keywords case ensensitive.
+- Make keywords case insensitive.
 - Write a readme.
+- Add "collapsed" view for events so they show up in one tile. 
+- Add links to event tiles that link to the event page.
+- Maybe combine substream path with include prefix? So we don't have to do two {{foo}}{{bar}} on every link.
+- Put current stream first on photo page
+- Update nav to render subnav too, for current section.
+- Finish commenting the BaseStream.
 
 
 ----- All the notes below are kind of outdated ------
