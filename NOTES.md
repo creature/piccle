@@ -1,22 +1,20 @@
 # Priorities/things to do next 
-- Right now, you're in the middle of doing things in a parse-then-generate cycle. The parser is probably fully working. 
-  It also generates subindex pages, and canonical pages for photos. These are reasonably well-advanced.
-  Your sensible next steps will probably be: 
-  - Figure out what's causing some photo pages to slow down (and speed it up)
-    - ifEqual is definitely a partial culprit; refactor that out.
-  - Add ordering to all the various substreams.
-  - Add link prev next on photo pages.
-  - Add link back to home page on subindex page.
-  - Check whether individual photos have been changed since the filesystem date before generating subpages.
-  - Generate an RSS feed.
-  - Add opengraph tags.
-    - Requires configuring a URL for it.
-  - Add an events stream
-  - Add a location stream
-  - Update the photo update method so it also REMOVES keywords from files.
-    - Store changed MD5 hashes, generate redirect pages for those.
-  - Add a cleanup function that removes old images/HTML.
-  - Write a readme.
+- Figure out what's causing some photo pages to slow down (and speed it up)
+  - I think this is just calling out to a JS templating library (that uses V8 to render)
+    - Switching to handlebars-ruby requires adding support for {with} and {lookup}
+- Add ordering to all the various substreams.
+- Add link prev next on photo pages.
+- Check whether individual photos have been changed since the filesystem date before generating subpages.
+- Generate an RSS feed.
+- Add opengraph tags.
+  - Requires configuring a URL for it.
+- Add an events stream
+- Add a location stream
+- Update the photo update method so it also REMOVES keywords from files.
+  - Store changed MD5 hashes, generate redirect pages for those.
+- Add a cleanup function that removes old images/HTML.
+- Make keywords case ensensitive.
+- Write a readme.
 
 
 ----- All the notes below are kind of outdated ------

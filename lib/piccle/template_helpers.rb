@@ -1,6 +1,7 @@
 require 'handlebars'
 
 class Piccle::TemplateHelpers
+  @@cached_site_metadata = nil
   @@handlebars = nil
   @@slim_pages = {}
   @@slim_partials = {}
@@ -29,18 +30,21 @@ class Piccle::TemplateHelpers
 
   # Gets information about our site, used on pretty much every page.
   def self.site_metadata
-    min_year = Piccle::Photo.earliest_photo_year
-    max_year = Piccle::Photo.latest_photo_year
-    copyright_year = if min_year == max_year
-                      max_year
-                    else
-                      "#{min_year} – #{max_year}"
-                    end
+    unless @@cached_site_metadata
+      min_year = Piccle::Photo.earliest_photo_year
+      max_year = Piccle::Photo.latest_photo_year
+      copyright_year = if min_year == max_year
+                        max_year
+                      else
+                        "#{min_year} – #{max_year}"
+                      end
 
-    OpenStruct.new(
-      author_name: Piccle::AUTHOR_NAME,
-      copyright_year: copyright_year
-    )
+      @@cached_site_metadata = OpenStruct.new(
+        author_name: Piccle::AUTHOR_NAME,
+        copyright_year: copyright_year
+      )
+    end
+    @@cached_site_metadata
   end
 
   # Given a "selector" (an array of string path components), returns an "include prefix" (a relative path that
