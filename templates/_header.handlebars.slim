@@ -9,3 +9,9 @@ head
     {{#if canonical}}
     <link rel="canonical" href="{{include_prefix}}{{canonical}}" />
     {{/if}}
+    {{#if prev_link}}
+    <link rel="prev" href="{{include_prefix}}{{prev_link}}" />
+    {{/if}}
+    {{#if next_link}}
+    <link rel="next" href="{{include_prefix}}{{next_link}}" />
+    {{/if}}

@@ -9,6 +9,13 @@ body.photo_show
     h2
       | {{photo.title}}
     img src="{{include_prefix}}images/photos/{{photo.hash}}.{{photo.file_name}}"
+    | {{#if prev_link}}
+      <p class="navigation previous"><a href="{{include_prefix}}{{prev_link}}">&lt;</a></p>
+      {{/if}}
+      {{#if next_link}}
+      <p class="navigation nextious"><a href="{{include_prefix}}{{next_link}}">&gt;</a></p>
+      {{/if}}
+
     p.description
       | {{photo.description}}
     p.settings
