@@ -39,6 +39,7 @@ module Piccle
       photo_data = @parser.data[:photos][hash]
       substreams = [@parser.substream_for(hash)] + @parser.links_for(hash).map { |selector| @parser.interesting_substream_for(hash, selector) }.compact
 
+
       template_vars = {
         photo: photo_data,
         selector: selector,
@@ -57,8 +58,6 @@ module Piccle
       photo_title = photo_data[:title] || ""
       photo_title = "Photo" if photo_title.empty?
       template_vars[:breadcrumbs] << { friendly_name: photo_title } if selector.any?
-
-      Piccle::TemplateHelpers.render("show", template_vars)
 
       Piccle::TemplateHelpers.render("show", template_vars)
     end
