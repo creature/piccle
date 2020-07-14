@@ -2,14 +2,14 @@
 - Figure out what's causing some photo pages to slow down (and speed it up)
   - I think this is just calling out to a JS templating library (that uses V8 to render)
     - Switching to handlebars-ruby requires adding support for {with} and {lookup}
-- Add ordering to all the various substreams.
+- Add ordering to all the various substreams. Almost done, apart from sorting days and months in the datestream.
 - Add link prev next on photo pages.
   - And clickable links.
 - Check whether individual photos have been changed since the filesystem date before generating subpages.
+  - And an option to force-override.
 - Generate an RSS feed.
 - Add opengraph tags.
   - Requires configuring a URL for it.
-- Add an events stream
 - Add a location stream
 - Update the photo update method so it also REMOVES keywords from files.
   - Store changed MD5 hashes, generate redirect pages for those.
