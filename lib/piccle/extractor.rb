@@ -32,6 +32,31 @@ module Piccle
       template_ready_metadata(metadata_of_type(:date_year, photo_hash).first)
     end
 
+    # Given that we're in the stream described by selector, what's the link to the previous photo?
+    # If there's no selector, we look at all photos. Returns nil if there is no photo before this one.
+    def prev_link(photo_hash, selector)
+      _first, *rest = *@parser.substream_hashes_for(photo_hash, selector)
+
+      if index = rest.index(photo_hash)
+        "#{(selector + [rest[index-1]]).join("/")}.html"
+      else
+        nil
+      end
+    end
+
+    # Given that we're in the stream described by selector, what's the link to the next photo?
+    # If there's no selector, we look at all photos. Returns nil if there is no photo after this one.
+    def next_link(photo_hash, selector)
+      hashes = @parser.substream_hashes_for(photo_hash, selector)
+
+      index = hashes.index(photo_hash)
+      if index && index < (hashes.length - 1)
+        "#{(selector + [hashes[index + 1]]).join("/")}.html"
+      else
+        nil
+      end
+    end
+
     # Gets a (currently top-level only) navigation structure. All entries have at least one photo.
     def navigation
       @parser.faceted_data.map do |k, v|
