@@ -82,22 +82,33 @@ nav ul {
 
 .event_block {
   margin: 0;
-  display: inline-block;
-  text-align: center;
   vertical-align: middle;
   font-size: 36px;
   font-weight: bold;
   color: #ddd;
   background-color: #222;
   padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.event_block.event_start:after {
+.event_block.event_start {
+  text-align: right;
+}
+
+.event_block.event_end {
+  text-align: left;
+}
+
+.event_block.event_start:before {
   content: '\27fb';
+  padding-right: 1rem;
 }
 
 .event_block.event_end:after {
   content: '\27fc';
+  padding-left: 1rem;
 }
 
 .keywords {
