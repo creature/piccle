@@ -8,13 +8,14 @@ body.photo_show
   main
     h2
       | {{photo.title}}
-    img src="{{include_prefix}}images/photos/{{photo.hash}}.{{photo.file_name}}"
-    | {{#if prev_link}}
-      <p class="navigation_arrow previous"><a href="{{include_prefix}}{{prev_link}}">&laquo;</a></p>
-      {{/if}}
-      {{#if next_link}}
-      <p class="navigation_arrow next"><a href="{{include_prefix}}{{next_link}}">&raquo;</a></p>
-      {{/if}}
+    .photo_with_pagination
+      | {{#if prev_link}}
+        <a class="navigation_arrow" href="{{include_prefix}}{{prev_link}}">&laquo;</a>
+        {{/if}}
+      img src="{{include_prefix}}images/photos/{{photo.hash}}.{{photo.file_name}}"
+      | {{#if next_link}}
+        <a class="navigation_arrow" ref="{{include_prefix}}{{next_link}}">&raquo;</a>
+        {{/if}}
 
     p.description
       | {{photo.description}}

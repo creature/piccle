@@ -69,13 +69,14 @@ nav ul {
 /* This is both a flexbox item (of the main element) and a Flexbox container itself (for the photos). */
 .photos {
   flex: auto;
-  display: flex;
-  flex-flow: row wrap;
-  align-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-gap: 0;
 }
 
-.photos a, .event_block {
-  width: 300px;
+.photos a img {
+  width: 100%;
+  height: auto;
 }
 
 .event_block {
@@ -87,6 +88,7 @@ nav ul {
   font-weight: bold;
   color: #ddd;
   background-color: #222;
+  padding: 1rem;
 }
 
 .event_block.event_start:after {
@@ -162,4 +164,13 @@ footer {
 .photo_show img {
   max-width: 100%;
   display: block;
+}
+
+.photo_with_pagination {
+  display: flex;
+  align-items: center;
+}
+
+.photo_with_pagination img {
+  flex-grow: 1;
 }
