@@ -25,7 +25,7 @@ class Piccle::Photo < Sequel::Model
     photo = self.find_or_create(file_name: File.basename(path_to_file), path: File.dirname(path_to_file)) do |p|
       # Block executes when creating a new record.
       freshly_created = true
-      p = data_hash(path_to_file)
+      p.set(data_hash(path_to_file))
     end
     photo.modified = md5 != photo.md5
     photo.freshly_created = freshly_created
