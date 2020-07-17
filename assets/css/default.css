@@ -72,6 +72,7 @@ nav ul {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   grid-gap: 0;
+  align-content: start;
 }
 
 .photos a img {
@@ -107,7 +108,7 @@ nav ul {
   text-decoration: none;
   font-size: 90%;
   color: white;
-  background: grey;
+  background: linear-gradient(0deg, grey 20%, dimgrey 80%);
   border-radius: 20px;
   padding: 5px 10px;
 }
@@ -161,16 +162,28 @@ footer {
 }
 
 /* Styles for the photo_show template */
+
+body.photo_show {
+  margin: 0;
+}
+
+.photo_show main h2, .photo_show p.description, .photo_show p.settings, .photo_show p.date, .photo_show .streams {
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
 .photo_show img {
-  max-width: 100%;
   display: block;
 }
 
 .photo_with_pagination {
   display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
 .photo_with_pagination img {
-  flex-grow: 1;
+  flex-grow: 2;
+  object-fit: contain;
+  min-width: 0;
 }

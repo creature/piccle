@@ -14,7 +14,7 @@ body.photo_show
         {{/if}}
       img src="{{include_prefix}}images/photos/{{photo.hash}}.{{photo.file_name}}"
       | {{#if next_link}}
-        <a class="navigation_arrow" ref="{{include_prefix}}{{next_link}}">&raquo;</a>
+        <a class="navigation_arrow" href="{{include_prefix}}{{next_link}}">&raquo;</a>
         {{/if}}
 
     p.description
