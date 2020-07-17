@@ -59,10 +59,14 @@ module Piccle
 
     # Gets a (currently top-level only) navigation structure. All entries have at least one photo.
     def navigation
-      @parser.faceted_data.map do |k, v|
-        { friendly_name: v[:friendly_name],
-          entries: entries_for(v, k)
-        }
+      navigation_entries = @parser.faceted_data.map do |k, v|
+                             { friendly_name: v[:friendly_name],
+                               entries: entries_for(v, k)
+                             }
+                           end
+      # A hack, to only show keywords that have more than one image.
+      navigation_entries.each do |nav_entry|
+        nav_entry[:entries].keep_if { |entry| entry[:photo_count] > 1 } if "By Topic" == nav_entry[:friendly_name]
       end
     end
 
@@ -94,7 +98,7 @@ module Piccle
 
     def entries_for(data_hash, namespace)
       string_keys_only(data_hash).map do |k, v|
-        { name: k, link: "#{namespace}/#{k}/index.html" }
+        { name: k, link: "#{namespace}/#{k}/index.html", photo_count: v[:photos].length }
       end
     end
 
