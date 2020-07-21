@@ -51,6 +51,8 @@ module Piccle
         day_link: @extractor.day_link(hash),
         month_link: @extractor.month_link(hash),
         year_link: @extractor.year_link(hash),
+        prev_link: @extractor.prev_link(hash, selector),
+        next_link: @extractor.next_link(hash, selector),
         include_prefix: Piccle::TemplateHelpers.include_prefix(selector),
         canonical: "photos/#{hash}.html" # TODO: Other paths live in piccle.rake. Why's this one here?
       }
