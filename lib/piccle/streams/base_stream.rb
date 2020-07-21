@@ -27,9 +27,11 @@ class Piccle::Streams::BaseStream
   #
   # Each stream is expected to only meddle within its own namespace, but this is not enforced.
   def order(data)
-    data[namespace] = data[namespace].sort_by(&length_sort_proc(data)).reverse.to_h
-    data[namespace].each do |k, v|
-      data[namespace][k][:photos] = data[namespace][k][:photos].sort_by(&date_sort_proc(data)).reverse if k.is_a?(String)
+    if data.key?(namespace)
+      data[namespace] = data[namespace].sort_by(&length_sort_proc(data)).reverse.to_h
+      data[namespace].each do |k, v|
+        data[namespace][k][:photos] = data[namespace][k][:photos].sort_by(&date_sort_proc(data)).reverse if k.is_a?(String)
+      end
     end
 
     data
