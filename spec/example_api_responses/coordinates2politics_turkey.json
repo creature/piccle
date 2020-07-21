@@ -1,0 +1,34 @@
+[
+  {
+    "politics": [
+      {
+        "type": "admin2",
+        "friendly_type": "country",
+        "name": "Turkey",
+        "code": "tur"
+      },
+      {
+        "type": "admin4",
+        "friendly_type": "state",
+        "name": "Istanbul",
+        "code": "tu34"
+      },
+      {
+        "type": "admin2",
+        "friendly_type": "country",
+        "name": "Turkey",
+        "code": "tur"
+      },
+      {
+        "type": "admin4",
+        "friendly_type": "state",
+        "name": "Istanbul",
+        "code": "tu34"
+      }
+    ],
+    "location": {
+      "latitude": 40.9866561833333,
+      "longitude": 29.01939965
+    }
+  }
+]
