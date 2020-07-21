@@ -26,8 +26,9 @@ end
 def new_parser_with_streams
   Piccle::Parser.new.tap do |p|
     p.add_stream(Piccle::Streams::DateStream)
-    p.add_stream(Piccle::Streams::CameraStream)
+    p.add_stream(Piccle::Streams::LocationStream)
     p.add_stream(Piccle::Streams::EventStream)
+    p.add_stream(Piccle::Streams::CameraStream)
     p.add_stream(Piccle::Streams::KeywordStream)
   end
 end

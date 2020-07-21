@@ -22,7 +22,7 @@ namespace :photos do
     Dir.glob("images/**").each do |filename|
       print "Examining #{filename}..."
       photo = Piccle::Photo.from_file(filename)
-      if photo.modified?
+      if photo.changed_hash?
         print " updating..."
         photo.update_from_file
         puts " done."
@@ -52,18 +52,19 @@ namespace :photos do
         puts "    Looking up place names for #{photo.latitude}, #{photo.longitude}"
         # Can we look this up now in our cache?
         if location = Piccle::Location.find(latitude: photo.latitude, longitude: photo.longitude)
-          puts "        Found #{[location.city, location.state, location.country].join(", ")} in the database."
-          photo.update(city: location.city, state: location.state, country: location.country)
+          puts "        Found #{[location.city, location.state, location.country].compact.join(", ")} in the database."
+          unless photo.update(city: location.city, state: location.state, country: location.country)
+            puts "        Couldn't save data: #{photo.errors.inspect}"
+          end
         else
           # If not, can we look it up now?
           result = JSON.parse(cached_coords2politics(photo.latitude, photo.longitude))
-          location_data = result.first["politics"]
-          country = extract_field('country', location_data)
-          state = extract_field('state', location_data)
-          city = extract_field('city', location_data)
+          country = extract_field('country', result)
+          state = extract_field('state', result)
+          city = extract_field('city', result)
           puts "        Found #{[city, state, country].compact.join(", ")} from the Data Science Toolkit API."
           Piccle::Location.create(latitude: photo.latitude, longitude: photo.longitude, city: city, state: state, country: country)
-          photo.update(city: city, state: state, country: country)
+          puts "        Couldn't save data: #{photo.errors.inspect}" unless photo.update(city: city, state: state, country: country)
         end
       else
         places = [photo.city, photo.state, photo.country].compact

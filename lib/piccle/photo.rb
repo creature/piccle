@@ -10,7 +10,7 @@ DB = Piccle::Database.connect
 # Represents an image in the system. Reading info from an image? Inferring something based on the data? Put it here.
 class Piccle::Photo < Sequel::Model
   many_to_many :keywords
-  attr_accessor :modified # Has this file been modified?
+  attr_accessor :changed_hash # Has this file been modified?
   attr_accessor :freshly_created # Have we just generated this file?
 
   def before_create
@@ -27,11 +27,11 @@ class Piccle::Photo < Sequel::Model
       freshly_created = true
       p.set(data_hash(path_to_file))
     end
-    photo.modified = md5 != photo.md5
+    photo.changed_hash = md5 != photo.md5
     photo.freshly_created = freshly_created
 
     # Pull out keywords for this file, if it's new or changed.
-    photo.generate_keywords if freshly_created || photo.modified?
+    photo.generate_keywords if freshly_created || photo.changed_hash?
 
     photo
   end
@@ -67,6 +67,13 @@ class Piccle::Photo < Sequel::Model
     p[:title] = if xmp && xmp.namespaces && xmp.namespaces.include?("dc") && xmp.dc.attributes.include?("title")
                   xmp.dc.title
                 end
+    %w[City State Country].each do |location|
+      p[location.downcase.to_sym] = if xmp && xmp.namespaces && xmp.namespaces.include?("photoshop") &&
+                                        xmp.photoshop.attributes.include?(location)
+                                      xmp.photoshop.send(location)
+                                    end
+    end
+
     p
   end
 
@@ -147,9 +154,9 @@ class Piccle::Photo < Sequel::Model
 
   # ---- Piccle internals ----
 
-  # Has this file been modified? You probably want to call update if so.
-  def modified?
-    modified
+  # Has this file changed hash? You probably want to call update if so.
+  def changed_hash?
+    changed_hash
   end
 
   # Have we just created this file?
