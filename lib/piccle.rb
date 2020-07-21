@@ -1,6 +1,7 @@
 require "piccle/database"
 require "piccle/extractor"
 require "piccle/keyword"
+require "piccle/location"
 require "piccle/parser"
 require "piccle/photo"
 require "piccle/renderer"

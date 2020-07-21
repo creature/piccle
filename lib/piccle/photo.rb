@@ -140,6 +140,11 @@ class Piccle::Photo < Sequel::Model
     "#{shutter_speed_numerator}/#{shutter_speed_denominator}s"
   end
 
+  # Does this image have both a lat-long pair, AND at least one of (city, state, country)?
+  def geocoded?
+    (latitude && longitude) && (city || state || country)
+  end
+
   # ---- Piccle internals ----
 
   # Has this file been modified? You probably want to call update if so.

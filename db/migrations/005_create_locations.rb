@@ -8,6 +8,7 @@ Sequel.migration do
       String :state, text: true
       String :country, text: true
       DateTime :created_at
+      check { (city !~ nil) | (state !~ nil) | (country !~ nil) }
     end
 
     alter_table(:photos) do
