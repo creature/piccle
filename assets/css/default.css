@@ -157,6 +157,7 @@ nav ul {
   justify-content: center;
   padding-top: 1rem;
   padding-bottom: 1rem;
+  overflow-x: scroll;
 }
 
 header {
@@ -183,6 +184,11 @@ body.photo_show {
   margin-right: 100px;
 }
 
+.photo_show .streams h2 {
+  margin-left: 0;
+  margin-right: 0;
+}
+
 .photo_show img {
   display: block;
 }
@@ -197,4 +203,43 @@ body.photo_show {
   flex-grow: 2;
   object-fit: contain;
   min-width: 0;
+  max-width: 100%;
+}
+
+/* --------- Mobile styles ---------- */
+@media(max-width: 688px) {
+  body {
+    margin: 1rem 0;
+  }
+
+  nav {
+    display: none; /* TODO: show with hamburger menu. */
+  }
+
+  .photos {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .photo_with_pagination .navigation_arrow {
+    position: absolute;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: rgba(255, 255, 255, 0.75);
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    font-weight: lighter;
+  }
+
+  .photo_with_pagination .navigation_arrow:last-child {
+    right: 0;
+    border-radius: 0;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+  }
+
+  .photo_show main h2, .photo_show p.description, .photo_show p.settings, .photo_show p.date, .photo_show .streams {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
 }
