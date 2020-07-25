@@ -252,11 +252,11 @@ body.photo_show {
   }
 
   nav label:before {
-    content: "\2261  Show ";
+    content: "\2261  Open ";
   }
 
   nav input:checked + label:before {
-    content: "\2261  Hide ";
+    content: "\2261  Close ";
   }
 
   nav ul {
