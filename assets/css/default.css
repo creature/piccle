@@ -48,6 +48,10 @@ header ol li a {
   display: flex;
 }
 
+nav input, nav label {
+  display: none;
+}
+
 nav {
   flex: none;
   max-width: 180px;
@@ -113,6 +117,11 @@ nav ul {
 
 .keywords {
   margin: 72px 72px 18px;
+  line-height: 2;
+}
+
+.keywords a {
+  white-space: nowrap;
 }
 
 .keywords a {
@@ -212,8 +221,51 @@ body.photo_show {
     margin: 1rem 0;
   }
 
+  header {
+    margin-bottom: 1rem;
+  }
+
+  .photos_index main {
+    display: block;
+  }
+
   nav {
-    display: none; /* TODO: show with hamburger menu. */
+    max-width: initial;
+    padding: 0 1rem 1rem;
+    margin-bottom: 1rem;
+    margin-right: 0;
+    border-bottom: 1px solid #777;
+  }
+
+
+  nav section {
+    display: none;
+  }
+
+  nav input:checked ~ section {
+    display: block;
+  }
+
+  nav label {
+    display: block;
+    font-size: 140%;
+  }
+
+  nav label:before {
+    content: "\2261  Show ";
+  }
+
+  nav input:checked + label:before {
+    content: "\2261  Hide ";
+  }
+
+  nav ul {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  nav ul li {
+    width: 50%;
   }
 
   .photos {
