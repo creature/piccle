@@ -46,18 +46,62 @@ The test images are public domain images by [Sasin Tipchai](https://pixabay.com/
 
 Piccle is licensed under the [Affero GPL v3](https://www.gnu.org/licenses/agpl-3.0.en.html).
 
+
 ## Contributing
 
+I have fairly firm ideas about where I want to take Piccle, so if you want to contribute features please talk to me 
+first! Bugfixes and test cases are welcomed, especially if you can include a public-domain photo that illustrates the 
+bug.
 
 ------
 
-
-
 ## Suggested Tools
 
+I am resisting the urge to write my own metadata manager until I consider Piccle complete. I haven't found an ideal 
+tool for managing metadata yet, but here are some options:
+
+### Adobe Bridge
+
+Pros
+: Available for free, without a paid Creative Cloud subscription
+: Lets you build a library of keywords, with a nested heirarchy, so it's easier to use a set of standard tags with your photos
+: Can [edit titles, descriptions, and locations](https://helpx.adobe.com/ca/bridge/using/metadata-adobe-bridge.html)
+: Good filtering support: it's easy to find pictures lacking metadata
+
+Cons
+: You still need a Creative Cloud account to download it
+: You must install the Adobe Creative Cloud stuff to get Bridge
+: Can't place photos on a map for adding latitude/longitude.
+
+### macOS Preview
+
+Pros
+: If you use macOS you already have it
+: Access the inspector (⌘-I or File → Inspect) and choose the "Keywords" panel to add/remove keywords
+
+Cons 
+: Can't edit title, description, or location
+: Can't build a library of tags
+
+### Affinity Photo
+
+Pros
+: Lets you edit titles, descriptions, locations, keywords, and add latitude/longitude via a map
+: Is generally a delightful image editor
+
+Cons
+: Longwinded for bulk edits: open photo, switch to Develop mode, change to metadata tab, switch between "File" and "IPTC (Image)" sections
+: No tag library - you must type in a comma-separated string
 
 
 ## Automation
+
+You can run Piccle by hand, but it's also ideal for automation. I use Piccle with macOS' built-in [Automator](https://support.apple.com/en-gb/guide/automator/welcome/mac)
+tool. A [folder action](https://support.apple.com/en-gb/guide/automator/aut7cac58839/2.10/mac/10.15) watches Piccle's 
+`images` directory for added files; when a file is added, automator runs `rake piccle:generate` and runs [`rsync`](https://wiki.archlinux.org/index.php/Rsync)
+to copy the generated files to my web server. Zero-click publishing! When I finish editing an image I save a JPEG to 
+Piccle's directory, and it's published automatically in the background.
+
 
 
 
