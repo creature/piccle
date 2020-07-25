@@ -32,6 +32,18 @@ module Piccle
       template_ready_metadata(metadata_of_type(:date_year, photo_hash).first)
     end
 
+    def country_link(photo_hash)
+      template_ready_metadata(metadata_of_type(:location_country, photo_hash).first)
+    end
+
+    def state_link(photo_hash)
+      template_ready_metadata(metadata_of_type(:location_state, photo_hash).first)
+    end
+
+    def city_link(photo_hash)
+      template_ready_metadata(metadata_of_type(:location_city, photo_hash).first)
+    end
+
     # Given that we're in the stream described by selector, what's the link to the previous photo?
     # If there's no selector, we look at all photos. Returns nil if there is no photo before this one.
     def prev_link(photo_hash, selector)

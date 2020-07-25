@@ -202,6 +202,23 @@ body.photo_show {
   display: block;
 }
 
+
+ul.location {
+  padding-left: 1rem;
+}
+
+ul.location li {
+  display: inline-block;
+}
+
+ul.location li:after {
+  content: ", ";
+}
+
+ul.location li:last-of-type:after {
+  content: ".";
+}
+
 .photo_with_pagination {
   display: flex;
   justify-content: space-between;

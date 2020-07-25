@@ -11,13 +11,12 @@ class Piccle::Streams::LocationStream < Piccle::Streams::BaseStream
     if photo.country
       data = { namespace => {
                :friendly_name => "By Location",
-               :interesting => true,
+               :interesting => false,
                photo.country => {
                  :friendly_name => photo.country,
-                 :interesting => false,
+                 :interesting => true,
                  :photos => [photo.md5]
                },
-               :photos => [photo.md5]
              }}
       if photo.state
         data[namespace][photo.country][photo.state] = {
@@ -44,6 +43,14 @@ class Piccle::Streams::LocationStream < Piccle::Streams::BaseStream
 
     if photo.country
       metadata << { friendly_name: photo.country, type: :location_country, selector: [namespace, photo.country] }
+
+      if photo.state
+        metadata << { friendly_name: photo.state, type: :location_state, selector: [namespace, photo.country, photo.state] }
+
+        if photo.city
+          metadata << { friendly_name: photo.city, type: :location_city, selector: [namespace, photo.country, photo.state, photo.city] }
+        end
+      end
     end
     metadata
   end

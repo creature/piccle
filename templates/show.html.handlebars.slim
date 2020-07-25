@@ -28,6 +28,13 @@ body.photo_show
           {{#if year_link}}<a href="{{include_prefix}}{{year_link.link}}">{{year_link.friendly_name}}</a>.{{/if}}
         </p>
       {{/if}}
+      {{#if photo.has_location}}
+        <ul class="location">
+          {{#if city_link}}<li><a href="{{include_prefix}}{{city_link.link}}">{{city_link.friendly_name}}</a></li>{{/if}}
+          {{#if state_link}}<li><a href="{{include_prefix}}{{state_link.link}}">{{state_link.friendly_name}}</a></li>{{/if}}
+          {{#if country_link}}<li><a href="{{include_prefix}}{{country_link.link}}">{{country_link.friendly_name}}</a></li>{{/if}}
+        </ul>
+      {{/if}}
 
     | {{#if keywords}}
         <div class="keywords">

@@ -50,6 +50,10 @@ module Piccle
                                     aperture: photo.aperture,
                                     shutter_speed: photo.friendly_shutter_speed,
                                     iso: photo.iso,
+                                    city: photo.city,
+                                    state: photo.state,
+                                    country: photo.country,
+                                    has_location: photo.geocoded?,
                                     metadata: []
       }
 
