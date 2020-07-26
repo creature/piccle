@@ -85,6 +85,7 @@ nav ul {
 }
 
 .event_block {
+  max-width: 100%;
   margin: 0;
   vertical-align: middle;
   font-size: 36px;
@@ -95,6 +96,7 @@ nav ul {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .event_block.event_start {
@@ -287,6 +289,10 @@ ul.location li:last-of-type:after {
 
   .photos {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .event_block {
+    font-size: 18px;
   }
 
   .photo_with_pagination .navigation_arrow {
