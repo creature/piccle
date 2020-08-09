@@ -99,6 +99,11 @@ nav ul {
   overflow: hidden;
 }
 
+.event_block a {
+  color: #ddd;
+  text-decoration: none;
+}
+
 .event_block.event_start {
   text-align: right;
 }

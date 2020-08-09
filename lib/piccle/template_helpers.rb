@@ -1,5 +1,15 @@
 require 'handlebars'
 
+# Rendering functions for templates.
+# * For most files, we use Slim to render a Handlebars template (ie. HTML with embedded Handlebars). Handlebars then
+#   generates the final output. This lets us use the same templates for backend and frontend rendering.
+# * Partials don't have variable interpolation, because they're rendered inline into the main template. Their variables
+#   will be interpolated when the overall template is rendered.
+# * RSS feeds are generated via Slim only, as we don't need to generate those server-side.
+#
+# We don't cache Handlebars templates, because it actually results in WORSE performance than compiling a fresh instance
+# each time.
+
 class Piccle::TemplateHelpers
   @@cached_site_metadata = nil
   @@handlebars = nil
@@ -15,8 +25,8 @@ class Piccle::TemplateHelpers
   # Renders an entire template out
   def self.render(template_name, data = {})
     options = { code_attr_delims: { '(' => ')', '[' => ']'}, attr_list_delims: { '(' => ')', '[' => ']' } }
-    @@slim_pages[template_name] ||= Tilt['slim'].new(options) { File.read("templates/#{template_name}.html.handlebars.slim") }
-    template = handlebars.compile(@@slim_pages[template_name].render)
+    @@slim_pages[template_name] ||= Tilt['slim'].new(options) { File.read("templates/#{template_name}.html.handlebars.slim") }.render
+    template = handlebars.compile(@@slim_pages[template_name])
     data['debug'] ||= []
     data.merge!({ site_metadata: site_metadata })
     template.call(data)
@@ -67,6 +77,10 @@ class Piccle::TemplateHelpers
         if arg1 == arg2
           block.fn(context)
         end
+      end
+
+      @@handlebars.register_helper(:join) do |context, arg1, arg2, block|
+        arg1.join(arg2)
       end
     end
     @@handlebars

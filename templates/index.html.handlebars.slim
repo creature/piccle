@@ -19,7 +19,7 @@ html
           {{#each photos as |photo|}}
             {{#if (lookup ../sentinels photo.hash)}}
               {{#with (lookup ../sentinels hash)}}
-                <p class="event_block {{type}}">{{name}}</p>
+                <p class="event_block {{type}}"><a href="{{../include_prefix}}{{join selector '/'}}/index.html">{{name}}</a></p>
               {{/with}}
             {{/if}}
             <a href="{{../include_prefix}}{{../selector_path}}{{photo.hash}}.html">

@@ -75,8 +75,9 @@ module Piccle
     # Loads the event data from the EventStream. It also finds "sentinels", which are photos where we should display a special
     # tile beforehand to indicate the start/end of the event.
     def load_events
+      event_stream = Piccle::Streams::EventStream.new
       order
-      @data[:events] = Piccle::Streams::EventStream.new.events
+      @data[:events] = event_stream.events
       @data[:sentinels] = {}
 
       # Look at each 2 pics, try to figure out if there's an event that falls between them.
@@ -86,11 +87,11 @@ module Piccle
         second_photo_date = @data[:photos][second_hash][:taken_at]&.to_datetime || DateTime.new(1970, 1, 1)
 
         if event = @data[:events].find { |ev| first_photo_date > ev[:from] && second_photo_date < ev[:from] }
-          @data[:sentinels][second_hash] = { name: event[:name], type: :event_start }
+          @data[:sentinels][second_hash] = { name: event[:name], type: :event_start, selector: event_stream.selector_for(event[:name]) }
         end
 
         if event = @data[:events].find { |ev| first_photo_date > ev[:to] && second_photo_date < ev[:to] }
-          @data[:sentinels][second_hash] = { name: event[:name], type: :event_end }
+          @data[:sentinels][second_hash] = { name: event[:name], type: :event_end, selector: event_stream.selector_for(event[:name]) }
         end
       end
     end

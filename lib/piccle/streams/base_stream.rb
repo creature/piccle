@@ -48,4 +48,9 @@ class Piccle::Streams::BaseStream
   def date_sort_proc(data)
     Proc.new { |hash| data.dig(:photos, hash, :taken_at) || Time.new(1970, 1, 1) }
   end
+
+  # Converts a sentence into something suitable for use in a URL slug.
+  def slugify(name)
+    name.downcase.gsub(/[^a-z0-9]+/, '-').gsub(/^-+/, '').gsub(/-+$/, '')
+  end
 end
