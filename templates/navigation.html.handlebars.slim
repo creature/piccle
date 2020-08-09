@@ -7,7 +7,7 @@ nav
       <h2>{{nav_item.friendly_name}}</h2>
       <ul>
         {{#each nav_item.entries as |entry|}}
-          <li><a href="{{../../include_prefix}}{{entry.link}}">{{entry.name}}</a></li>
+          <li><a href="{{../../include_prefix}}{{entry.link}}">{{entry.friendly_name}}</a></li>
         {{/each}}
       </ul>
       </section>

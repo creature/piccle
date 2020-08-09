@@ -11,7 +11,7 @@ class Piccle::Streams::CameraStream < Piccle::Streams::BaseStream
       namespace => {
         :friendly_name => "By Camera",
         :interesting => false,
-        camera_name(photo) => {
+        slugify(camera_name(photo)) => {
           friendly_name: camera_name(photo),
           photos: [photo.md5]
         },
@@ -23,7 +23,7 @@ class Piccle::Streams::CameraStream < Piccle::Streams::BaseStream
     [{
       friendly_name: camera_name(photo),
       type: :camera,
-      selector: [namespace, camera_name(photo)]
+      selector: [namespace, slugify(camera_name(photo))]
     }]
   end
 

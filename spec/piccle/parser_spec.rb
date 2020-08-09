@@ -118,7 +118,7 @@ describe Piccle::Parser do
       subject.parse(photo_2)
 
       expect(data).to have_key("by-camera")
-      expect(data["by-camera"].keys.select { |k| k.is_a?(String) }).to contain_exactly("NIKON D810", "NIKON D3100")
+      expect(data["by-camera"].keys.select { |k| k.is_a?(String) }).to contain_exactly("nikon-d810", "nikon-d3100")
     end
   end
 
@@ -144,7 +144,7 @@ describe Piccle::Parser do
         ["by-date", "2015"],
         ["by-date", "2015", "10"],
         ["by-date", "2015", "10", "23"],
-        ["by-camera", "NIKON D810"]
+        ["by-camera", "nikon-d810"]
       ]
 
       expect(result).to match_array(expected_links)

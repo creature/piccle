@@ -110,7 +110,7 @@ module Piccle
 
     def entries_for(data_hash, namespace)
       string_keys_only(data_hash).map do |k, v|
-        { name: k, link: "#{namespace}/#{k}/index.html", photo_count: v[:photos].length }
+        { name: k, friendly_name: v[:friendly_name], link: "#{namespace}/#{k}/index.html", photo_count: v[:photos].length }
       end
     end
 
