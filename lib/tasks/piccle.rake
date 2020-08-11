@@ -12,11 +12,14 @@ namespace :piccle do
 
     parser = new_parser_with_streams
     parse_photos(parser)
-    generate_html_indexes(parser)
-    generate_html_photos(parser)
-    generate_json(parser)
+    renderer = Piccle::Renderer.new(parser)
+
+    generate_rss_feeds(parser, renderer)
+    generate_html_indexes(parser, renderer)
+    generate_html_photos(parser, renderer)
+    generate_json(parser, renderer)
     generate_thumbnails
-    generate_templates
+    generate_templates(renderer)
     copy_assets
     puts "Website generated in #{(Time.now - start_time)} seconds."
   end
@@ -43,9 +46,8 @@ def parse_photos(parser)
 end
 
 # Given a parser object, generate some HTML index pages from the data it contains.
-def generate_html_indexes(parser)
+def generate_html_indexes(parser, renderer)
   puts "    ... generating HTML indexes ..."
-  renderer = Piccle::Renderer.new(parser)
   print "        ... generating main index ... "
   File.write("generated/index.html", renderer.render_main_index)
   puts "Done."
@@ -61,10 +63,28 @@ def generate_html_indexes(parser)
   end
 end
 
+# Given a parser object, generate Atom feeds for everything, and all substreams.
+def generate_rss_feeds(parser, renderer)
+  puts "    ... generating Atom feeds ..."
+  print "        ... generating main Atom feed ... "
+  File.write("generated/feed.atom", renderer.render_feed)
+  puts "Done."
+
+  parser.subsections.each do |subsection|
+    if parser.subsection_photo_hashes(subsection).any?
+      subdir = "generated/#{subsection.join("/")}"
+      print "        ... generating #{subdir} feed ... "
+      FileUtils.mkdir_p(subdir)
+      File.write("#{subdir}/feed.atom", renderer.render_feed(subsection))
+      puts "Done."
+    end
+  end
+
+end
+
 # Given a parser object, generate photo pages from the data it contains.
-def generate_html_photos(parser)
+def generate_html_photos(parser, renderer)
   puts "    ... generating HTML photo pages ..."
-  renderer = Piccle::Renderer.new(parser)
   parser.photo_hashes.each do |hash|
     print "        ... generating canonical page for #{hash}... "
     File.write("generated/#{hash}.html", renderer.render_photo(hash))
@@ -79,7 +99,7 @@ def generate_html_photos(parser)
   end
 end
 
-def generate_json(parser)
+def generate_json(parser, _renderer)
   puts "    ... generating JSON files..."
   FileUtils.mkdir_p("generated/json")
   File.write("generated/json/all.json", parser.data.to_json)
@@ -111,7 +131,7 @@ def generate_thumbnails
   end
 end
 
-def generate_templates
+def generate_templates(_renderer)
   puts '    ... generating templates...'
   FileUtils.mkdir_p('generated/js/')
   File.write('generated/js/index.handlebars.js', Piccle::TemplateHelpers.compile_template('index'))
@@ -132,8 +152,4 @@ def database
   @db ||= SQLite3::Database.new(Piccle::Database::PHOTO_DATABASE_FILENAME)
   @db.results_as_hash = true
   @db
-end
-
-def streams
-  [Piccle::Streams::DateStream.new, Piccle::Streams::CameraStream.new]
 end
