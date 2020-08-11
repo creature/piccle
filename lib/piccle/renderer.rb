@@ -34,6 +34,21 @@ module Piccle
       Piccle::TemplateHelpers.render("index", photos: photos, sentinels: @parser.data[:sentinels], navigation: render_nav, debug: debug)
     end
 
+    # Renders an Atom feed of the given subsection.
+    def render_feed(selector = [])
+      photos = @parser.subsection_photos(selector).sort_by { |k, p| p[:created_at] }.reverse
+      escaped_selector = selector.map { |s| CGI::escape(s) }
+
+      template_vars = {
+        photos: photos,
+        joined_selector: "/#{escaped_selector.join("/")}/",
+        feed_update_time: photos.map { |k, v| v[:created_at] }.max,
+        selector: selector
+      }
+
+      Piccle::TemplateHelpers.render_rss("feed", template_vars)
+    end
+
     # Render a page for a specific photo.
     def render_photo(hash, selector=[])
       photo_data = @parser.data[:photos][hash]

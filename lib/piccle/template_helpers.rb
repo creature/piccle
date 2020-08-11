@@ -32,6 +32,12 @@ class Piccle::TemplateHelpers
     template.call(data)
   end
 
+  def self.render_rss(template_name, data = {})
+    data.merge!({ site_metadata: site_metadata })
+    @@slim_pages["rss_#{template_name}"] ||= Tilt['slim'].new { File.read("templates/#{template_name}.atom.slim") }
+    @@slim_pages["rss_#{template_name}"].render(Object.new, data)
+  end
+
   # Gets a Handlebars version of the template. No variable replacement!
   def self.compile_template(name)
     slim_template = Tilt['slim'].new { File.read("templates/#{name}.html.handlebars.slim") }

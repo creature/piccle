@@ -47,6 +47,7 @@ module Piccle
                                     width: photo.width,
                                     height: photo.height,
                                     taken_at: photo.taken_at,
+                                    created_at: photo.created_at,
                                     aperture: photo.aperture,
                                     shutter_speed: photo.friendly_shutter_speed,
                                     iso: photo.iso,
@@ -138,7 +139,11 @@ module Piccle
 
     # Gets the actual photo objects for a given subsection.
     def subsection_photos(subsection_path)
-      subsection_photo_hashes(subsection_path).map { |hash| [hash, @data[:photos][hash]] }.to_h
+      if subsection_path.any?
+        subsection_photo_hashes(subsection_path).map { |hash| [hash, @data[:photos][hash]] }.to_h
+      else
+        @data[:photos]
+      end
     end
 
     # Given an MD5 hash, returns an array of arrays. Each array is a set of strings that, combined with the MD5, gives a link to the photo.

@@ -22,4 +22,5 @@ module Piccle
   AUTHOR_NAME = "Alex Pounds" # TODO: extract this out to a config file.
   DEBUG = true # Output some debug info on web pages when true.
   EVENT_YAML_FILE = "events.yaml" # A file with a list of "events", named things that we want to generate pages for.
+  HOME_URL = "https://example.com/" # OpenGraph and Atom feeds need a fully-qualified URL. This is used to generate them.
 end
