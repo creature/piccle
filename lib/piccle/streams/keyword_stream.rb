@@ -13,12 +13,12 @@ class Piccle::Streams::KeywordStream < Piccle::Streams::BaseStream
                :interesting => true
              }}
     photo.keywords.each do |kw|
-      result[namespace][kw.name] = { friendly_name: kw.name, interesting: true, photos: [photo.md5] }
+      result[namespace][slugify(kw.name)] = { friendly_name: kw.name, interesting: true, photos: [photo.md5] }
     end
     result
   end
 
   def metadata_for(photo)
-    photo.keywords.map { |kw| { friendly_name: kw.name, type: :keyword, selector: [namespace, kw.name] } }
+    photo.keywords.map { |kw| { friendly_name: kw.name, type: :keyword, selector: [namespace, slugify(kw.name)] } }
   end
 end
