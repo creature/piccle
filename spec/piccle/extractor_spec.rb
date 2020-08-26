@@ -6,7 +6,6 @@ describe Piccle::Extractor do
   subject { Piccle::Extractor.new(parser) }
 
   before(:each) do
-    puts "Registering streams"
     parser.add_stream(Piccle::Streams::DateStream)
     parser.parse(photo_1)
   end

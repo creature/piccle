@@ -24,4 +24,8 @@ module Piccle
   DB = Piccle::Database.connect
   Sequel::Model.db = DB
   Dir["lib/piccle/models/*.rb"].each { |f| require f.delete_prefix("lib/").delete_suffix(".rb") }
+  models = [Piccle::Photo, Piccle::Keyword, Piccle::Location]
+  models.each(&:finalize_associations)
+  models.each(&:freeze)
+  DB.freeze
 end
