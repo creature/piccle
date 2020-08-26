@@ -1,9 +1,6 @@
 require "piccle/database"
 require "piccle/extractor"
-require "piccle/keyword"
-require "piccle/location"
 require "piccle/parser"
-require "piccle/photo"
 require "piccle/renderer"
 require "piccle/streams"
 require "piccle/streams/base_stream"
@@ -23,4 +20,8 @@ module Piccle
   DEBUG = true # Output some debug info on web pages when true.
   EVENT_YAML_FILE = "events.yaml" # A file with a list of "events", named things that we want to generate pages for.
   HOME_URL = "https://example.com/" # OpenGraph and Atom feeds need a fully-qualified URL. This is used to generate them.
+
+  DB = Piccle::Database.connect
+  Sequel::Model.db = DB
+  Dir["lib/piccle/models/*.rb"].each { |f| require f.delete_prefix("lib/").delete_suffix(".rb") }
 end

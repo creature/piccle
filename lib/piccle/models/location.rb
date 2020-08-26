@@ -1,7 +1,5 @@
 require 'sequel'
 
-DB = Piccle::Database.connect
-
 # Represents a location in the system - either just a lat/long point (to be geocoded later) or a lat/long named
 # with "city", "state", "country". Countries are normally countries, but overall it's more like "small area", "wider
 # geographic area", "big geographic area".

@@ -5,8 +5,6 @@ require 'sequel'
 require 'rmagick'
 require 'json'
 
-DB = Piccle::Database.connect
-
 # Represents an image in the system. Reading info from an image? Inferring something based on the data? Put it here.
 class Piccle::Photo < Sequel::Model
   many_to_many :keywords
@@ -36,7 +34,7 @@ class Piccle::Photo < Sequel::Model
     photo
   end
 
-  # Gets a dataset of properties to save to the file. We reuse this between from_file (above) and update_from_file
+  # Gets a dataset of properties to save about this file. We reuse this between from_file (above) and update_from_file
   # (below).
   def self.data_hash(path_to_file)
     exif_info = EXIFR::JPEG.new(path_to_file)
