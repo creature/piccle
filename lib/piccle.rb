@@ -1,3 +1,4 @@
+require "piccle/config"
 require "piccle/database"
 require "piccle/extractor"
 require "piccle/parser"
