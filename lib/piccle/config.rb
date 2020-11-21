@@ -11,7 +11,7 @@ module Piccle
   class Config
     attr_accessor :home_url
 
-    def initialize(options)
+    def initialize(options = {})
       @commandline_options = options
       @working_directory = options[:working_directory]
       @home_directory = options[:home_directory]

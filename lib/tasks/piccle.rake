@@ -6,7 +6,7 @@ require 'piccle'
 
 namespace :piccle do
   desc "Generate our website"
-  task generate: "photos:update_db" do
+  task generate: "photos:update_db" do |task, args|
     start_time = Time.now
     puts "Generating website..."
 
@@ -65,21 +65,24 @@ end
 
 # Given a parser object, generate Atom feeds for everything, and all substreams.
 def generate_rss_feeds(parser, renderer)
-  puts "    ... generating Atom feeds ..."
-  print "        ... generating main Atom feed ... "
-  File.write("generated/feed.atom", renderer.render_feed)
-  puts "Done."
+  if Piccle::CONFIG.atom?
+    puts "    ... generating Atom feeds ..."
+    print "        ... generating main Atom feed ... "
+    File.write("generated/feed.atom", renderer.render_feed)
+    puts "Done."
 
-  parser.subsections.each do |subsection|
-    if parser.subsection_photo_hashes(subsection).any?
-      subdir = "generated/#{subsection.join("/")}"
-      print "        ... generating #{subdir} feed ... "
-      FileUtils.mkdir_p(subdir)
-      File.write("#{subdir}/feed.atom", renderer.render_feed(subsection))
-      puts "Done."
+    parser.subsections.each do |subsection|
+      if parser.subsection_photo_hashes(subsection).any?
+        subdir = "generated/#{subsection.join("/")}"
+        print "        ... generating #{subdir} feed ... "
+        FileUtils.mkdir_p(subdir)
+        File.write("#{subdir}/feed.atom", renderer.render_feed(subsection))
+        puts "Done."
+      end
     end
+  else
+    puts "    Not generating RSS feeds, because no home URL is set."
   end
-
 end
 
 # Given a parser object, generate photo pages from the data it contains.
