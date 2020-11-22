@@ -17,23 +17,6 @@ namespace :photos do
     end
   end
 
-  desc "Update the database with photo info"
-  task :update_db do
-    Dir.glob("images/**").each do |filename|
-      print "Examining #{filename}..."
-      photo = Piccle::Photo.from_file(filename)
-      if photo.changed_hash?
-        print " updating..."
-        photo.update_from_file
-        puts " done."
-      elsif photo.freshly_created?
-        puts " created."
-      else
-        puts " done."
-      end
-    end
-  end
-
   desc "Process locations for photos"
   task :update_locations do
     Piccle::Photo.all.each do |photo|

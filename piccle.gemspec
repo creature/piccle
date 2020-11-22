@@ -8,6 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Piccle::VERSION
   spec.authors       = ["Alex Pounds"]
   spec.email         = ["alex+git@alexpounds.com"]
+  spec.executables   = ["piccle"]
 
   spec.summary       = %q{A static site generator for photographers}
 
@@ -32,6 +33,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov" # Code coverage calculator
   spec.add_development_dependency "simplecov-console" # Output stats on the console
   spec.add_development_dependency "pry-byebug", "~> 3.5" # Debugging aid; only needed by developers.
+  spec.add_development_dependency "ruby-prof"
+
 
   spec.add_dependency "exifr", "~> 1.3" # EXIF reading library
   spec.add_dependency "handlebars" # Templating engine, usable both backend and frontend.
@@ -42,5 +45,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "sequel", "~> 5" # DB access in a structured way
   spec.add_dependency "slim", "~> 3.0" # Templating language, so we don't have to write longhand HTML
   spec.add_dependency "sqlite3", "~> 1.3" # Simple file-based database
+  spec.add_dependency "thor" # Nice Ruby CLI builder
   spec.add_dependency "xmp", "~> 0.2" # Read XMP info from files
 end

@@ -1,0 +1,200 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+require 'handlebars'
+require 'json'
+require 'slim'
+require 'thor'
+require 'piccle'
+
+class CLI < Thor
+  desc "generate", "Generates a web photo gallery based on image metadata."
+  option :"image-dir", desc: "Input image directory. Defaults to $CWD/images.", aliases: "-i"
+  option :"output-dir", desc: "Output directory. Defaults to $CWD/generated.", aliases: "-o"
+  option :config, desc: "Config file to use. Defaults to $CDW/piccle.cofing.yaml, then ~/.piccle.config.yaml.", aliases: "-c"
+  option :"author-name", desc: "Author name.", aliases: "-n"
+  option :url, desc: "The URL where you'll deploy your gallery. Used to generate Atom feeds and OpenGraph tags.", aliases: "-u"
+  option :debug, desc: "Enable debug mode.", type: :boolean, default: false
+  def generate
+    if options.key?("config") && !File.exist?(options["config"])
+      puts "Specified config file #{options["config"]} not found."
+      exit 1
+    end
+
+    Piccle.config = Piccle::Config.new(options.merge("working_directory" => Dir.pwd, "home_directory" => Dir.home))
+
+    update_db
+    generate_everything
+  end
+
+  desc "geocode", "Retrieve locations from photos, and convert lat/longs to named locations."
+  def geocode
+
+  end
+
+  protected
+
+  # Read all the images in the images directory, and load their data into the DB.
+  def update_db
+    Dir.glob(File.join(Piccle.config.images_dir, "**")).each do |filename|
+      print "Examining #{filename}..."
+      photo = Piccle::Photo.from_file(filename)
+      if photo.changed_hash?
+        print " updating..."
+        photo.update_from_file
+        puts " done."
+      elsif photo.freshly_created?
+        puts " created."
+      else
+        puts " done."
+      end
+    end
+  end
+
+  # Generates an entire site. Atom feeds, HTML templates, smaller images, JSON data, copied assets, the whole enchilada.
+  def generate_everything
+    start_time = Time.now
+    puts "Generating website..."
+
+    parser = new_parser_with_streams
+    parse_photos(parser)
+    renderer = Piccle::Renderer.new(parser)
+
+    generate_atom_feeds(parser, renderer)
+    generate_html_indexes(parser, renderer)
+    generate_html_photos(parser, renderer)
+    generate_json(parser, renderer)
+    generate_thumbnails
+    generate_templates(renderer)
+    copy_assets
+    puts "Website generated in #{(Time.now - start_time)} seconds."
+  end
+
+  # Get a parser, with streams (metadata filters and extractors) registered.
+  def new_parser_with_streams
+    Piccle::Parser.new.tap do |p|
+      p.add_stream(Piccle::Streams::DateStream)
+      p.add_stream(Piccle::Streams::LocationStream)
+      p.add_stream(Piccle::Streams::EventStream)
+      p.add_stream(Piccle::Streams::CameraStream)
+      p.add_stream(Piccle::Streams::KeywordStream)
+    end
+  end
+
+  # Load all the photos, and parse them all.
+  def parse_photos(parser)
+    Piccle::Photo.all.each do |p|
+      parser.parse(p)
+    end
+    parser.load_events
+    parser.order
+  end
+
+  # Given a parser object, generate some HTML index pages from the data it contains.
+  def generate_html_indexes(parser, renderer)
+    puts "    ... generating HTML indexes ..."
+    print "        ... generating main index ... "
+    File.write("generated/index.html", renderer.render_main_index)
+    puts "Done."
+
+    parser.subsections.each do |subsection|
+      if parser.subsection_photo_hashes(subsection).any?
+        subdir = "generated/#{subsection.join("/")}"
+        print "        ... generating #{subdir} index ... "
+        FileUtils.mkdir_p(subdir)
+        File.write("#{subdir}/index.html", renderer.render_index(subsection))
+        puts "Done."
+      end
+    end
+  end
+
+  # Given a parser object, generate Atom feeds for everything, and all substreams.
+  def generate_atom_feeds(parser, renderer)
+    if Piccle.config.atom?
+      puts "    ... generating Atom feeds ..."
+      print "        ... generating main Atom feed ... "
+      File.write("generated/feed.atom", renderer.render_feed)
+      puts "Done."
+
+      parser.subsections.each do |subsection|
+        if parser.subsection_photo_hashes(subsection).any?
+          subdir = "generated/#{subsection.join("/")}"
+          print "        ... generating #{subdir} feed ... "
+          FileUtils.mkdir_p(subdir)
+          File.write("#{subdir}/feed.atom", renderer.render_feed(subsection))
+          puts "Done."
+        end
+      end
+    else
+      puts "    Not generating RSS feeds, because no home URL is set."
+    end
+  end
+
+  # Given a parser object, generate photo pages from the data it contains.
+  def generate_html_photos(parser, renderer)
+    puts "    ... generating HTML photo pages ..."
+    parser.photo_hashes.each do |hash|
+      print "        ... generating canonical page for #{hash}... "
+      File.write("generated/#{hash}.html", renderer.render_photo(hash))
+      puts "Done."
+
+      parser.links_for(hash).each do |selector|
+        destination_page = "generated/#{selector.join('/')}/#{hash}.html"
+        print "            ... generating stream page #{destination_page}..."
+        File.write(destination_page, renderer.render_photo(hash, selector))
+        puts "Done."
+      end
+    end
+  end
+
+  def generate_json(parser, _renderer)
+    puts "    ... generating JSON files..."
+    FileUtils.mkdir_p("generated/json")
+    File.write("generated/json/all.json", parser.data.to_json)
+  end
+
+
+  # Stubby, hacky method that demos generating thumbnails.
+  def generate_thumbnails
+    puts "    ... generating thumbnails..."
+    FileUtils.mkdir_p("generated/images/thumbnails")
+    FileUtils.mkdir_p("generated/images/photos")
+
+    Piccle::Photo.all.each do |photo|
+      print "        ... generating #{photo.thumbnail_path}... "
+      if photo.thumbnail_exists?
+        puts "Already exists, skipping."
+      else
+        photo.generate_thumbnail!
+        puts "Done."
+      end
+
+      print "        ... generating #{photo.full_image_path}... "
+      if photo.full_image_exists?
+        puts "Already exists, skipping."
+      else
+        photo.generate_full_image!
+        puts "Done."
+      end
+    end
+  end
+
+  def generate_templates(_renderer)
+    puts '    ... generating templates...'
+    FileUtils.mkdir_p('generated/js/')
+    File.write('generated/js/index.handlebars.js', Piccle::TemplateHelpers.compile_template('index'))
+    File.write('generated/js/show.handlebars.js', Piccle::TemplateHelpers.compile_template('show'))
+  end
+
+  # Copy our static assets into the expected location.
+  def copy_assets
+    puts "    ... copying static assets..."
+    puts "        ... copying CSS..."
+    FileUtils.mkdir_p("generated/css")
+    Dir.glob("assets/css/**").each do |f|
+      FileUtils.cp(f, "generated/css/#{File.basename(f)}")
+    end
+  end
+end
+
+CLI.start(ARGV)
