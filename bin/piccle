@@ -11,7 +11,7 @@ class CLI < Thor
   desc "generate", "Generates a web photo gallery based on image metadata."
   option :"image-dir", desc: "Input image directory. Defaults to $CWD/images.", aliases: "-i"
   option :"output-dir", desc: "Output directory. Defaults to $CWD/generated.", aliases: "-o"
-  option :config, desc: "Config file to use. Defaults to $CDW/piccle.cofing.yaml, then ~/.piccle.config.yaml.", aliases: "-c"
+  option :config, desc: "Config file to use. Defaults to $CWD/piccle.config.yaml, then ~/.piccle.config.yaml.", aliases: "-c"
   option :"author-name", desc: "Author name.", aliases: "-n"
   option :url, desc: "The URL where you'll deploy your gallery. Used to generate Atom feeds and OpenGraph tags.", aliases: "-u"
   option :debug, desc: "Enable debug mode.", type: :boolean, default: false
