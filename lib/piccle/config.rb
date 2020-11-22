@@ -13,14 +13,14 @@ module Piccle
 
     def initialize(options = {})
       @commandline_options = options
-      @working_directory = options[:working_directory]
-      @home_directory = options[:home_directory]
-      @images_directory = options[:"image-dir"]
-      @output_directory = options[:"output-dir"]
-      @debug = options[:debug] || false
-      @author = options[:author]
-      @home_url = options[:url] || "https://example.com/"
-      @config_file = config_from_file(options[:config], @working_directory, @home_directory)
+      @working_directory = options["working_directory"]
+      @home_directory = options["home_directory"]
+      @images_directory = options["image-dir"]
+      @output_directory = options["output-dir"]
+      @debug = options["debug"] || false
+      @author = options["author-name"]
+      @home_url = options["url"] || "https://example.com/"
+      @config_file = config_from_file(options["config"], @working_directory, @home_directory)
     end
 
     # Load the config from a YAML file, if there is one.
@@ -77,11 +77,11 @@ module Piccle
     end
 
     # Who should be credited as the author of these photos?
-    def author
+    def author_name
       if @author
         @author
-      elsif @config_file && @config_file["author"]
-        @config_file["author"]
+      elsif @config_file && @config_file["author-name"]
+        @config_file["author-name"]
       else
         "An Anonymous Photographer"
       end
