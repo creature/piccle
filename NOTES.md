@@ -1,16 +1,31 @@
 # Priorities/things to do next 
+
+## Right now! 
+
+- Fix pagination spacing on the left hand side (after merging branch down) 
+- Fix pagination linking for second photo item.
+
+## Bugs
+- Don't fail horribly if there are no images.
+- Don't generate sidebar titles if there's nothing to put in those sections. 
+- Don't generate event tiles in listings if there's nothing in the events. 
+- Should generate left/right hand side margins, even if there's no pagination link to put in there.
+- Pagination can get kinda weird! 
+  - Look at the fewer-generated gallery: open the first image. Click "next", then click "previous". 
+    - Goes from Quebec City frozen ice, to red rod lights, to skateboarder. 
+
+
+## Improvements
+
 - Figure out what's causing some photo pages to slow down (and speed it up)
   - I think this is just calling out to a JS templating library (that uses V8 to render)
     - Switching to handlebars-ruby requires adding support for {with} and {lookup}
 - Add ordering to all the various substreams. Almost done, apart from sorting days and months in the datestream.
-- Add link prev next on photo pages.
-  - And clickable links.
 - Check whether individual photos have been changed since the filesystem date before generating subpages.
   - And an option to force-override.
 - Generate an RSS feed.
 - Add opengraph tags.
   - Requires configuring a URL for it.
-- Add a location stream
 - Update the photo update method so it also REMOVES keywords from files.
   - Store changed MD5 hashes, generate redirect pages for those.
 - Add a cleanup function that removes old images/HTML.
