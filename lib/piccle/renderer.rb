@@ -28,7 +28,7 @@ module Piccle
     # Renders the "main" index – the front page of our site.
     def render_main_index
       photos = @parser.data[:photos]
-      debug = if Piccle::DEBUG
+      debug = if Piccle.config.debug?
                 debug = [{ title: "Number of photos", value: photos.length }]
               end
       Piccle::TemplateHelpers.render("index", photos: photos, sentinels: @parser.data[:sentinels], navigation: render_nav, debug: debug)
