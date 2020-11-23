@@ -8,6 +8,8 @@ require 'thor'
 require 'piccle'
 
 class CLI < Thor
+  default_task :generate
+
   desc "generate", "Generates a web photo gallery based on image metadata."
   option :"image-dir", desc: "Input image directory. Defaults to $CWD/images.", aliases: "-i"
   option :"output-dir", desc: "Output directory. Defaults to $CWD/generated.", aliases: "-o"
