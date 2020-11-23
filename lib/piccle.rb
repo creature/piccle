@@ -11,7 +11,6 @@ require "piccle/streams/event_stream"
 require "piccle/streams/keyword_stream"
 require "piccle/streams/location_stream"
 require "piccle/template_helpers"
-require "piccle/template_paths"
 require "piccle/version"
 
 module Piccle

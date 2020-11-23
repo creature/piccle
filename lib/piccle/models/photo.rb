@@ -108,12 +108,12 @@ class Piccle::Photo < Sequel::Model
 
   # Gets the full path to the thumbnail for this photo.
   def thumbnail_path
-    "generated#{template_thumbnail_path}"
+    File.join(Piccle.config.output_dir, template_thumbnail_path)
   end
 
   # Gets the path to use in our generated HTML.
   def template_thumbnail_path
-    Piccle::TemplatePaths.thumbnail_path(self)
+    File.join("images", "thumbnails", "#{md5}.#{file_name}")
   end
 
   # Does a "full-size" image exist?
@@ -123,12 +123,12 @@ class Piccle::Photo < Sequel::Model
 
   # Gets the full path to the "full" image for this photo.
   def full_image_path
-    "generated/#{template_full_image_path}"
+    File.join(Piccle.config.output_dir, template_full_image_path)
   end
 
   # Gets the path to use in our generated HTML."
   def template_full_image_path
-    "images/photos/#{md5}.#{file_name}"
+    File.join("images", "photos", "#{md5}.#{file_name}")
   end
 
   # Gets the path to the photo page.
@@ -137,7 +137,7 @@ class Piccle::Photo < Sequel::Model
   end
 
   def original_photo_path
-    "#{path}/#{file_name}"
+    File.join(path, file_name)
   end
 
   # Munge the shutter speed data into a human-readable string.
