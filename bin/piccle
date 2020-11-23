@@ -25,6 +25,7 @@ class CLI < Thor
 
     Piccle.config = Piccle::Config.new(options.merge("working_directory" => Dir.pwd, "home_directory" => Dir.home))
 
+    report_options
     update_db
     generate_everything
   end
@@ -35,6 +36,16 @@ class CLI < Thor
   end
 
   protected
+
+  # How are we going to generate this gallery - based on which options?
+  def report_options
+    puts "Reading images from #{Piccle.config.images_dir} (#{Piccle.config.source_for("image-dir")})"
+    puts "Writing gallery to #{Piccle.config.output_dir} (#{Piccle.config.source_for("output-dir")})"
+    puts "Photos will be credited to #{Piccle.config.author_name} (#{Piccle.config.source_for("author-name")})"
+    puts "⚠️  Not generating an Atom feed, because URL is unset." unless Piccle.config.atom?
+    puts "⚠️  Not generating OpenGraph tags, because URL is unset." unless Piccle.config.open_graph?
+    puts ""
+  end
 
   # Read all the images in the images directory, and load their data into the DB.
   def update_db
@@ -129,7 +140,7 @@ class CLI < Thor
         end
       end
     else
-      puts "    Not generating RSS feeds, because no home URL is set."
+      puts "    Not generating Atom feeds, because no home URL is set."
     end
   end
 

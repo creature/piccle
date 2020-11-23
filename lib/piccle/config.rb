@@ -20,17 +20,28 @@ module Piccle
       @debug = options["debug"] || false
       @author = options["author-name"]
       @home_url = options["url"] || "https://example.com/"
-      @config_file = config_from_file(options["config"], @working_directory, @home_directory)
+      @config_file, @config_source = config_from_file(options["config"], @working_directory, @home_directory)
     end
 
     # Load the config from a YAML file, if there is one.
     def config_from_file(config, working_directory, home_directory)
       if config && File.exist?(config)
-        YAML.load_file(config)
+        [YAML.load_file(config), "configuration file #{filename} from commandline switch"]
       elsif working_directory && File.exist?(filename = File.join(working_directory, "piccle.config.yaml"))
-        YAML.load_file(filename)
+        [YAML.load_file(filename), "configuration file #{filename} from working directory"]
       elsif home_directory && File.exist?(filename = File.join(home_directory, ".piccle.config.yaml"))
-        YAML.load_file(filename)
+        [YAML.load_file(filename), "configuration file #{filename} from home directory"]
+      end
+    end
+
+    # Given the name of a config parameter, where was it configured?
+    def source_for(option)
+      if @commandline_options.key?(option)
+        "command line switch"
+      elsif @config_file && @config_file.key?(option)
+        @config_source
+      else
+        "piccle default"
       end
     end
 
