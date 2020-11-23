@@ -56,7 +56,7 @@ class Piccle::TemplateHelpers
                       end
 
       @@cached_site_metadata = OpenStruct.new(
-        author_name: Piccle::AUTHOR_NAME,
+        author_name: Piccle.config.author_name,
         copyright_year: copyright_year
       )
     end

@@ -3,20 +3,20 @@ feed xmlns="http://www.w3.org/2005/Atom"
   title Photography by #{site_metadata.author_name}
   author
     name #{site_metadata.author_name}
-  link rel="self" href=URI::join(Piccle::CONFIG.home_url, joined_selector, "feed.atom")
-  link rel="alternate" href=URI::join(Piccle::CONFIG.home_url, joined_selector, "index.html")
+  link rel="self" href=URI::join(Piccle.config.home_url, joined_selector, "feed.atom")
+  link rel="alternate" href=URI::join(Piccle.config.home_url, joined_selector, "index.html")
   updated = feed_update_time
-  id = URI::join(Piccle::CONFIG.home_url, joined_selector, "feed.atom")
+  id = URI::join(Piccle.config.home_url, joined_selector, "feed.atom")
 
   - photos.map do |hash, photo|
     entry
       title = photo[:title]
-      link rel="alternate" href=URI::join(Piccle::CONFIG.home_url, joined_selector, "#{photo[:hash]}.html")
+      link rel="alternate" href=URI::join(Piccle.config.home_url, joined_selector, "#{photo[:hash]}.html")
       id = photo[:hash]
       updated = photo[:created_at]
       summary
         - if photo[:title]
           h1 = photo[:title]
-        img src=URI::join(Piccle::CONFIG.home_url, "/images/photos/", CGI::escape(photo[:file_name]))
+        img src=URI::join(Piccle.config.home_url, "/images/photos/", CGI::escape(photo[:file_name]))
         - if photo[:description]
           p = photo[:description]

@@ -195,7 +195,7 @@ body.photo_show {
   margin: 0;
 }
 
-.photo_show main h2, .photo_show p.description, .photo_show p.settings, .photo_show p.date, .photo_show .streams {
+.photo_show main h2, .photo_show p.description, .photo_show p.settings, .photo_show p.date, .photo_show ul.location, .photo_show .streams {
   margin-left: 100px;
   margin-right: 100px;
 }
@@ -209,9 +209,8 @@ body.photo_show {
   display: block;
 }
 
-
 ul.location {
-  padding-left: 1rem;
+  padding-left: 0;
 }
 
 ul.location li {
