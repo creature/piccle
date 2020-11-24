@@ -14,13 +14,38 @@ contain contact info or real names - either your own ([eg.](http://fujifilm-dsc.
 or [that of your subjects](https://www.iptc.org/std/photometadata/documentation/userguide/#_persons_depicted_in_the_image) - 
 though these are unlikely to be added unless you set them up first. 
 
+
 ## Getting started
 
-Eventually Piccle will be available via Rubygems. For now, it's available via Github. 
+Piccle requires a modern(ish) version of Ruby. If you don't have one already, then I like [rbenv](https://github.com/rbenv/rbenv#readme) 
+as a Ruby version manager. 
 
+1. Run `gem install piccle` to install the software. 
+1. Piccle can run from anywhere, but things will be easier if you created a dedicated directory for it: 
+    ```
+    mkdir -p piccle/images
+    ```
 1. Place your photos within the `images/` directory. 
-1. Run `rake piccle:generate`. 
+1. Run `piccle`. This will take a little while on the first run, but subsequent runs are faster. 
 1. Take the output in `generated/` and deploy it to your web server of choice.
+1. You're done! 
+
+Piccle has two subcommands, `generate` and `geocode`. `generate` is the default task and is the same as running 
+without specifying a subcommand. `geocode` uses the Data Science Toolkit to look up locations in the database. 
+`piccle help generate` will display the various options:
+
+* `-i` or `--image-dir` specifies the input image directory. Defaults to `[$CWD](https://en.wikipedia.org/wiki/Working_directory)/images`.
+* `-o` or `--output-dir` specifies the output directory. Defaults to `$CWD/generated`.
+* `-c` or `--config` specifies a configuration file to use. Any long option can be specified in the configuration file, 
+  apart from this one. Config file settings can be overridden with command line switches, but config files don't "layer" - 
+  that is, a home directory config file won't be used to fill in settings if you have a config file in the current directory.
+  Defaults to `$CWD/piccle.config.yaml`, then `~/.piccle.config.yaml`. 
+* `-n` or `--author-name` sets the name used in the title and site copyright notice. Defaults to "An Anonymous Photographer". 
+* `-u` or `--url` sets the URL where you'll deploy your gallery. You can generate a site without this, but Atom feeds 
+  (so people can subscribe to updates) and OpenGraph tags (which give nice embeds on social media) require a full URL. 
+  They won't be generated if this is not set. 
+* `--debug` turns on debug mode, which adds some extra logging.
+
 
 ## Metadata Used
 
@@ -73,6 +98,7 @@ Cons
 : You must install the Adobe Creative Cloud stuff to get Bridge
 : Can't place photos on a map for adding latitude/longitude.
 
+
 ### macOS Preview
 
 Pros
@@ -82,6 +108,7 @@ Pros
 Cons 
 : Can't edit title, description, or location
 : Can't build a library of tags
+
 
 ### Affinity Photo
 
@@ -101,8 +128,6 @@ tool. A [folder action](https://support.apple.com/en-gb/guide/automator/aut7cac5
 `images` directory for added files; when a file is added, automator runs `rake piccle:generate` and runs [`rsync`](https://wiki.archlinux.org/index.php/Rsync)
 to copy the generated files to my web server. Zero-click publishing! When I finish editing an image I save a JPEG to 
 Piccle's directory, and it's published automatically in the background.
-
-
 
 
 ------

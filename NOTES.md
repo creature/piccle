@@ -4,9 +4,11 @@
 
 - Fix pagination spacing on the left hand side (after merging branch down) 
 - Fix pagination linking for second photo item.
+- Add option to regenerate entire site, or just changed photos.
 
 ## Bugs
 - Don't fail horribly if there are no images.
+  - More useful error output if the given images directory does not exist.
 - Don't generate sidebar titles if there's nothing to put in those sections. 
 - Don't generate event tiles in listings if there's nothing in the events. 
 - Should generate left/right hand side margins, even if there's no pagination link to put in there.
