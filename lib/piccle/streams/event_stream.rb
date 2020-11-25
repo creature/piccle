@@ -46,4 +46,24 @@ class Piccle::Streams::EventStream < Piccle::Streams::BaseStream
   def selector_for(name)
     [namespace, slugify(name)]
   end
+
+  # "Sentinels" are data hashes that mark the start and end of an event. We use them to render tiles in the overall
+  # index page, if we have photos for the declared event. Each event has an event_start and an event_end marker.
+  #
+  # Returns an array of 2 items: [event_starts, event_ends]
+  def sentinels_for(data)
+    event_starts = {}
+    event_ends = {}
+    @events.each do |event|
+      slug = slugify(event[:name])
+      if data.dig(namespace, slug, :photos).any?
+        most_recent_hash = data[namespace][slug][:photos].first
+        oldest_hash = data[namespace][slug][:photos].last # Event starts are the furthest back in time!
+        event_starts[oldest_hash] = { name: event[:name], selector: selector_for(event[:name]) }
+        event_ends[most_recent_hash] = { name: event[:name], selector: selector_for(event[:name]) }
+      end
+    end
+
+    [event_starts, event_ends]
+  end
 end

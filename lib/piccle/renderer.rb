@@ -14,7 +14,8 @@ module Piccle
     def render_index(selector)
       template_vars = {
         photos: @parser.subsection_photos(selector),
-        sentinels: [],
+        event_starts: [],
+        event_ends: [],
         navigation: render_nav(selector),
         selector: selector,
         selector_path: "#{selector.join('/')}/",
@@ -31,7 +32,7 @@ module Piccle
       debug = if Piccle.config.debug?
                 debug = [{ title: "Number of photos", value: photos.length }]
               end
-      Piccle::TemplateHelpers.render("index", photos: photos, sentinels: @parser.data[:sentinels], navigation: render_nav, debug: debug)
+      Piccle::TemplateHelpers.render("index", photos: photos, event_starts: @parser.data[:event_starts], event_ends: @parser.data[:event_ends], navigation: render_nav, debug: debug)
     end
 
     # Renders an Atom feed of the given subsection.

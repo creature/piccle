@@ -17,14 +17,19 @@ html
       .photos
         |
           {{#each photos as |photo|}}
-            {{#if (lookup ../sentinels photo.hash)}}
-              {{#with (lookup ../sentinels hash)}}
-                <p class="event_block {{type}}"><a href="{{../include_prefix}}{{join selector '/'}}/index.html">{{name}}</a></p>
+            {{#if (lookup ../event_ends photo.hash)}}
+              {{#with (lookup ../event_ends hash)}}
+                <p class="event_block event_end"><a href="{{../include_prefix}}{{join selector '/'}}/index.html">{{name}}</a></p>
               {{/with}}
             {{/if}}
             <a href="{{../include_prefix}}{{../selector_path}}{{photo.hash}}.html">
               <img class="thumbnail" src="{{../include_prefix}}images/thumbnails/{{photo.hash}}.{{photo.file_name}}" alt="{{photo.title}}" />
             </a>
+            {{#if (lookup ../event_starts photo.hash)}}
+              {{#with (lookup ../event_starts hash)}}
+                <p class="event_block event_start"><a href="{{../include_prefix}}{{join selector '/'}}/index.html">{{name}}</a></p>
+              {{/with}}
+            {{/if}}
           {{/each}}
 
     == Piccle::TemplateHelpers.render_partial "footer"
