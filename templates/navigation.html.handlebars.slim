@@ -3,12 +3,14 @@ nav
     <input type="checkbox" id="menu_toggle" name="menu_toggle" />
     <label for="menu_toggle">Menu</label>
     {{#each nav_items as |nav_item|}}
-      <section>
-      <h2>{{nav_item.friendly_name}}</h2>
-      <ul>
-        {{#each nav_item.entries as |entry|}}
-          <li><a href="{{../../include_prefix}}{{entry.link}}" title="{{entry.photo_count}} photos">{{entry.friendly_name}}</a></li>
-        {{/each}}
-      </ul>
-      </section>
+      {{#if nav_item.entries}}
+        <section>
+        <h2>{{nav_item.friendly_name}}</h2>
+        <ul>
+          {{#each nav_item.entries as |entry|}}
+            <li><a href="{{../../include_prefix}}{{entry.link}}" title="{{entry.photo_count}} photos">{{entry.friendly_name}}</a></li>
+          {{/each}}
+        </ul>
+        </section>
+      {{/if}}
     {{/each}}
