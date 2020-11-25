@@ -16,7 +16,6 @@ require "piccle/version"
 module Piccle
   FULL_SIZE = 1737 # Longest edge
   THUMBNAIL_SIZE = 300 # Thumbnail, square
-  EVENT_YAML_FILE = "events.yaml" # A file with a list of "events", named things that we want to generate pages for.
 
   DB = Piccle::Database.connect
   Sequel::Model.db = DB

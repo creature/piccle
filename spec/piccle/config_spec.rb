@@ -26,6 +26,17 @@ describe Piccle::Config do
     expect(Piccle::Config).to be
   end
 
+  describe "#using_default?" do
+    it "returns true when we haven't set anything" do
+      expect(bare_config.using_default?("author-name")).to be_truthy
+    end
+
+    it "returns false if we specify the author name in a config file" do
+      config = Piccle::Config.new("config" => Bundler.root.join("spec", "example_configs", "alice.yaml"))
+      expect(config.using_default?("author-name")).to be_falsy
+    end
+  end
+
   describe "#output_dir" do
     it "defaults to $CWD/generated" do
       expect(bare_config.output_dir).to eq("/Users/alex/Code/Personal/piccle/generated")

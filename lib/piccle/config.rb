@@ -17,6 +17,7 @@ module Piccle
       @home_directory = options["home_directory"]
       @images_directory = options["image-dir"]
       @output_directory = options["output-dir"]
+      @events_file = options["events"]
       @debug = options["debug"] || false
       @author = options["author-name"]
       @home_url = options["url"] || "https://example.com/"
@@ -43,6 +44,10 @@ module Piccle
       else
         "piccle default"
       end
+    end
+
+    def using_default?(option)
+      source_for(option) == "piccle default" # TODO: use a proper boolean check here.
     end
 
 
@@ -89,12 +94,23 @@ module Piccle
 
     # Who should be credited as the author of these photos?
     def author_name
-      if @author
-        @author
-      elsif @config_file && @config_file["author-name"]
-        @config_file["author-name"]
+      get_option(@author, "author-name", "An Anonymous Photographer")
+    end
+
+    def events_file
+      get_option(@events_file, "events", File.join(@working_directory, "events.yaml"))
+    end
+
+    protected
+
+    # If cli_var is set, use it. Otherwise, look for the option in the config file. Otherwise, use the default.
+    def get_option(cli_var, config_key, default)
+      if cli_var
+        cli_var
+      elsif @config_file && @config_file[config_key]
+        @config_file[config_key]
       else
-        "An Anonymous Photographer"
+        default
       end
     end
   end

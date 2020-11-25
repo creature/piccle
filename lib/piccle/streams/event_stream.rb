@@ -11,15 +11,16 @@ class Piccle::Streams::EventStream < Piccle::Streams::BaseStream
   end
 
   def initialize
-    if File.exists?(Piccle::EVENT_YAML_FILE)
-      @events = YAML.load_file(Piccle::EVENT_YAML_FILE)
-      @events.map! do |event| # Make keys into symbols.
-        event = event.map { |k, v| [k.to_sym, v] }.to_h
-        event[:from] = event[:from].to_datetime
-        event[:to] = event[:to].to_datetime
-        event
-      end
-    end
+    @events = if File.exist?(Piccle.config.events_file)
+                YAML.load_file(Piccle.config.events_file).map do |event| # Convert keys to symbols; bring dates to life.
+                  event = event.map { |k, v| [k.to_sym, v] }.to_h
+                  event[:from] = event[:from].to_datetime
+                  event[:to] = event[:to].to_datetime
+                  event
+                end
+              else
+                []
+              end
   end
 
   def data_for(photo)
