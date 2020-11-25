@@ -68,6 +68,7 @@ module Piccle
       atom?
     end
 
+    # TODO: I don't think these will work with the config file.
     def output_dir
       if @output_directory
         if Pathname.new(@output_directory).relative?
@@ -94,20 +95,20 @@ module Piccle
 
     # Who should be credited as the author of these photos?
     def author_name
-      get_option(@author, "author-name", "An Anonymous Photographer")
+      get_option("author-name", "An Anonymous Photographer")
     end
 
     def events_file
-      get_option(@events_file, "events", File.join(@working_directory, "events.yaml"))
+      get_option("events", File.join(@working_directory, "events.yaml"))
     end
 
     protected
 
     # If cli_var is set, use it. Otherwise, look for the option in the config file. Otherwise, use the default.
-    def get_option(cli_var, config_key, default)
-      if cli_var
-        cli_var
-      elsif @config_file && @config_file[config_key]
+    def get_option(config_key, default)
+      if @commandline_options.key?(config_key)
+        @commandline_options[config_key]
+      elsif @config_file && @config_file.key?(config_key)
         @config_file[config_key]
       else
         default
