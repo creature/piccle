@@ -46,11 +46,12 @@ module Piccle
 
     # Given that we're in the stream described by selector, what's the link to the previous photo?
     # If there's no selector, we look at all photos. Returns nil if there is no photo before this one.
-    def prev_link(photo_hash, selector)
-      _first, *rest = *@parser.substream_hashes_for(photo_hash, selector)
+    def prev_link(photo_hash, selector = [])
+      hashes = @parser.substream_hashes_for(photo_hash, selector)
 
-      if index = rest.index(photo_hash)
-        "#{(selector + [rest[index-1]]).join("/")}.html"
+      index = hashes.index(photo_hash)
+      if index && index > 0
+        "#{(selector + [hashes[index-1]]).join("/")}.html"
       else
         nil
       end
@@ -58,7 +59,7 @@ module Piccle
 
     # Given that we're in the stream described by selector, what's the link to the next photo?
     # If there's no selector, we look at all photos. Returns nil if there is no photo after this one.
-    def next_link(photo_hash, selector)
+    def next_link(photo_hash, selector = [])
       hashes = @parser.substream_hashes_for(photo_hash, selector)
 
       index = hashes.index(photo_hash)
