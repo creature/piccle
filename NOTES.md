@@ -4,13 +4,11 @@
 
 - Fix pagination spacing on the left hand side (after merging branch down) 
 - Fix pagination linking for second photo item.
-- Add option to regenerate entire site, or just changed photos.
+- Configure database location.
 
 ## Bugs
 - Don't fail horribly if there are no images.
   - More useful error output if the given images directory does not exist.
-- Don't generate sidebar titles if there's nothing to put in those sections. 
-- Don't generate event tiles in listings if there's nothing in the events. 
 - Should generate left/right hand side margins, even if there's no pagination link to put in there.
 - Pagination can get kinda weird! 
   - Look at the fewer-generated gallery: open the first image. Click "next", then click "previous". 
@@ -23,8 +21,6 @@
   - I think this is just calling out to a JS templating library (that uses V8 to render)
     - Switching to handlebars-ruby requires adding support for {with} and {lookup}
 - Add ordering to all the various substreams. Almost done, apart from sorting days and months in the datestream.
-- Check whether individual photos have been changed since the filesystem date before generating subpages.
-  - And an option to force-override.
 - Generate an RSS feed.
 - Add opengraph tags.
   - Requires configuring a URL for it.
@@ -40,6 +36,11 @@
 - Update nav to render subnav too, for current section.
 - Finish commenting the BaseStream.
 
+## Gotchas
+- Add option to regenerate entire site, or just changed photos.
+  - Basically impossible! Even if a photo hasn't changed, the navigation items/stream neighbours might have changed. 
+  - We'd have to cache the rendering context for each photo in the DB to determine whether we should regenerate it or not. 
+  - Might as well just regenerate the page.
 
 ----- All the notes below are kind of outdated ------
 
