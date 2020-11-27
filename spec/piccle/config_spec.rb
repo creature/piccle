@@ -49,6 +49,22 @@ describe Piccle::Config do
     it "respects absolute pathnames" do
       expect(absolute_config.output_dir).to eq("/tmp/custom_generated")
     end
+
+    context "with a config file with a relative directory" do
+      let(:config) { Piccle::Config.new(bare_params.merge("config" => Bundler.root.join("spec", "example_configs", "bob.yaml").to_s)) }
+
+      it "resolves relative paths from the config file" do
+        expect(config.output_dir).to eq(Bundler.root.join("spec", "example_configs", "shots-from-the-front").to_s)
+      end
+    end
+
+    context "with a config file with a absolute directory" do
+      let(:config) { Piccle::Config.new(bare_params.merge("config" => Bundler.root.join("spec", "example_configs", "charlotte.yaml").to_s)) }
+
+      it "returns absolute paths from the config file" do
+        expect(config.output_dir).to eq("/Users/charlotte/photography/generated-site")
+      end
+    end
   end
 
   describe "#images_dir" do
@@ -62,6 +78,22 @@ describe Piccle::Config do
 
     it "respects absolute pathnames" do
       expect(absolute_config.images_dir).to eq("/tmp/custom_images")
+    end
+
+    context "with a config file with a relative directory" do
+      let(:config) { Piccle::Config.new(bare_params.merge("config" => Bundler.root.join("spec", "example_configs", "bob.yaml").to_s)) }
+
+      it "resolves relative paths from the config file" do
+        expect(config.images_dir).to eq(Bundler.root.join("spec", "example_images").to_s)
+      end
+    end
+
+    context "with a config file with a absolute directory" do
+      let(:config) { Piccle::Config.new(bare_params.merge("config" => Bundler.root.join("spec", "example_configs", "charlotte.yaml").to_s)) }
+
+      it "returns absolute paths from the config file" do
+        expect(config.images_dir).to eq("/Users/charlotte/photography/incoming")
+      end
     end
   end
 

@@ -21,17 +21,18 @@ module Piccle
       @debug = options["debug"] || false
       @author = options["author-name"]
       @home_url = options["url"] || "https://example.com/"
-      @config_file, @config_source = config_from_file(options["config"], @working_directory, @home_directory)
+      @config_file, @config_source = config_location(options["config"], @working_directory, @home_directory)
+      @config_file_options = @config_file ? YAML.load_file(@config_file) : {}
     end
 
-    # Load the config from a YAML file, if there is one.
-    def config_from_file(config, working_directory, home_directory)
+    # Return the path the config file, as well as where we found it.
+    def config_location(config, working_directory, home_directory)
       if config && File.exist?(config)
-        [YAML.load_file(config), "configuration file #{config} from commandline switch"]
+        [config, "configuration file #{config} from commandline switch"]
       elsif working_directory && File.exist?(filename = File.join(working_directory, "piccle.config.yaml"))
-        [YAML.load_file(filename), "configuration file #{filename} from working directory"]
+        [filename, "configuration file #{filename} from working directory"]
       elsif home_directory && File.exist?(filename = File.join(home_directory, ".piccle.config.yaml"))
-        [YAML.load_file(filename), "configuration file #{filename} from home directory"]
+        [filename, "configuration file #{filename} from home directory"]
       end
     end
 
@@ -39,7 +40,7 @@ module Piccle
     def source_for(option)
       if @commandline_options.key?(option)
         "command line switch"
-      elsif @config_file && @config_file.key?(option)
+      elsif @config_file_options.key?(option)
         @config_source
       else
         "piccle default"
@@ -49,7 +50,6 @@ module Piccle
     def using_default?(option)
       source_for(option) == "piccle default" # TODO: use a proper boolean check here.
     end
-
 
     # Debug mode outputs some extra info, and makes some safety-checks less strict.
     def debug?
@@ -68,29 +68,12 @@ module Piccle
       atom?
     end
 
-    # TODO: I don't think these will work with the config file.
     def output_dir
-      if @output_directory
-        if Pathname.new(@output_directory).relative?
-          File.join(@working_directory, @output_directory)
-        else
-          @output_directory
-        end
-      else
-        File.join(@working_directory, "generated")
-      end
+      get_filename_option("output-dir", File.join(@working_directory, "generated"))
     end
 
     def images_dir
-      if @images_directory
-        if Pathname.new(@images_directory).relative?
-          File.join(@working_directory, @images_directory)
-        else
-          @images_directory
-        end
-      else
-        File.join(@working_directory, "images")
-      end
+      get_filename_option("image-dir", File.join(@working_directory, "images"))
     end
 
     # Who should be credited as the author of these photos?
@@ -108,8 +91,20 @@ module Piccle
     def get_option(config_key, default)
       if @commandline_options.key?(config_key)
         @commandline_options[config_key]
-      elsif @config_file && @config_file.key?(config_key)
-        @config_file[config_key]
+      elsif @config_file_options.key?(config_key)
+        @config_file_options[config_key]
+      else
+        default
+      end
+    end
+
+    # Similar to the above - return CLI option if given, otherwise check the config file, otherwise return the default.
+    # The difference is this is for filenames/directories - it also resolves absolute vs. relative paths.
+    def get_filename_option(config_key, default)
+      if filename = @commandline_options[config_key]
+        Pathname.new(filename).relative? ? File.join(@working_directory, filename) : filename
+      elsif filename = @config_file_options[config_key]
+        Pathname.new(filename).relative? ? File.absolute_path(File.join(File.dirname(@config_file), filename)) : filename
       else
         default
       end
