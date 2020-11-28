@@ -56,7 +56,7 @@ class Piccle::Streams::EventStream < Piccle::Streams::BaseStream
     event_ends = {}
     @events.each do |event|
       slug = slugify(event[:name])
-      if data.dig(namespace, slug, :photos).any?
+      if data.dig(namespace, slug, :photos)&.any?
         most_recent_hash = data[namespace][slug][:photos].first
         oldest_hash = data[namespace][slug][:photos].last # Event starts are the furthest back in time!
         event_starts[oldest_hash] = { name: event[:name], selector: selector_for(event[:name]) }

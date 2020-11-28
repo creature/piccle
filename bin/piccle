@@ -13,6 +13,7 @@ class CLI < Thor
   desc "generate", "Generates a web photo gallery based on image metadata."
   option :"image-dir", desc: "Input image directory. Defaults to $CWD/images.", aliases: "-i"
   option :"output-dir", desc: "Output directory. Defaults to $CWD/generated.", aliases: "-o"
+  option :database, desc: "The location of the database to use. Defaults to $CWD/piccle_data.db.", aliases: "-d"
   option :events, desc: "The location of the events file to use, if any. Defaults to $CWD/events.yaml", aliases: "-e"
   option :"author-name", desc: "Author name.", aliases: "-n"
   option :config, desc: "Config file to use. Defaults to $CWD/piccle.config.yaml, then ~/.piccle.config.yaml.", aliases: "-c"
@@ -40,21 +41,33 @@ class CLI < Thor
 
   # How are we going to generate this gallery - based on which options?
   def report_options
-    puts "Reading images from #{Piccle.config.images_dir} (#{Piccle.config.source_for("image-dir")})"
-    puts "Writing gallery to #{Piccle.config.output_dir} (#{Piccle.config.source_for("output-dir")})"
-    puts "Photos will be credited to #{Piccle.config.author_name} (#{Piccle.config.source_for("author-name")})"
+    option_message("Reading images from #{Piccle.config.images_dir}", "image-dir")
+
+    if Piccle.config.database_exists?
+      option_message("Using existing database #{Piccle.config.database_file}", "database")
+    else
+      option_message("Creating new database #{Piccle.config.database_file}", "database")
+    end
+
+    option_message("Writing gallery to #{Piccle.config.output_dir}", "output-dir")
+    option_message("Photos will be credited to #{Piccle.config.author_name}", "author-name")
 
     if Piccle.config.using_default?("events") && !File.exist?(Piccle.config.events_file)
       puts "No events file found."
     elsif File.exist?(Piccle.config.events_file)
-      puts "Events read from #{Piccle.config.events_file} (#{Piccle.config.source_for("events")})"
+      option_message("Events read from #{Piccle.config.events_file}", "events")
     else
-      puts "⚠️  Events file #{Piccle.config.events_file} not found (#{Piccle.config.source_for("events")})"
+      option_message("⚠️  Events file #{Piccle.config.events_file}", "events")
     end
 
     puts "⚠️  Not generating an Atom feed, because URL is unset." unless Piccle.config.atom?
     puts "⚠️  Not generating OpenGraph tags, because URL is unset." unless Piccle.config.open_graph?
     puts ""
+  end
+
+  # Given a message and a parameter name, generate one of our standard report strings.
+  def option_message(message, config_param)
+    puts "#{message} (#{Piccle.config.source_for(config_param)})"
   end
 
   # Read all the images in the images directory, and load their data into the DB.

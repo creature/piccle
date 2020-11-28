@@ -9,20 +9,15 @@
 #   Atom feeds and OpenGraph tags.
 module Piccle
   class Config
-    attr_accessor :home_url
-
     def initialize(options = {})
       @commandline_options = options
       @working_directory = options["working_directory"]
       @home_directory = options["home_directory"]
       @images_directory = options["image-dir"]
       @output_directory = options["output-dir"]
-      @events_file = options["events"]
-      @debug = options["debug"] || false
-      @author = options["author-name"]
-      @home_url = options["url"] || "https://example.com/"
       @config_file, @config_source = config_location(options["config"], @working_directory, @home_directory)
       @config_file_options = @config_file ? YAML.load_file(@config_file) : {}
+      @db = nil # The Sequel database itself.
     end
 
     # Return the path the config file, as well as where we found it.
@@ -53,13 +48,13 @@ module Piccle
 
     # Debug mode outputs some extra info, and makes some safety-checks less strict.
     def debug?
-      @debug
+      get_option("debug", false)
     end
 
     # Generate an Atom feed if we're in debug mode and have a home URL, or if we've set it to something other than
     # example.com.
     def atom?
-      (@debug && home_url.strip != "") || (home_url.strip != "" && home_url != "https://example.com/")
+      (debug? && home_url.strip != "") || (home_url.strip != "" && home_url != "https://example.com/")
     end
 
     # Should we generate Open Graph tags? These do nice unfurls on Twitter, Facebook, Slack etc. when a link is posted.
@@ -81,8 +76,27 @@ module Piccle
       get_option("author-name", "An Anonymous Photographer")
     end
 
+    def home_url
+      get_option("url", "https://example.com/")
+    end
+
     def events_file
       get_option("events", File.join(@working_directory, "events.yaml"))
+    end
+
+    # Gets the path to the database file.
+    def database_file
+      get_filename_option("database", File.join(@working_directory, "piccle.db"))
+    end
+
+    # Does the DB file exist?
+    def database_exists?
+      File.exist?(database_file)
+    end
+
+    # Gets the Sequel database itself.
+    def db
+      @db ||= Piccle::Database.new(database_file)
     end
 
     protected
