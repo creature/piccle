@@ -17,6 +17,7 @@ module Piccle
       @output_directory = options["output-dir"]
       @config_file, @config_source = config_location(options["config"], @working_directory, @home_directory)
       @config_file_options = @config_file ? YAML.load_file(@config_file) : {}
+      @db = nil # The Sequel database itself.
     end
 
     # Return the path the config file, as well as where we found it.
@@ -83,8 +84,19 @@ module Piccle
       get_option("events", File.join(@working_directory, "events.yaml"))
     end
 
+    # Gets the path to the database file.
     def database_file
       get_filename_option("database", File.join(@working_directory, "piccle.db"))
+    end
+
+    # Does the DB file exist?
+    def database_exists?
+      File.exist?(database_file)
+    end
+
+    # Gets the Sequel database itself.
+    def db
+      @db ||= Piccle::Database.new(database_file)
     end
 
     protected

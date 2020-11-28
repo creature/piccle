@@ -14,3 +14,4 @@ photo_data_test.db
 query.log
 .DS_Store
 *.swp
+piccle.db
