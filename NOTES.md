@@ -3,16 +3,14 @@
 ## Right now! 
 
 - Fix pagination spacing on the left hand side (after merging branch down) 
-- Fix pagination linking for second photo item.
+- Fix location display (mobile vs. desktop)
 - Configure database location.
+- Generate an OpenGraph image.
 
 ## Bugs
 - Don't fail horribly if there are no images.
   - More useful error output if the given images directory does not exist.
 - Should generate left/right hand side margins, even if there's no pagination link to put in there.
-- Pagination can get kinda weird! 
-  - Look at the fewer-generated gallery: open the first image. Click "next", then click "previous". 
-    - Goes from Quebec City frozen ice, to red rod lights, to skateboarder. 
 
 
 ## Improvements
