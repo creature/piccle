@@ -1,8 +1,15 @@
+/*@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;800&display=swap');*/
+/*@import url('https://fonts.googleapis.com/css2?family=Tenor+Sans&display=swap');*/
+
+
 body {
-  background-color: #EEE;
-  color: #111;
-  font-family: Helvetica, Arial, sans-serif;
+  /*background-color: #EEE;*/
+  color: #212121;
+  background-color: #fffdf6;
+  font-family: 'Gill Sans', Helvetica, Arial, sans-serif;
+  /*font-family: 'Libre Franklin', sans-serif;*/
   margin: 0 100px;
+  -webkit-font-smoothing: antialiased;	
 }
 
 header, footer {
@@ -10,8 +17,8 @@ header, footer {
   margin-right: auto;
   margin-left: auto;
   text-align: center;
-  padding-top: 1em;
-  padding-bottom: 1em;
+  /*padding-top: 1em;*/
+  padding-bottom: 1.5em;
 }
 
 header a {
@@ -121,7 +128,7 @@ nav ul {
   content: '\27fc';
   padding-left: 1rem;
 }
-
+/*
 .keywords {
   margin: 72px 72px 18px;
   line-height: 2;
@@ -138,7 +145,7 @@ nav ul {
   background: linear-gradient(0deg, grey 20%, dimgrey 80%);
   border-radius: 20px;
   padding: 5px 10px;
-}
+}*/
 
 .thumbnail, .stamp {
   line-height: 0;
@@ -149,11 +156,11 @@ nav ul {
   max-width: 96px;
   max-height: 96px;
 }
-
+/*
 .stamp.current {
   box-sizing: border-box;
   border: 3px solid lightblue;
-}
+}*/
 
 
 .navigation_arrow {
@@ -164,7 +171,7 @@ nav ul {
 }
 
 .streams {
-  border-top: 1px solid #777;
+  border-top: 1px solid #eaeaea;
 }
 
 .stream {
@@ -177,15 +184,17 @@ nav ul {
 }
 
 header {
-  border-bottom: 1px solid #777;
+  border-bottom: 1px solid #eaeaea;
   margin-bottom: 2em;
+  padding-top: 1em;
 }
 
 footer {
-  border-top: 1px solid #777;
+  border-top: 1px solid #eaeaea;
   font-size: 80%;
   color: #444;
   margin-top: 2em;
+  padding-top: 2em;
   min-height: 100px;
 }
 
@@ -238,6 +247,98 @@ ul.location li:last-of-type:after {
   max-width: 100%;
 }
 
+
+/* --------- Katrina's random tweaks ---------- */
+
+header h1 {
+	/*font-family: 'Tenor Sans', sans-serif;*/
+	font-family: 'Gill Sans', Optima, sans-serif;
+	font-size: 3.1em;
+	font-weight: 400;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+}
+
+section h2 {
+	font-size: 1em;
+}
+
+nav {
+    margin-right: 30px; /*adjusted for more whitespace*/
+}
+
+nav section ul {
+	list-style: none;
+	padding-left: 20px;
+}
+
+nav section li {
+	margin: 0.95em 0;
+	font-size: 0.9em;
+	padding-left: 0;
+}
+
+ul li a {
+	display: block;
+	transition: opacity ease-in 0.22s;
+	color: #444444;
+	text-decoration: none;
+}
+
+
+ul:hover a {
+  opacity: 0.5;
+}
+
+ul:hover a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+footer {
+	/*font-family: 'Tenor Sans', sans-serif;*/
+	font-family: 'Gill Sans', Optima, sans-serif;
+}
+
+
+.stamp.current {
+  box-sizing: border-box;
+  border: 3px solid #fffdf6;
+  opacity: 55%;
+}
+
+
+.keywords {
+  margin: 72px 72px 18px;
+  line-height: 2;
+}
+
+.keywords a {
+  white-space: nowrap;
+}
+
+.keywords a {
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 80%;
+  color: #7b6240;
+  /*background: linear-gradient(0deg, grey 20%, dimgrey 80%);*/
+  border-radius: 20px;
+  border-color: #7b6240;
+  border-width: 2px;
+  padding: 5px 10px;
+}
+
+.keywords a:hover {
+ background: linear-gradient(0deg, grey 20%, dimgrey 80%);
+   color: ;
+}
+
+a {
+	color: #7b6240;
+}
+
 /* --------- Mobile styles ---------- */
 @media(max-width: 688px) {
   body {
@@ -257,7 +358,7 @@ ul.location li:last-of-type:after {
     padding: 0 1rem 1rem;
     margin-bottom: 1rem;
     margin-right: 0;
-    border-bottom: 1px solid #777;
+    border-bottom: 1px solid #eaeaea;
   }
 
 
@@ -271,15 +372,19 @@ ul.location li:last-of-type:after {
 
   nav label {
     display: block;
-    font-size: 140%;
+    font-size: 110%;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    opacity: 65%;
+    margin-bottom: 0.03em;
   }
 
   nav label:before {
-    content: "\2261  Open ";
+    content: "\2630  Open ";
   }
 
   nav input:checked + label:before {
-    content: "\2261  Close ";
+    content: "\2630  Close ";
   }
 
   nav ul {
