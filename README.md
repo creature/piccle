@@ -22,12 +22,19 @@ as a Ruby version manager.
 
 1. Run `gem install piccle` to install the software. 
 1. Piccle can run from anywhere, but things will be easier if you created a dedicated directory for it: 
-    ```
+    ```bash
     mkdir -p piccle/images
+    cd piccle
     ```
 1. Place your photos within the `images/` directory. 
 1. Run `piccle`. This will take a little while on the first run, but subsequent runs are faster. 
-1. Take the output in `generated/` and deploy it to your web server of choice.
+   * You don't have to provide any options, but you will probably want to specify your name and your deployment URL. 
+     For instance, I run:
+     ```bash
+     piccle generate -n "Alex Pounds" -u "https://photography.alexpounds.com/"
+     ```
+1. Take the output in `generated/` and deploy it to your web server of choice. You can preview the gallery locally; 
+   open `generated/index.html` in your browser.
 1. You're done! 
 
 Piccle has two subcommands, `generate` and `geocode`. `generate` is the default task and is the same as running 
@@ -36,6 +43,8 @@ without specifying a subcommand. `geocode` uses the Data Science Toolkit to look
 
 * `-i` or `--image-dir` specifies the input image directory. Defaults to `[$CWD](https://en.wikipedia.org/wiki/Working_directory)/images`.
 * `-o` or `--output-dir` specifies the output directory. Defaults to `$CWD/generated`.
+* `-d` or `--database` specifies which metadata database to use. If it doesn't exist, one will be created. Defaults to 
+  `$CWD/piccle.db`. 
 * `-c` or `--config` specifies a configuration file to use. Any long option can be specified in the configuration file, 
   apart from this one. Config file settings can be overridden with command line switches, but config files don't "layer" - 
   that is, a home directory config file won't be used to fill in settings if you have a config file in the current directory.
@@ -55,7 +64,6 @@ without specifying a subcommand. `geocode` uses the Data Science Toolkit to look
 * **Keywords** are shown, and exposed as "topics". 
 * **Location** is shown. If your photos have a city/state/country specified in their data, then that's used; otherwise, 
   Piccle will attempt to geocode them based on embedded latitude/longitude.
-
 
 -------
 
@@ -125,7 +133,7 @@ Cons
 
 You can run Piccle by hand, but it's also ideal for automation. I use Piccle with macOS' built-in [Automator](https://support.apple.com/en-gb/guide/automator/welcome/mac)
 tool. A [folder action](https://support.apple.com/en-gb/guide/automator/aut7cac58839/2.10/mac/10.15) watches Piccle's 
-`images` directory for added files; when a file is added, automator runs `rake piccle:generate` and runs [`rsync`](https://wiki.archlinux.org/index.php/Rsync)
+`images` directory for added files; when a file is added, automator runs `piccle generate` and [`rsync`](https://wiki.archlinux.org/index.php/Rsync)
 to copy the generated files to my web server. Zero-click publishing! When I finish editing an image I save a JPEG to 
 Piccle's directory, and it's published automatically in the background.
 
@@ -134,14 +142,14 @@ Piccle's directory, and it's published automatically in the background.
 
 ## Philosophy
 
-Most photo sharing websites don't support the conversations I naturally have about photography - meaning you can't 
+Most photo sharing websites don't support the photography conversations that occur naturally - meaning you can't 
 take introductions like these:
 
-* "I'm really into portraits at the moment."
-* "I just got a new camera, and it's great."
-* "I took a trip to Norway last year, and had a great time."
+* "I'm really into portraits at the moment..."
+* "I just got a new camera, and it's great..."
+* "I took a trip to Norway last year, and had a great time..."
 
-And append "Here, let me show you some pics" in a couple of clicks. Instagram only has hashtags, and you can't filter
+And append "... Here, let me show you some pics" in a couple of clicks. Instagram only has hashtags, and you can't filter
 your own photos by hashtag. 500px gives you some organisational tools (like albums), but puts the onus on you to file
 the photos in each album. (Flickr has [some amazing search features](https://www.flickr.com/search/advanced), but limits
 how many photos you can upload for free and doesn't mesh with a [POSSE self-hosting ideal](https://indieweb.org/POSSE)).
@@ -159,4 +167,9 @@ Piccle is built around two phases:
     1. There's also a renderer, capable of generating "index" pages and "show" pages. This doesn't do anything 
        complicated, though; it's basically a proxy between the extractor and a template. 
 
-_Streams_ are another key concept. 
+_Streams_ are another key concept. A Piccle stream takes the data loaded by the parser and adds information in its own
+namespace. Streams are responsible for faceting the data by some part of the metadata; for instance, the `DateStream`
+breaks photos down by year, month, and day. The `KeywordStream` takes keywords from the photos and presents them as 
+tags/topics in the page. The `EventStream` reads data from `events.yaml`, and groups photos into a named event. 
+As well as faceting the data, each stream gets the opportunity to re-order its data.
+
