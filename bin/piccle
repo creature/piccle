@@ -306,7 +306,7 @@ class CLI < Thor
   # Take geo information from a photo, and save it to our Piccle database.
   def save_location_data(photo)
     unless Piccle::Location.find(latitude: photo.latitude, longitude: photo.longitude)
-      Piccle.Location.create(latitude: photo.latitude, longitude: photo.longitude, city: photo.city,
+      Piccle::Location.create(latitude: photo.latitude, longitude: photo.longitude, city: photo.city,
                               state: photo.state, country: photo.country)
     end
   end
