@@ -40,6 +40,8 @@ class CLI < Thor
 
     Piccle.config = piccle_config(options)
     report_options
+    check_image_dir_exists
+
     update_db
     generate_everything
   end
@@ -47,6 +49,8 @@ class CLI < Thor
   desc "geocode", "Retrieve locations from photos, and convert lat/longs to named locations."
   def geocode
     Piccle.config = piccle_config(options)
+    report_image_and_config_options
+    check_image_dir_exists
 
     Piccle::Photo.where(path: Piccle.config.images_dir).each do |photo|
       if File.exist?(File.join(Piccle.config.images_dir, photo.file_name))
@@ -91,14 +95,7 @@ class CLI < Thor
 
   # How are we going to generate this gallery - based on which options?
   def report_options
-    option_message("Reading images from #{Piccle.config.images_dir}", "image-dir")
-
-    if Piccle.config.database_exists?
-      option_message("Using existing database #{Piccle.config.database_file}", "database")
-    else
-      option_message("Creating new database #{Piccle.config.database_file}", "database")
-    end
-
+    report_image_and_config_options
     option_message("Writing gallery to #{Piccle.config.output_dir}", "output-dir")
     option_message("Photos will be credited to #{Piccle.config.author_name}", "author-name")
 
@@ -113,6 +110,17 @@ class CLI < Thor
     puts "⚠️  Not generating an Atom feed, because URL is unset." unless Piccle.config.atom?
     puts "⚠️  Not generating OpenGraph tags, because URL is unset." unless Piccle.config.open_graph?
     puts ""
+  end
+
+  # Geocoding has fewer relevant options, so we can output this little summary instead.
+  def report_image_and_config_options
+    option_message("Reading images from #{Piccle.config.images_dir}", "image-dir")
+
+    if Piccle.config.database_exists?
+      option_message("Using existing database #{Piccle.config.database_file}", "database")
+    else
+      option_message("Creating new database #{Piccle.config.database_file}", "database")
+    end
   end
 
   # Given a message and a parameter name, generate one of our standard report strings.
@@ -134,6 +142,18 @@ class CLI < Thor
       else
         puts " done."
       end
+    end
+  end
+
+  # Ensure we have some images to work with; if not, output an error and quit.
+  def check_image_dir_exists
+    unless File.exist?(Piccle.config.images_dir)
+      STDERR.puts "\n⚠️  The images directory, #{Piccle.config.images_dir}, does not exist. You can specify it using the -i option; run 'piccle help generate' for more info."
+      exit 1
+    end
+    if Dir.empty?(Piccle.config.images_dir)
+      STDERR.puts "\n⚠️  There are no images in #{Piccle.config.images_dir}, so we cannot continue."
+      exit 1
     end
   end
 
