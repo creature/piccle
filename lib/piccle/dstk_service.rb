@@ -12,12 +12,17 @@ module Piccle
     # Either way, you should get a Piccle::Location back.
     def location_for(photo)
       unless location = Piccle::Location.find(latitude: photo.latitude, longitude: photo.longitude)
-        result = JSON.parse(cached_coords2politics(photo.latitude, photo.longitude))
-        country = extract_field('country', result)
-        state = extract_field('state', result)
-        city = extract_field('city', result)
-        puts "        Found #{[city, state, country].compact.join(", ")} from the Data Science Toolkit API."
-        location = Piccle::Location.create(latitude: photo.latitude, longitude: photo.longitude, city: city, state: state, country: country)
+        result = cached_coords2politics(photo.latitude, photo.longitude)
+        if result
+          result = JSON.parse(result)
+          country = extract_field('country', result)
+          state = extract_field('state', result)
+          city = extract_field('city', result)
+          puts "        Found #{[city, state, country].compact.join(", ")} from the Data Science Toolkit API."
+          location = Piccle::Location.create(latitude: photo.latitude, longitude: photo.longitude, city: city, state: state, country: country)
+        else
+          puts "        Couldn't retrieve any location data for this photo."
+        end
       end
       location
     end
@@ -39,7 +44,7 @@ module Piccle
         end
       end
     rescue Net::OpenTimeout => e
-      STDERR.puts "Error: couldn't contact the Data Science Toolkit (to look up a latitude/longitude)"
+      STDERR.puts "Error: couldn't lookup latitude/longitude on the Data Science Toolkit: #{e}"
       nil
     end
 
