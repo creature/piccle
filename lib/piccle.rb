@@ -1,5 +1,6 @@
 require "piccle/config"
 require "piccle/database"
+require "piccle/dstk_service"
 require "piccle/extractor"
 require "piccle/parser"
 require "piccle/renderer"

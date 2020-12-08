@@ -11,8 +11,8 @@ module Piccle
   class Config
     def initialize(options = {})
       @commandline_options = options
-      @working_directory = options["working_directory"]
-      @home_directory = options["home_directory"]
+      @working_directory = options["working_directory"] || Dir.pwd
+      @home_directory = options["home_directory"] || Dir.home
       @images_directory = options["image-dir"]
       @output_directory = options["output-dir"]
       @config_file, @config_source = config_location(options["config"], @working_directory, @home_directory)

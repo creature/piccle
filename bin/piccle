@@ -9,24 +9,36 @@ require 'piccle'
 
 class CLI < Thor
   default_task :generate
+  class_option :"image-dir", desc: "Input image directory. Defaults to $CWD/images.", aliases: "-i"
+  class_option :database, desc: "The location of the database to use. Defaults to $CWD/piccle_data.db.", aliases: "-d"
+  class_option :config, desc: "Config file to use. Defaults to $CWD/piccle.config.yaml, then ~/.piccle.config.yaml.", aliases: "-c"
+  class_option :debug, desc: "Enable debug mode.", type: :boolean, default: false
+
+  # Prints a banner describing Piccle. qv. https://github.com/erikhuda/thor/issues/612
+  def help(*)
+    print_wrapped <<~INTRO
+      Piccle: a static website generator for photographers.
+
+      Piccle reads the metadata from your photos and uses it to generate a gallery that lets people explore
+      your photos by date, keyword, location, etc. Run "piccle help generate" for more details, or see
+      usage instructions at https://piccle.alexpounds.com/.
+    INTRO
+    puts
+    super
+  end
 
   desc "generate", "Generates a web photo gallery based on image metadata."
-  option :"image-dir", desc: "Input image directory. Defaults to $CWD/images.", aliases: "-i"
   option :"output-dir", desc: "Output directory. Defaults to $CWD/generated.", aliases: "-o"
-  option :database, desc: "The location of the database to use. Defaults to $CWD/piccle_data.db.", aliases: "-d"
   option :events, desc: "The location of the events file to use, if any. Defaults to $CWD/events.yaml", aliases: "-e"
   option :"author-name", desc: "Author name.", aliases: "-n"
-  option :config, desc: "Config file to use. Defaults to $CWD/piccle.config.yaml, then ~/.piccle.config.yaml.", aliases: "-c"
   option :url, desc: "The URL where you'll deploy your gallery, if any. Used to generate Atom feeds and OpenGraph tags.", aliases: "-u"
-  option :debug, desc: "Enable debug mode.", type: :boolean, default: false
   def generate
     if options.key?("config") && !File.exist?(options["config"])
       puts "Specified config file #{options["config"]} not found."
       exit 1
     end
 
-    Piccle.config = Piccle::Config.new(options.merge("working_directory" => Dir.pwd, "home_directory" => Dir.home))
-
+    Piccle.config = piccle_config(options)
     report_options
     update_db
     generate_everything
@@ -34,10 +46,48 @@ class CLI < Thor
 
   desc "geocode", "Retrieve locations from photos, and convert lat/longs to named locations."
   def geocode
+    Piccle.config = piccle_config(options)
 
+    Piccle::Photo.where(path: Piccle.config.images_dir).each do |photo|
+      if File.exist?(File.join(Piccle.config.images_dir, photo.file_name))
+        print "Updating location data for #{photo.file_name}... "
+
+        # Is this photo fully geocoded? That is, does it have lat/long/city/state/country?
+        if photo.geocoded?
+          puts " Already geocoded, no changes made."
+          save_location_data(photo)
+
+        # Does it have just a lat/long? Either retrieve a cached location record or look it up.
+        elsif photo.latitude && photo.longitude
+          puts "\n    Photo has lat/long, looking for place data... "
+          dstk_service = Piccle::DstkService.new
+          if location = dstk_service.location_for(photo)
+            if photo.update(city: location.city, state: location.state, country: location.country)
+              puts "    Done."
+            else
+              puts "    Couldn't save data: #{photo.errors.inspect}"
+            end
+          end
+
+        # Maybe it's got city/state/country in the DB already.
+        else
+          places = [photo.city, photo.state, photo.country].compact
+          if places.any?
+            puts " Photo has metadata labels for #{places.join(", ")}, no changes made."
+          else
+            puts " No geo information in this photo's metadata, no changes made."
+          end
+        end
+      end
+    end
   end
 
   protected
+
+  # Merge our supplied options with a couple of required details, and return a config object.
+  def piccle_config(options)
+    Piccle::Config.new(options.merge("working_directory" => Dir.pwd, "home_directory" => Dir.home))
+  end
 
   # How are we going to generate this gallery - based on which options?
   def report_options
@@ -230,6 +280,14 @@ class CLI < Thor
     FileUtils.mkdir_p(File.join(Piccle.config.output_dir, "css"))
     Dir.glob("#{Bundler.root.join("assets", "css")}/**").each do |f|
       FileUtils.cp(f, File.join(Piccle.config.output_dir, "css", File.basename(f)))
+    end
+  end
+
+  # Take geo information from a photo, and save it to our Piccle database.
+  def save_location_data(photo)
+    unless Piccle::Location.find(latitude: photo.latitude, longitude: photo.longitude)
+      Piccle.Location.create(latitude: photo.latitude, longitude: photo.longitude, city: photo.city,
+                              state: photo.state, country: photo.country)
     end
   end
 end

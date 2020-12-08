@@ -1,9 +1,7 @@
 require "json"
 require "spec_helper"
 
-describe "photos:update_locations" do
-  include_context "rake"
-
+describe Piccle::DstkService do
   describe "#extract_field" do
     context "with an API response for Turkey" do
       let(:data) { JSON.parse(File.read("spec/example_api_responses/coordinates2politics_turkey.json")) }
