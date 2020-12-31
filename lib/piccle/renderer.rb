@@ -98,6 +98,21 @@ module Piccle
       photo_title = "Photo" if photo_title.empty?
       template_vars[:breadcrumbs] << { friendly_name: photo_title } if selector.any?
 
+      if Piccle.config.open_graph?
+        template_vars[:open_graph] = {
+          title: photo_data[:title] || "A photo by #{Piccle.config.author_name}",
+          image: {
+            url: "#{Piccle.config.home_url}images/#{hash}.#{photo_data[:file_name]}",
+            width: photo_data[:width],
+            height: photo_data[:height]
+          },
+          url: "#{Piccle.config.home_url}photos/#{hash}.html"
+        }
+        if photo_data.fetch(:description, "")&.strip&.length&.positive?
+          template_vars[:open_graph][:description] = photo_data[:description]
+        end
+      end
+
       Piccle::TemplateHelpers.render("show", template_vars)
     end
 
