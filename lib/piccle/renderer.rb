@@ -12,16 +12,34 @@ module Piccle
     # For instance, if selector was ["by-date", "2015"] you'd get an index page of photos
     # for 2015 based on the data held by the parser.
     def render_index(selector)
+      breadcrumbs = @extractor.breadcrumbs_for(selector)
+      selector_path = "#{selector.join('/')}/"
       template_vars = {
         photos: @parser.subsection_photos(selector),
         event_starts: [],
         event_ends: [],
         navigation: render_nav(selector),
         selector: selector,
-        selector_path: "#{selector.join('/')}/",
-        breadcrumbs: @extractor.breadcrumbs_for(selector),
+        selector_path: selector_path,
+        breadcrumbs: breadcrumbs,
+        site_url: Piccle.config.home_url,
         include_prefix: Piccle::TemplateHelpers.include_prefix(selector)
       }
+
+      if Piccle.config.open_graph?
+        width, height = Piccle::QuiltGenerator.dimensions_for(@parser.subsection_photo_hashes(selector).count)
+        template_vars[:open_graph] = {
+          title: site_title(breadcrumbs),
+          description: "A gallery of photos by #{Piccle.config.author_name}",
+          image: {
+            url: "#{Piccle.config.home_url}#{selector_path}quilt.jpg",
+            alt: "A quilt of the most recent images in this gallery.",
+            width: width,
+            height: height
+          },
+          url: "#{Piccle.config.home_url}#{selector_path}"
+        }
+      end
 
       Piccle::TemplateHelpers.render("index", template_vars)
     end
@@ -84,6 +102,15 @@ module Piccle
     end
 
     protected
+
+    # Returns a human-readable title for this site.
+    def site_title(breadcrumbs)
+      title = "Photography by #{Piccle.config.author_name}"
+      if breadcrumbs.any?
+        title += " - " + breadcrumbs.map { |b| b[:friendly_name] }.join(" - ")
+      end
+      title
+    end
 
     # Gets the navigation info from the parser data.
     def render_nav(selector = [])
