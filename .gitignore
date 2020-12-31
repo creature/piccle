@@ -13,3 +13,5 @@ query.log
 .DS_Store
 *.swp
 piccle.db
+fewer-generated
+fewer-images
