@@ -106,6 +106,10 @@ nav li {
   padding-left: 0;
 }
 
+nav li a {
+  display: block;
+}
+
 section h2 {
   font-size: 1em;
 }
