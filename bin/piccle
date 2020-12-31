@@ -291,8 +291,16 @@ class CLI < Thor
   def generate_quilts(parser)
     puts "Generating gallery quilts (preview images for sharing galleries on social media)..."
     if Piccle.config.open_graph?
+      thumbnail_path_proc = Proc.new { |k, v| File.join(Piccle.config.output_dir, "images", "thumbnails", "#{v[:hash]}.#{v[:file_name]}") }
+
+      print "    ... Creating main index quilt..."
+      main_thumbnails = parser.data[:photos].first(9).map(&thumbnail_path_proc)
+      main_quilt = Piccle::QuiltGenerator.generate_for(main_thumbnails)
+      main_quilt.write(File.join(Piccle.config.output_dir, "quilt.jpg"))
+      puts " Done."
+
       parser.subsections.each do |subsection|
-        thumbnails = parser.subsection_photos(subsection).map { |_, p| File.join(Piccle.config.output_dir, "images", "thumbnails", "#{p[:hash]}.#{p[:file_name]}") }
+        thumbnails = parser.subsection_photos(subsection).map(&thumbnail_path_proc)
         if thumbnails.any?
           output_path = File.join(Piccle.config.output_dir, *subsection, "quilt.jpg")
           print "    ... Creating gallery quilt #{output_path}..."

@@ -27,7 +27,6 @@ class Piccle::TemplateHelpers
     options = { code_attr_delims: { '(' => ')', '[' => ']'}, attr_list_delims: { '(' => ')', '[' => ']' } }
     @@slim_pages[template_name] ||= Tilt['slim'].new(options) { File.read("templates/#{template_name}.html.handlebars.slim") }.render
     template = handlebars.compile(@@slim_pages[template_name])
-    data['debug'] ||= []
     data.merge!({ site_metadata: site_metadata })
     template.call(data)
   end

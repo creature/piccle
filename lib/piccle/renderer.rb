@@ -27,18 +27,14 @@ module Piccle
       }
 
       if Piccle.config.open_graph?
-        width, height = Piccle::QuiltGenerator.dimensions_for(@parser.subsection_photo_hashes(selector).count)
-        template_vars[:open_graph] = {
-          title: site_title(breadcrumbs),
-          description: "A gallery of photos by #{Piccle.config.author_name}",
-          image: {
-            url: "#{Piccle.config.home_url}#{selector_path}quilt.jpg",
-            alt: "A quilt of the most recent images in this gallery.",
-            width: width,
-            height: height
-          },
-          url: "#{Piccle.config.home_url}#{selector_path}"
-        }
+        width, height = Piccle::QuiltGenerator.dimensions_for(@parser.subsection_photo_hashes(selector).length)
+        template_vars[:open_graph] = open_graph_for(title: site_title(breadcrumbs),
+                                                    description: "A gallery of photos by #{Piccle.config.author_name}",
+                                                    image_url: "#{Piccle.config.home_url}#{selector_path}quilt.jpg",
+                                                    image_alt: "A quilt of the most recent images in this gallery.",
+                                                    width: width,
+                                                    height: height,
+                                                    page_url: "#{Piccle.config.home_url}#{selector_path}")
       end
 
       Piccle::TemplateHelpers.render("index", template_vars)
@@ -46,11 +42,24 @@ module Piccle
 
     # Renders the "main" index – the front page of our site.
     def render_main_index
-      photos = @parser.data[:photos]
-      debug = if Piccle.config.debug?
-                debug = [{ title: "Number of photos", value: photos.length }]
-              end
-      Piccle::TemplateHelpers.render("index", photos: photos, event_starts: @parser.data[:event_starts], event_ends: @parser.data[:event_ends], navigation: render_nav, debug: debug)
+      template_vars = {
+        photos: @parser.data[:photos],
+        event_starts: @parser.data[:event_starts],
+        event_ends: @parser.data[:event_ends],
+        navigation: render_nav
+      }
+
+      if Piccle.config.open_graph?
+        width, height = Piccle::QuiltGenerator.dimensions_for(@parser.data[:photos].length)
+        template_vars[:open_graph] = open_graph_for(title: site_title(),
+                                                    description: "A gallery of photos by #{Piccle.config.author_name}",
+                                                    image_url: "#{Piccle.config.home_url}quilt.jpg",
+                                                    image_alt: "A quilt of the most recent images in this gallery.",
+                                                    width: width,
+                                                    height: height,
+                                                    page_url: "#{Piccle.config.home_url}")
+      end
+      Piccle::TemplateHelpers.render("index", template_vars)
     end
 
     # Renders an Atom feed of the given subsection.
@@ -99,18 +108,12 @@ module Piccle
       template_vars[:breadcrumbs] << { friendly_name: photo_title } if selector.any?
 
       if Piccle.config.open_graph?
-        template_vars[:open_graph] = {
-          title: photo_data[:title] || "A photo by #{Piccle.config.author_name}",
-          image: {
-            url: "#{Piccle.config.home_url}images/#{hash}.#{photo_data[:file_name]}",
-            width: photo_data[:width],
-            height: photo_data[:height]
-          },
-          url: "#{Piccle.config.home_url}photos/#{hash}.html"
-        }
-        if photo_data.fetch(:description, "")&.strip&.length&.positive?
-          template_vars[:open_graph][:description] = photo_data[:description]
-        end
+        template_vars[:open_graph] = open_graph_for(title: photo_data[:title] || "A photo by #{Piccle.config.author_name}",
+                                                    description: photo_data[:description],
+                                                    image_url: "#{Piccle.config.home_url}images/#{hash}.#{photo_data[:file_name]}",
+                                                    width: photo_data[:width],
+                                                    height: photo_data[:height],
+                                                    page_url: "#{Piccle.config.home_url}photos/#{hash}.html")
       end
 
       Piccle::TemplateHelpers.render("show", template_vars)
@@ -118,8 +121,16 @@ module Piccle
 
     protected
 
+    # Returns a hash of open graph data based on the parameters passed in.
+    def open_graph_for(title: nil, description: nil, image_url: nil, image_alt: nil, width: nil, height: nil, page_url: nil)
+      open_graph = { title: title, url: page_url, image: { width: width, height: height, url: image_url } }
+      open_graph[:image][:image_alt] = image_alt if image_alt
+      open_graph[:description] = description if description
+      open_graph
+    end
+
     # Returns a human-readable title for this site.
-    def site_title(breadcrumbs)
+    def site_title(breadcrumbs = [])
       title = "Photography by #{Piccle.config.author_name}"
       if breadcrumbs.any?
         title += " - " + breadcrumbs.map { |b| b[:friendly_name] }.join(" - ")
