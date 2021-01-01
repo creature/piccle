@@ -181,15 +181,18 @@ section h2 {
   letter-spacing: 0.1em;
   font-size: 80%;
   color: #7b6240;
-  border-radius: 20px;
+  border-radius: 10px;
   border-color: #7b6240;
   border-width: 2px;
   padding: 5px 10px;
+  transition: all 0.5s;
+  display: inline-block;
 }
 
 .keywords a:hover {
-  background: linear-gradient(0deg, grey 20%, dimgrey 80%);
-  color: ;
+  background-color: grey;
+  color: white;
+  border-radius: 20px;
 }
 
 .thumbnail, .stamp {
@@ -219,12 +222,18 @@ section h2 {
   border-top: 1px solid #eaeaea;
 }
 
-.stream {
+.stream, .stamps {
   display: flex;
   flex-direction: row;
+}
+
+.stream {
   justify-content: center;
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+.stamps {
   overflow-x: scroll;
 }
 
