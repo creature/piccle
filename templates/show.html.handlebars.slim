@@ -11,10 +11,14 @@ body.photo_show
     .photo_with_pagination
       | {{#if prev_link}}
         <a class="navigation_arrow" href="{{include_prefix}}{{prev_link}}">&laquo;</a>
+        {{else}}
+        <span class="navigation_arrow">&nbsp;</span>
         {{/if}}
       img src="{{include_prefix}}images/photos/{{photo.hash}}.{{photo.file_name}}"
       | {{#if next_link}}
         <a class="navigation_arrow" href="{{include_prefix}}{{next_link}}">&raquo;</a>
+        {{else}}
+        <span class="navigation_arrow">&nbsp;</span>
         {{/if}}
 
     p.description

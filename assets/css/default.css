@@ -1,17 +1,45 @@
 body {
-  background-color: #EEE;
-  color: #111;
-  font-family: Helvetica, Arial, sans-serif;
+  color: #212121;
+  background-color: #fffdf6;
+  font-family: 'Gill Sans', Helvetica, Arial, sans-serif;
   margin: 0 100px;
+  -webkit-font-smoothing: antialiased;
 }
+
+a {
+  color: #7b6240;
+}
+
+ul li a {
+  transition: opacity ease-in 0.22s;
+  color: #444444;
+  text-decoration: none;
+}
+
+ul:hover a {
+  opacity: 0.5;
+}
+
+ul:hover a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
 
 header, footer {
   max-width: 960px;
   margin-right: auto;
   margin-left: auto;
   text-align: center;
-  padding-top: 1em;
-  padding-bottom: 1em;
+  padding-bottom: 1.5em;
+}
+
+header h1 {
+  font-family: 'Gill Sans', Optima, sans-serif;
+  font-size: 3.1em;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 header a {
@@ -55,7 +83,7 @@ nav input, nav label {
 nav {
   flex: none;
   max-width: 180px;
-  margin-right: 20px;
+  margin-right: 30px;
   vertical-align: top;
 }
 
@@ -68,6 +96,22 @@ nav h1 {
 nav ul {
   margin-top: 0;
   margin-bottom: 2rem;
+  list-style: none;
+  padding-left: 20px;
+}
+
+nav li {
+  margin: 0.95em 0;
+  font-size: 0.9em;
+  padding-left: 0;
+}
+
+nav li a {
+  display: block;
+}
+
+section h2 {
+  font-size: 1em;
 }
 
 /* This is both a flexbox item (of the main element) and a Flexbox container itself (for the photos). */
@@ -133,11 +177,22 @@ nav ul {
 
 .keywords a {
   text-decoration: none;
-  font-size: 90%;
-  color: white;
-  background: linear-gradient(0deg, grey 20%, dimgrey 80%);
-  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 80%;
+  color: #7b6240;
+  border-radius: 10px;
+  border-color: #7b6240;
+  border-width: 2px;
   padding: 5px 10px;
+  transition: all 0.5s;
+  display: inline-block;
+}
+
+.keywords a:hover {
+  background-color: grey;
+  color: white;
+  border-radius: 20px;
 }
 
 .thumbnail, .stamp {
@@ -152,9 +207,9 @@ nav ul {
 
 .stamp.current {
   box-sizing: border-box;
-  border: 3px solid lightblue;
+  border: 3px solid #fffdf6;
+  opacity: 55%;
 }
-
 
 .navigation_arrow {
   text-decoration: none;
@@ -164,29 +219,38 @@ nav ul {
 }
 
 .streams {
-  border-top: 1px solid #777;
+  border-top: 1px solid #eaeaea;
+}
+
+.stream, .stamps {
+  display: flex;
+  flex-direction: row;
 }
 
 .stream {
-  display: flex;
-  flex-direction: row;
   justify-content: center;
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+.stamps {
   overflow-x: scroll;
 }
 
 header {
-  border-bottom: 1px solid #777;
+  border-bottom: 1px solid #eaeaea;
   margin-bottom: 2em;
+  padding-top: 1em;
 }
 
 footer {
-  border-top: 1px solid #777;
+  border-top: 1px solid #eaeaea;
   font-size: 80%;
   color: #444;
   margin-top: 2em;
+  padding-top: 2em;
   min-height: 100px;
+  font-family: 'Gill Sans', Optima, sans-serif;
 }
 
 /* Styles for the photo_show template */
@@ -248,6 +312,10 @@ ul.location li:last-of-type:after {
     margin-bottom: 1rem;
   }
 
+  header h1 {
+    font-size: 2.1em;
+  }
+
   .photos_index main {
     display: block;
   }
@@ -257,7 +325,7 @@ ul.location li:last-of-type:after {
     padding: 0 1rem 1rem;
     margin-bottom: 1rem;
     margin-right: 0;
-    border-bottom: 1px solid #777;
+    border-bottom: 1px solid #eaeaea;
   }
 
 
@@ -271,15 +339,19 @@ ul.location li:last-of-type:after {
 
   nav label {
     display: block;
-    font-size: 140%;
+    font-size: 110%;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    opacity: 65%;
+    margin-bottom: 0.03em;
   }
 
   nav label:before {
-    content: "\2261  Open ";
+    content: "\2630  Open ";
   }
 
   nav input:checked + label:before {
-    content: "\2261  Close ";
+    content: "\2630  Close ";
   }
 
   nav ul {
@@ -316,7 +388,8 @@ ul.location li:last-of-type:after {
     border-bottom-left-radius: 1rem;
   }
 
-  .photo_show main h2, .photo_show p.description, .photo_show p.settings, .photo_show p.date, .photo_show .streams {
+  .photo_show main h2, .photo_show p.description, .photo_show p.settings, .photo_show p.date,
+  .photo_show ul.location, .photo_show .keywords, .photo_show .streams {
     margin-left: 1rem;
     margin-right: 1rem;
   }
