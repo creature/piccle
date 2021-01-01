@@ -312,6 +312,10 @@ ul.location li:last-of-type:after {
     margin-bottom: 1rem;
   }
 
+  header h1 {
+    font-size: 2.1em;
+  }
+
   .photos_index main {
     display: block;
   }
@@ -384,7 +388,8 @@ ul.location li:last-of-type:after {
     border-bottom-left-radius: 1rem;
   }
 
-  .photo_show main h2, .photo_show p.description, .photo_show p.settings, .photo_show p.date, .photo_show .streams {
+  .photo_show main h2, .photo_show p.description, .photo_show p.settings, .photo_show p.date,
+  .photo_show ul.location, .photo_show .keywords, .photo_show .streams {
     margin-left: 1rem;
     margin-right: 1rem;
   }
