@@ -72,6 +72,11 @@ class Piccle::Photo < Sequel::Model
                                     end
     end
 
+    # Tweak encoding of potential non-UTF-8 strings
+    %i[description title city state country].each do |attr|
+      p[attr].force_encoding("UTF-8") if p[attr].respond_to?(:force_encoding)
+    end
+
     p
   end
 
