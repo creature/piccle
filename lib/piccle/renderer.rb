@@ -110,10 +110,10 @@ module Piccle
       if Piccle.config.open_graph?
         template_vars[:open_graph] = open_graph_for(title: photo_data[:title] || "A photo by #{Piccle.config.author_name}",
                                                     description: photo_data[:description],
-                                                    image_url: "#{Piccle.config.home_url}images/#{hash}.#{photo_data[:file_name]}",
+                                                    image_url: "#{Piccle.config.home_url}images/photos/#{hash}.#{photo_data[:file_name]}",
                                                     width: photo_data[:width],
                                                     height: photo_data[:height],
-                                                    page_url: "#{Piccle.config.home_url}photos/#{hash}.html")
+                                                    page_url: "#{Piccle.config.home_url}/#{hash}.html")
       end
 
       Piccle::TemplateHelpers.render("show", template_vars)

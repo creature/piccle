@@ -20,13 +20,13 @@ head
     <link rel="alternate" type="application/atom+xml" href="{{include_prefix}}/feed.atom" title="All photos">
     {{/if}}
     {{#if open_graph}}
-      <meta property="og:type" content="website" />
-      <meta property="og:title" content="{{open_graph.title}}" />
-      <meta property="og:description" content="{{open_graph.description}}" />
-      <meta property="og:image" content="{{open_graph.image.url}}" />
-      <meta property="og:image:type" content="image/jpeg" />
-      {{#if open_graph.image.alt}}<meta property="og:image:alt" content="{{open_graph.image.alt}}" />{{/if}}
-      <meta property="og:image:width" content="{{open_graph.image.width}}" />
-      <meta property="og:image:height" content="{{open_graph.image.height}}" />
-      <meta property="og:url" content="{{open_graph.url}}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{open_graph.title}}" />
+    <meta property="og:description" content="{{open_graph.description}}" />
+    <meta property="og:image" content="{{open_graph.image.url}}" />
+    <meta property="og:image:type" content="image/jpeg" />
+    {{#if open_graph.image.alt}}<meta property="og:image:alt" content="{{open_graph.image.alt}}" />{{/if}}
+    <meta property="og:image:width" content="{{open_graph.image.width}}" />
+    <meta property="og:image:height" content="{{open_graph.image.height}}" />
+    <meta property="og:url" content="{{open_graph.url}}" />
     {{/if}}

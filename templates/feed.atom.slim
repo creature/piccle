@@ -17,6 +17,6 @@ feed xmlns="http://www.w3.org/2005/Atom"
       summary
         - if photo[:title]
           h1 = photo[:title]
-        img src=URI::join(Piccle.config.home_url, "/images/photos/", CGI::escape(photo[:file_name]))
+        img src=URI::join(Piccle.config.home_url, "/images/photos/", "#{photo[:hash]}.#{URI::DEFAULT_PARSER.escape(photo[:file_name])}")
         - if photo[:description]
           p = photo[:description]
