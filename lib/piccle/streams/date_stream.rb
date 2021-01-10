@@ -60,9 +60,21 @@ class Piccle::Streams::DateStream < Piccle::Streams::BaseStream
   # its honour to only meddle within its own namespace.
   def order(data)
     sort_proc = Proc.new { |k, v| k.is_a?(String) ? k : "" }
+
     data[namespace] = data[namespace].sort_by(&sort_proc).to_h # Sort years
-    data[namespace].each do |k, v|
-      data[namespace][k] = data[namespace][k].sort_by(&sort_proc).to_h if k.is_a?(String) # Sort months
+
+    data[namespace].each do |year_k, v|
+      # Sort photos in each year, and then the month keys
+      if year_k.is_a?(String)
+        if data[namespace][year_k].key?(:photos)
+          data[namespace][year_k][:photos] = data[namespace][year_k][:photos].sort_by(&date_sort_proc(data)).reverse
+        end
+        data[namespace][year_k] = data[namespace][year_k].sort_by(&sort_proc).to_h
+
+        data[namespace][year_k].each do |month_k, v|
+          # Sort photos in each month, and then the days. TODO.
+        end
+      end
     end
     data
   end
