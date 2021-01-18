@@ -17,24 +17,7 @@ module Piccle
 
     # Renders the "main" index – the front page of our site.
     def render_main_index
-      template_vars = {
-        photos: @parser.data[:photos],
-        event_starts: @parser.data[:event_starts],
-        event_ends: @parser.data[:event_ends],
-        navigation: render_nav
-      }
-
-      if Piccle.config.open_graph?
-        width, height = Piccle::QuiltGenerator.dimensions_for(@parser.data[:photos].length)
-        template_vars[:open_graph] = open_graph_for(title: site_title(),
-                                                    description: "A gallery of photos by #{Piccle.config.author_name}",
-                                                    image_url: "#{Piccle.config.home_url}quilt.jpg",
-                                                    image_alt: "A quilt of the most recent images in this gallery.",
-                                                    width: width,
-                                                    height: height,
-                                                    page_url: "#{Piccle.config.home_url}")
-      end
-      Piccle::TemplateHelpers.render("index", template_vars)
+      Piccle::TemplateHelpers.render("index", render_main_index_template_vars)
     end
 
     # Renders an Atom feed of the given subsection.
@@ -59,6 +42,29 @@ module Piccle
     end
 
     protected
+
+    # Returns all the data we pass into the main index to render.
+    def render_main_index_template_vars
+      template_vars = {
+        photos: @parser.data[:photos],
+        event_starts: @parser.data[:event_starts],
+        event_ends: @parser.data[:event_ends],
+        navigation: render_nav,
+        site_metadata: site_metadata
+      }
+
+      if Piccle.config.open_graph?
+        width, height = Piccle::QuiltGenerator.dimensions_for(@parser.data[:photos].length)
+        template_vars[:open_graph] = open_graph_for(title: site_title(),
+                                                    description: "A gallery of photos by #{Piccle.config.author_name}",
+                                                    image_url: "#{Piccle.config.home_url}quilt.jpg",
+                                                    image_alt: "A quilt of the most recent images in this gallery.",
+                                                    width: width,
+                                                    height: height,
+                                                    page_url: "#{Piccle.config.home_url}")
+      end
+      template_vars
+    end
 
     # Returns all the data we pass into a template for rendering an index page, as a hash.
     def render_index_template_vars(selector)

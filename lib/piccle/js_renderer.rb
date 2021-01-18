@@ -8,6 +8,10 @@ module Piccle
       super(*args)
     end
 
+    def render_main_index
+      call_nodejs("index", render_main_index_template_vars)
+    end
+
     def render_index(selector)
       call_nodejs("index", render_index_template_vars(selector))
     end
