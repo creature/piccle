@@ -1,14 +1,12 @@
 const Handlebars = require('./handlebars.min-v4.7.6');
 const fs = require('fs');
 const path = require('path');
+const readline = require('readline');
 
-// Read in command line arguments
-if (process.argv.length < 3) {
-    console.warn("Not enough arguments: must specify a template and an output file on the CLI.");
-    process.exit(1);
-}
-
-let template = process.argv[2];
+const AWAITING_COMMAND = 1;
+const AWAITING_DATA = 2;
+const VALID_COMMANDS = ["render_index", "render_show", "quit"];
+let state = { command: undefined, mode: AWAITING_COMMAND };
 
 // Set up Handlebars templates
 Handlebars.registerHelper("ifEqual", function(a, b, options) {
@@ -20,31 +18,50 @@ Handlebars.registerHelper("join", (items, separator) => {
     return items.join(separator);
 });
 
-const templateString = fs.readFileSync(path.resolve(__dirname, `../generated/js/${template}.handlebars`), { encoding: 'utf-8' });
-const templateFn = Handlebars.compile(templateString);
+const templates = {
+    index: Handlebars.compile(fs.readFileSync(path.resolve(__dirname, `../generated/js/index.handlebars`), { encoding: 'utf-8' })),
+    show: Handlebars.compile(fs.readFileSync(path.resolve(__dirname, `../generated/js/show.handlebars`), { encoding: 'utf-8' })),
+};
+
+// Open a log file, set up our inputs/outputs, and wait for commands.
 const logFile = fs.open(path.resolve(__dirname, "debug.log"), "a", (err, fd) => {
-    fs.writeSync(fd, "About to set up event listeners on STDIN\n");
-    let chunks = [];
+    let log = (msg) => fs.writeSync(fd, `${new Date()}: ${msg}\n`);
+
+    log("Setting up stdin/stdout");
+
     process.stdin.setEncoding('utf-8');
-    process.stdin.on('readable', () => {
-        fs.writeSync(fd, "Read a chunk");
-        let chunk;
-        while(null !== (chunk = process.stdin.read())) {
-            chunks.push(chunk);
+    process.stdout.setEncoding('utf-8');
+    const io = readline.createInterface({ input: process.stdin, output: process.stdout });
+
+    io.on('line', (line) => {
+        if (AWAITING_COMMAND == state.mode && VALID_COMMANDS.includes(line)) {
+            log(`Received command ${line}`);
+            state.command = line;
+            state.mode = AWAITING_DATA;
+
+            if ("quit" == state.command) {
+                log("Quitting on request");
+                process.exit(0);
+            }
+        } else if (AWAITING_DATA == state.mode) {
+            log(`Generating page ${state.command}.`);
+
+            try {
+                let templateVars = JSON.parse(line);
+                if ("render_index" == state.command) {
+                    fs.writeSync(process.stdout.fd, templates["index"](templateVars));
+                } else if ("render_show" == state.command) {
+                    fs.writeSync(process.stdout.fd, templates["show"](templateVars));
+                }
+                fs.writeSync(process.stdout.fd, "\n\x1C\n");
+                log("Finished writing template, awaiting next command");
+                state.mode = AWAITING_COMMAND;
+            } catch (e) {
+                log(`Couldn't generate template: our input line was ${line}`);
+                throw e;
+            }
+        } else {
+            log(`Unexpected input ${line}`);
         }
     });
-    process.stdin.on('end', () => {
-        fs.writeSync(fd, "Read the last chunk");
-        const templateVars = JSON.parse(chunks.join(""));
-        fs.writeFile(process.stdout.fd, templateFn(templateVars), (err) => {
-            if (err) {
-                console.error(`Couldn't create output file: ${err}`);
-                process.exit(1);
-            }
-        });
-        fs.writeSync(fd, "All done, quitting.");
-    });
-    fs.writeSync(fd, "Event listeners all configured.\n");
-    process.stdin.resume();
-    fs.writeSync(fd, "Attempted to resume stdin.\n");
 });

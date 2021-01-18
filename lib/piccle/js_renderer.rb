@@ -3,6 +3,10 @@
 # This renderer calls out to a NodeJS helper program instead - so all the templating is handled in JavaScript.
 module Piccle
   class JsRenderer < Renderer
+    def initialize(*args)
+      @renderer = IO.popen("node js-renderer/renderer.js", "r+")
+      super(*args)
+    end
 
     def render_index(selector)
       call_nodejs("index", render_index_template_vars(selector))
@@ -15,13 +19,15 @@ module Piccle
     protected
 
     def call_nodejs(template, template_vars)
-      IO.popen("node js-renderer/renderer.js #{template}", "r+") do |io|
-        JSON.dump(template_vars, io)
-        io.close_write
-
-        output = io.readlines
-        return output.join
+      @renderer.write("render_#{template}\n")
+      @renderer.write("#{JSON.dump(template_vars)}\n")
+      buffer = ""
+      loop do
+        line = @renderer.readline
+        break if line.strip == "\x1C"
+        buffer += line
       end
+      buffer
     end
   end
 end
