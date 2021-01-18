@@ -4,6 +4,10 @@
 module Piccle
   class JsRenderer < Renderer
 
+    def render_index(selector)
+      call_nodejs("index", render_index_template_vars(selector))
+    end
+
     def render_photo(hash, selector = [])
       call_nodejs("show", render_photo_template_vars(hash, selector))
     end

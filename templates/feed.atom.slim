@@ -1,8 +1,8 @@
 doctype xml
 feed xmlns="http://www.w3.org/2005/Atom"
-  title Photography by #{site_metadata.author_name}
+  title Photography by #{site_metadata[:author_name]}
   author
-    name #{site_metadata.author_name}
+    name #{site_metadata[:author_name]}
   link rel="self" href=URI::join(Piccle.config.home_url, joined_selector, "feed.atom")
   link rel="alternate" href=URI::join(Piccle.config.home_url, joined_selector, "index.html")
   updated = feed_update_time

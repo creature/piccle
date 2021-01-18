@@ -11,7 +11,6 @@ require 'handlebars'
 # each time.
 
 class Piccle::TemplateHelpers
-  @@cached_site_metadata = nil
   @@handlebars = nil
   @@slim_pages = {}
   @@slim_partials = {}
@@ -27,12 +26,10 @@ class Piccle::TemplateHelpers
     options = { code_attr_delims: { '(' => ')', '[' => ']'}, attr_list_delims: { '(' => ')', '[' => ']' } }
     @@slim_pages[template_name] ||= Tilt['slim'].new(options) { File.read("templates/#{template_name}.html.handlebars.slim") }.render
     template = handlebars.compile(@@slim_pages[template_name])
-    data.merge!({ site_metadata: site_metadata })
     template.call(data)
   end
 
   def self.render_rss(template_name, data = {})
-    data.merge!({ site_metadata: site_metadata })
     @@slim_pages["rss_#{template_name}"] ||= Tilt['slim'].new { File.read("templates/#{template_name}.atom.slim") }
     @@slim_pages["rss_#{template_name}"].render(Object.new, data)
   end
@@ -41,25 +38,6 @@ class Piccle::TemplateHelpers
   def self.compile_template(name)
     slim_template = Tilt['slim'].new { File.read("templates/#{name}.html.handlebars.slim") }
     slim_template.render(Object.new, {})
-  end
-
-  # Gets information about our site, used on pretty much every page.
-  def self.site_metadata
-    unless @@cached_site_metadata
-      min_year = Piccle::Photo.earliest_photo_year
-      max_year = Piccle::Photo.latest_photo_year
-      copyright_year = if min_year == max_year
-                        max_year
-                      else
-                        "#{min_year} – #{max_year}"
-                      end
-
-      @@cached_site_metadata = OpenStruct.new(
-        author_name: Piccle.config.author_name,
-        copyright_year: copyright_year
-      )
-    end
-    @@cached_site_metadata
   end
 
   # Given a "selector" (an array of string path components), returns an "include prefix" (a relative path that

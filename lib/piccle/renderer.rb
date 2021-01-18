@@ -12,32 +12,7 @@ module Piccle
     # For instance, if selector was ["by-date", "2015"] you'd get an index page of photos
     # for 2015 based on the data held by the parser.
     def render_index(selector)
-      breadcrumbs = @extractor.breadcrumbs_for(selector)
-      selector_path = "#{selector.join('/')}/"
-      template_vars = {
-        photos: @parser.subsection_photos(selector),
-        event_starts: [],
-        event_ends: [],
-        navigation: render_nav(selector),
-        selector: selector,
-        selector_path: selector_path,
-        breadcrumbs: breadcrumbs,
-        site_url: Piccle.config.home_url,
-        include_prefix: Piccle::TemplateHelpers.include_prefix(selector)
-      }
-
-      if Piccle.config.open_graph?
-        width, height = Piccle::QuiltGenerator.dimensions_for(@parser.subsection_photo_hashes(selector).length)
-        template_vars[:open_graph] = open_graph_for(title: site_title(breadcrumbs),
-                                                    description: "A gallery of photos by #{Piccle.config.author_name}",
-                                                    image_url: "#{Piccle.config.home_url}#{selector_path}quilt.jpg",
-                                                    image_alt: "A quilt of the most recent images in this gallery.",
-                                                    width: width,
-                                                    height: height,
-                                                    page_url: "#{Piccle.config.home_url}#{selector_path}")
-      end
-
-      Piccle::TemplateHelpers.render("index", template_vars)
+      Piccle::TemplateHelpers.render("index", render_index_template_vars(selector))
     end
 
     # Renders the "main" index – the front page of our site.
@@ -71,7 +46,8 @@ module Piccle
         photos: photos,
         joined_selector: "/#{escaped_selector.join("/")}/",
         feed_update_time: photos.map { |k, v| v[:created_at] }.max,
-        selector: selector
+        selector: selector,
+        site_metadata: site_metadata
       }
 
       Piccle::TemplateHelpers.render_rss("feed", template_vars)
@@ -79,12 +55,43 @@ module Piccle
 
     # Render a page for a specific photo.
     def render_photo(hash, selector=[])
-      template_vars = render_photo_template_vars(hash, selector)
-      Piccle::TemplateHelpers.render("show", template_vars)
+      Piccle::TemplateHelpers.render("show", render_photo_template_vars(hash, selector))
     end
 
     protected
 
+    # Returns all the data we pass into a template for rendering an index page, as a hash.
+    def render_index_template_vars(selector)
+      breadcrumbs = @extractor.breadcrumbs_for(selector)
+      selector_path = "#{selector.join('/')}/"
+      template_vars = {
+        photos: @parser.subsection_photos(selector),
+        event_starts: [],
+        event_ends: [],
+        navigation: render_nav(selector),
+        selector: selector,
+        selector_path: selector_path,
+        breadcrumbs: breadcrumbs,
+        site_url: Piccle.config.home_url,
+        include_prefix: Piccle::TemplateHelpers.include_prefix(selector),
+        site_metadata: site_metadata
+      }
+
+      if Piccle.config.open_graph?
+        width, height = Piccle::QuiltGenerator.dimensions_for(@parser.subsection_photo_hashes(selector).length)
+        template_vars[:open_graph] = open_graph_for(title: site_title(breadcrumbs),
+                                                    description: "A gallery of photos by #{Piccle.config.author_name}",
+                                                    image_url: "#{Piccle.config.home_url}#{selector_path}quilt.jpg",
+                                                    image_alt: "A quilt of the most recent images in this gallery.",
+                                                    width: width,
+                                                    height: height,
+                                                    page_url: "#{Piccle.config.home_url}#{selector_path}")
+      end
+
+      template_vars
+    end
+
+    # Returns all the template vars we use to render a photo page.
     def render_photo_template_vars(hash, selector)
       photo_data = @parser.data[:photos][hash]
       substreams = [@parser.substream_for(hash)] + @parser.links_for(hash).map { |selector| @parser.interesting_substream_for(hash, selector) }.compact
@@ -106,7 +113,8 @@ module Piccle
         prev_link: @extractor.prev_link(hash, selector),
         next_link: @extractor.next_link(hash, selector),
         include_prefix: Piccle::TemplateHelpers.include_prefix(selector),
-        canonical: "photos/#{hash}.html" # TODO: Other paths live in piccle.rake. Why's this one here?
+        canonical: "photos/#{hash}.html", # TODO: Other paths live in piccle.rake. Why's this one here?
+        site_metadata: site_metadata
       }
 
       photo_title = photo_data[:title] || ""
@@ -125,6 +133,21 @@ module Piccle
       template_vars
     end
 
+    # Gets information about our site, used on pretty much every page.
+    def site_metadata
+      unless @cached_site_metadata
+        min_year = Piccle::Photo.earliest_photo_year
+        max_year = Piccle::Photo.latest_photo_year
+        copyright_year = if min_year == max_year
+                          max_year
+                        else
+                          "#{min_year} – #{max_year}"
+                        end
+
+        @cached_site_metadata = { author_name: Piccle.config.author_name, copyright_year: copyright_year }
+      end
+      @cached_site_metadata
+    end
 
     # Returns a hash of open graph data based on the parameters passed in.
     def open_graph_for(title: nil, description: nil, image_url: nil, image_alt: nil, width: nil, height: nil, page_url: nil)
