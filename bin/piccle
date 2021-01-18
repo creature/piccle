@@ -164,16 +164,16 @@ class CLI < Thor
 
     parser = new_parser_with_streams
     parse_photos(parser)
-    renderer = Piccle::Renderer.new(parser)
+    renderer = Piccle::JsRenderer.new(parser)
 
     FileUtils.mkdir_p(Piccle.config.output_dir)
+    generate_templates(renderer)
     generate_atom_feeds(parser, renderer)
     generate_html_indexes(parser, renderer)
     generate_html_photos(parser, renderer)
     generate_json(parser, renderer)
     generate_thumbnails
     generate_quilts(parser)
-    generate_templates(renderer)
     copy_assets
     puts "Website generated in #{(Time.now - start_time)} seconds."
   end
@@ -317,8 +317,9 @@ class CLI < Thor
   def generate_templates(_renderer)
     puts "    ... generating templates..."
     FileUtils.mkdir_p(File.join(Piccle.config.output_dir, "js"))
-    File.write(File.join(Piccle.config.output_dir, "js", "index.handlebars.js"), Piccle::TemplateHelpers.compile_template("index"))
-    File.write(File.join(Piccle.config.output_dir, "js", "show.handlebars.js"), Piccle::TemplateHelpers.compile_template("show"))
+    File.write(File.join(Piccle.config.output_dir, "js", "index.handlebars"), Piccle::TemplateHelpers.compile_template("index"))
+    File.write(File.join(Piccle.config.output_dir, "js", "navigation.handlebars"), Piccle::TemplateHelpers.compile_template("navigation"))
+    File.write(File.join(Piccle.config.output_dir, "js", "show.handlebars"), Piccle::TemplateHelpers.compile_template("show"))
   end
 
   # Copy our static assets into the expected location.
