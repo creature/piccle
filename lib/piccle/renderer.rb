@@ -79,9 +79,15 @@ module Piccle
 
     # Render a page for a specific photo.
     def render_photo(hash, selector=[])
+      template_vars = render_photo_template_vars(hash, selector)
+      Piccle::TemplateHelpers.render("show", template_vars)
+    end
+
+    protected
+
+    def render_photo_template_vars(hash, selector)
       photo_data = @parser.data[:photos][hash]
       substreams = [@parser.substream_for(hash)] + @parser.links_for(hash).map { |selector| @parser.interesting_substream_for(hash, selector) }.compact
-
 
       template_vars = {
         photo: photo_data,
@@ -116,10 +122,9 @@ module Piccle
                                                     page_url: "#{Piccle.config.home_url}/#{hash}.html")
       end
 
-      Piccle::TemplateHelpers.render("show", template_vars)
+      template_vars
     end
 
-    protected
 
     # Returns a hash of open graph data based on the parameters passed in.
     def open_graph_for(title: nil, description: nil, image_url: nil, image_alt: nil, width: nil, height: nil, page_url: nil)
