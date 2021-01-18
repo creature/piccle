@@ -5,7 +5,7 @@ const readline = require('readline');
 
 const AWAITING_COMMAND = 1;
 const AWAITING_DATA = 2;
-const VALID_COMMANDS = ["render_index", "render_show", "quit"];
+const VALID_COMMANDS = ["render_index", "render_show", "render_navigation", "quit"];
 let state = { command: undefined, mode: AWAITING_COMMAND };
 
 // Set up Handlebars templates
@@ -19,8 +19,12 @@ Handlebars.registerHelper("join", (items, separator) => {
 });
 
 const templates = {
-    index: Handlebars.compile(fs.readFileSync(path.resolve(__dirname, `../generated/js/index.handlebars`), { encoding: 'utf-8' })),
-    show: Handlebars.compile(fs.readFileSync(path.resolve(__dirname, `../generated/js/show.handlebars`), { encoding: 'utf-8' })),
+    index: Handlebars.compile(fs.readFileSync(path.resolve(__dirname, `../generated/js/index.handlebars`), { encoding: 'utf8' }),
+        { knownHelpers: { ifEqual: true, join: true }, knownHelpersOnly: true }),
+    show: Handlebars.compile(fs.readFileSync(path.resolve(__dirname, `../generated/js/show.handlebars`), { encoding: 'utf8' }),
+        { knownHelpers: { ifEqual: true, join: true }, knownHelpersOnly: true }),
+    navigation: Handlebars.compile(fs.readFileSync(path.resolve(__dirname, `../generated/js/navigation.handlebars`), { encoding: 'utf8' }),
+        { knownHelpers: { ifEqual: true, join: true }, knownHelpersOnly: true })
 };
 
 // Open a log file, set up our inputs/outputs, and wait for commands.
@@ -52,6 +56,8 @@ const logFile = fs.open(path.resolve(__dirname, "debug.log"), "a", (err, fd) => 
                     fs.writeSync(process.stdout.fd, templates["index"](templateVars));
                 } else if ("render_show" == state.command) {
                     fs.writeSync(process.stdout.fd, templates["show"](templateVars));
+                } else if ("render_navigation" == state.command) {
+                    fs.writeSync(process.stdout.fd, templates["navigation"](templateVars));
                 }
                 fs.writeSync(process.stdout.fd, "\n\x1C\n");
                 log("Finished writing template, awaiting next command");

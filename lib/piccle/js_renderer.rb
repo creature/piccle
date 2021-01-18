@@ -22,6 +22,10 @@ module Piccle
 
     protected
 
+    def render_nav(selector = [])
+      call_nodejs("navigation", render_nav_template_vars(selector))
+    end
+
     def call_nodejs(template, template_vars)
       @renderer.write("render_#{template}\n")
       @renderer.write("#{JSON.dump(template_vars)}\n")

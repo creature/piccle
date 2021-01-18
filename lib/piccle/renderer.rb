@@ -174,8 +174,11 @@ module Piccle
 
     # Gets the navigation info from the parser data.
     def render_nav(selector = [])
-      template_vars = { nav_items: @extractor.navigation, include_prefix: Piccle::TemplateHelpers.include_prefix(selector) }
-      Piccle::TemplateHelpers.render("navigation", template_vars)
+      Piccle::TemplateHelpers.render("navigation", render_nav_template_vars(selector))
+    end
+
+    def render_nav_template_vars(selector)
+      { nav_items: @extractor.navigation, include_prefix: Piccle::TemplateHelpers.include_prefix(selector) }
     end
   end
 end
