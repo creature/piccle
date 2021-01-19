@@ -1,3 +1,4 @@
+require 'cgi'
 require 'handlebars'
 
 # Rendering functions for templates.
@@ -49,6 +50,11 @@ class Piccle::TemplateHelpers
     else
       ""
     end
+  end
+
+  # Given a block of content, escape its HTML.
+  def self.escape_html(&block)
+    CGI::escape_html(yield)
   end
 
   protected

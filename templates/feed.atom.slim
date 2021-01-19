@@ -5,23 +5,25 @@ feed xmlns="http://www.w3.org/2005/Atom"
     name #{site_metadata[:author_name]}
   link rel="self" href=URI::join(Piccle.config.home_url, joined_selector, "feed.atom")
   link rel="alternate" href=URI::join(Piccle.config.home_url, joined_selector, "index.html")
-  updated = feed_update_time
+  icon = URI::join(Piccle.config.home_url, "icons", "android-chrome-192x192.png")
+  updated = feed_update_time.strftime("%FT%T%:z")
   id = URI::join(Piccle.config.home_url, joined_selector, "feed.atom")
 
   - photos.map do |hash, photo|
     entry
-      title = photo[:title]
+      title = photo[:title] || "A photo by #{site_metadata[:author_name]}"
       link rel="alternate" href=URI::join(Piccle.config.home_url, joined_selector, "#{photo[:hash]}.html")
-      id = photo[:hash]
-      updated = photo[:created_at]
+      id = URI::join(Piccle.config.home_url, joined_selector, "#{photo[:hash]}.html")
+      updated = photo[:created_at].strftime("%FT%T%:z")
       content type="html"
-        - if photo[:title]
-          h1 = photo[:title]
-        img src=URI::join(Piccle.config.home_url, "/images/photos/", "#{photo[:hash]}.#{URI::DEFAULT_PARSER.escape(photo[:file_name])}")
-        - if photo[:description]
-          p = photo[:description]
-        - if photo[:has_location]
-          p #{[photo[:city], photo[:state], photo[:country]].join(", ")}.
-        - if photo[:taken_at]
-          p Taken #{photo[:taken_at].strftime("%-d %B, %Y.")}
+        = Piccle::TemplateHelpers.escape_html do
+          - if photo[:title]
+            h1 = photo[:title]
+          img src=URI::join(Piccle.config.home_url, "/images/photos/", "#{photo[:hash]}.#{URI::DEFAULT_PARSER.escape(photo[:file_name])}")
+          - if photo[:description]
+            p = photo[:description]
+          - if photo[:has_location]
+            p #{[photo[:city], photo[:state], photo[:country]].join(", ")}.
+          - if photo[:taken_at]
+            p Taken #{photo[:taken_at].strftime("%-d %B, %Y.")}
 
