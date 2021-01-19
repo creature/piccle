@@ -326,9 +326,15 @@ class CLI < Thor
   def copy_assets
     puts "    ... copying static assets..."
     puts "        ... copying CSS..."
-    FileUtils.mkdir_p(File.join(Piccle.config.output_dir, "css"))
-    Dir.glob("#{Bundler.root.join("assets", "css")}/**").each do |f|
-      FileUtils.cp(f, File.join(Piccle.config.output_dir, "css", File.basename(f)))
+    copy_asset_type("css")
+    puts "        ... copying icons..."
+    copy_asset_type("icons")
+  end
+
+  def copy_asset_type(type)
+    FileUtils.mkdir_p(File.join(Piccle.config.output_dir, type))
+    Dir.glob("#{Bundler.root.join("assets", type)}/**").each do |f|
+      FileUtils.cp(f, File.join(Piccle.config.output_dir, type, File.basename(f)))
     end
   end
 
