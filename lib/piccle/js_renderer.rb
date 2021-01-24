@@ -4,7 +4,7 @@
 module Piccle
   class JsRenderer < Renderer
     def initialize(*args)
-      @renderer = IO.popen("node js-renderer/renderer.js", "r+")
+      @renderer = IO.popen(["node", "js-renderer/renderer.js", Piccle.config.output_dir], "r+")
       super(*args)
     end
 
