@@ -61,7 +61,7 @@ module Piccle
                                                     image_alt: "A quilt of the most recent images in this gallery.",
                                                     width: width,
                                                     height: height,
-                                                    page_url: "#{Piccle.config.home_url}")
+                                                    page_url: Piccle.config.home_url)
       end
       template_vars
     end
