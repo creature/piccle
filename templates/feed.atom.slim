@@ -16,7 +16,7 @@ feed xmlns="http://www.w3.org/2005/Atom"
       id = URI::join(Piccle.config.home_url, joined_selector, "#{photo[:hash]}.html")
       updated = photo[:created_at].strftime("%FT%T%:z")
       content type="html"
-        = Piccle::TemplateHelpers.escape_html do
+        == Piccle::TemplateHelpers.escape_html
           - if photo[:title]
             h1 = photo[:title]
           img src=URI::join(Piccle.config.home_url, "/images/photos/", "#{photo[:hash]}.#{URI::DEFAULT_PARSER.escape(photo[:file_name])}")
