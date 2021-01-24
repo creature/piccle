@@ -1,10 +1,10 @@
 |
   {{#if stream.previous}}
-    <a class="navigation_arrow left" href="{{../include_prefix}}{{stream.selector_path}}{{stream.previous.hash}}.html">&laquo;</a>
+    <a class="navigation_arrow left" href="{{../include_prefix}}{{stream.selector_path}}{{stream.previous.hash}}.html#photo">&laquo;</a>
   {{/if}}
   <div class="stamps">
   {{#each stream.photos as |substream_photo|}}
-    <a href="{{../../include_prefix}}{{stream.selector_path}}{{substream_photo.hash}}.html">
+    <a href="{{../../include_prefix}}{{stream.selector_path}}{{substream_photo.hash}}.html#photo">
       <img
         class="stamp{{#ifEqual substream_photo.hash ../../photo.hash}} current{{/ifEqual}}"
         src="{{../../include_prefix}}images/thumbnails/{{substream_photo.hash}}.{{substream_photo.file_name}}"
@@ -13,5 +13,5 @@
   {{/each}}
   </div>
   {{#if stream.next}}
-    <a class="navigation_arrow right" href="{{../include_prefix}}{{stream.selector_path}}{{stream.next.hash}}.html">&raquo;</a>
+    <a class="navigation_arrow right" href="{{../include_prefix}}{{stream.selector_path}}{{stream.next.hash}}.html#photo">&raquo;</a>
   {{/if}}

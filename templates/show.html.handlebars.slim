@@ -5,18 +5,18 @@ body.photo_show
     h1
       a href="{{include_prefix}}index.html" Photography by {{site_metadata.author_name}}
     == Piccle::TemplateHelpers.render_partial "breadcrumbs"
-  main
+  main#photo
     h2
       | {{photo.title}}
     .photo_with_pagination
       | {{#if prev_link}}
-        <a class="navigation_arrow" href="{{include_prefix}}{{prev_link}}">&laquo;</a>
+        <a class="navigation_arrow" href="{{include_prefix}}{{prev_link}}#photo">&laquo;</a>
         {{else}}
         <span class="navigation_arrow">&nbsp;</span>
         {{/if}}
       img src="{{include_prefix}}images/photos/{{photo.hash}}.{{photo.file_name}}"
       | {{#if next_link}}
-        <a class="navigation_arrow" href="{{include_prefix}}{{next_link}}">&raquo;</a>
+        <a class="navigation_arrow" href="{{include_prefix}}{{next_link}}#photo">&raquo;</a>
         {{else}}
         <span class="navigation_arrow">&nbsp;</span>
         {{/if}}
