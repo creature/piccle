@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 
-const DEBUG = false;
+const DEBUG = true;
 
 const AWAITING_COMMAND = 1;
 const AWAITING_DATA = 2;
@@ -65,18 +65,31 @@ const logFile = fs.open(path.resolve(__dirname, "debug.log"), "a", (err, fd) => 
 
             try {
                 let templateVars = JSON.parse(line);
-                if ("render_index" == state.command) {
-                    fs.writeSync(process.stdout.fd, templates["index"](templateVars));
-                } else if ("render_show" == state.command) {
-                    fs.writeSync(process.stdout.fd, templates["show"](templateVars));
-                } else if ("render_navigation" == state.command) {
-                    fs.writeSync(process.stdout.fd, templates["navigation"](templateVars));
+                let attempts = 0;
+                while (attempts <= 3) {
+                    try {
+                        if ("render_index" == state.command) {
+                            fs.writeSync(process.stdout.fd, templates["index"](templateVars));
+                        } else if ("render_show" == state.command) {
+                            fs.writeSync(process.stdout.fd, templates["show"](templateVars));
+                        } else if ("render_navigation" == state.command) {
+                            fs.writeSync(process.stdout.fd, templates["navigation"](templateVars));
+                        }
+                        fs.writeSync(process.stdout.fd, "\n\x1C\n");
+                    } catch (e) {
+                        if (e instanceof Error && 'EAGAIN' == e.code && attempts < 3) {
+                            log(`Failed write attempt ${attempts} for ${state.command}`);
+                            log(`Rendered output was ${templates["navigation"](templateVars)}`);
+                            attempts += 1;
+                        } else {
+                            throw e;
+                        }
+                    }
                 }
-                fs.writeSync(process.stdout.fd, "\n\x1C\n");
                 log("Finished writing template, awaiting next command");
                 state.mode = AWAITING_COMMAND;
             } catch (e) {
-                log(`Couldn't generate template: our input line was ${line}`);
+                log(`Couldn't generate template for ${state.command}: our input line was ${line}`);
                 throw e;
             }
         } else {
