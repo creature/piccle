@@ -3,10 +3,12 @@
 ## Roadmap
 
 v0.1
-- Make renderer use provided templates (ie. not hard-coded path)
-- Valid Atom feed
-- Next/prev skips header in links
 - Test it works on other computers
+- Show focal length in metadata. I wonder if we can see whether a camera has a fixed lens in the metadata?
+- Downcase location names
+- Better iPad display
+- Update readme
+- Remove "noindex" tag in header.
 
 v0.2
 - Paginated indexes
