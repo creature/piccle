@@ -7,7 +7,7 @@ const DEBUG = true;
 
 const AWAITING_COMMAND = 1;
 const AWAITING_DATA = 2;
-const VALID_COMMANDS = ["render_index", "render_show", "render_navigation", "quit"];
+const VALID_COMMANDS = ["render_index", "render_show", "quit"];
 let state = { command: undefined, mode: AWAITING_COMMAND };
 
 if (process.argv.length != 3) {
@@ -30,8 +30,6 @@ const templates = {
     index: Handlebars.compile(fs.readFileSync(path.resolve(templateDir, 'js/index.handlebars'), { encoding: 'utf8' }),
         { knownHelpers: { ifEqual: true, join: true }, knownHelpersOnly: true }),
     show: Handlebars.compile(fs.readFileSync(path.resolve(templateDir, 'js/show.handlebars'), { encoding: 'utf8' }),
-        { knownHelpers: { ifEqual: true, join: true }, knownHelpersOnly: true }),
-    navigation: Handlebars.compile(fs.readFileSync(path.resolve(templateDir, 'js/navigation.handlebars'), { encoding: 'utf8' }),
         { knownHelpers: { ifEqual: true, join: true }, knownHelpersOnly: true })
 };
 
@@ -72,14 +70,11 @@ const logFile = fs.open(path.resolve(__dirname, "debug.log"), "a", (err, fd) => 
                             fs.writeSync(process.stdout.fd, templates["index"](templateVars));
                         } else if ("render_show" == state.command) {
                             fs.writeSync(process.stdout.fd, templates["show"](templateVars));
-                        } else if ("render_navigation" == state.command) {
-                            fs.writeSync(process.stdout.fd, templates["navigation"](templateVars));
                         }
                         fs.writeSync(process.stdout.fd, "\n\x1C\n");
                     } catch (e) {
                         if (e instanceof Error && 'EAGAIN' == e.code && attempts < 3) {
                             log(`Failed write attempt ${attempts} for ${state.command}`);
-                            log(`Rendered output was ${templates["navigation"](templateVars)}`);
                             attempts += 1;
                         } else {
                             throw e;

@@ -318,7 +318,6 @@ class CLI < Thor
     puts "    ... generating templates..."
     FileUtils.mkdir_p(File.join(Piccle.config.output_dir, "js"))
     File.write(File.join(Piccle.config.output_dir, "js", "index.handlebars"), Piccle::TemplateHelpers.compile_template("index"))
-    File.write(File.join(Piccle.config.output_dir, "js", "navigation.handlebars"), Piccle::TemplateHelpers.compile_template("navigation"))
     File.write(File.join(Piccle.config.output_dir, "js", "show.handlebars"), Piccle::TemplateHelpers.compile_template("show"))
   end
 

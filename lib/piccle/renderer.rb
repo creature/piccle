@@ -49,7 +49,7 @@ module Piccle
         photos: @parser.data[:photos],
         event_starts: @parser.data[:event_starts],
         event_ends: @parser.data[:event_ends],
-        navigation: render_nav,
+        nav_items: @extractor.navigation,
         site_metadata: site_metadata
       }
 
@@ -74,7 +74,7 @@ module Piccle
         photos: @parser.subsection_photos(selector),
         event_starts: [],
         event_ends: [],
-        navigation: render_nav(selector),
+        nav_items: @extractor.navigation,
         selector: selector,
         selector_path: selector_path,
         breadcrumbs: breadcrumbs,
@@ -170,15 +170,6 @@ module Piccle
         title += " - " + breadcrumbs.map { |b| b[:friendly_name] }.join(" - ")
       end
       title
-    end
-
-    # Gets the navigation info from the parser data.
-    def render_nav(selector = [])
-      Piccle::TemplateHelpers.render("navigation", render_nav_template_vars(selector))
-    end
-
-    def render_nav_template_vars(selector)
-      { nav_items: @extractor.navigation, include_prefix: Piccle::TemplateHelpers.include_prefix(selector) }
     end
   end
 end

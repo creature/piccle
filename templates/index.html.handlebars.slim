@@ -12,7 +12,7 @@ html
         {{/if}}
       == Piccle::TemplateHelpers.render_partial "breadcrumbs"
     main
-      | {{{navigation}}}
+      == Piccle::TemplateHelpers.render_partial "navigation"
 
       .photos
         |
