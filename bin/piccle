@@ -32,6 +32,7 @@ class CLI < Thor
   option :events, desc: "The location of the events file to use, if any. Defaults to $CWD/events.yaml", aliases: "-e"
   option :"author-name", desc: "Author name.", aliases: "-n"
   option :url, desc: "The URL where you'll deploy your gallery, if any. Used to generate Atom feeds and OpenGraph tags.", aliases: "-u"
+  option :"ruby-renderer", desc: "Render templates with a Ruby codepath, rather than a JavaScript helper app. You don't need node in your path, but it is 10x slower.", type: :boolean, default: false
   def generate
     if options.key?("config") && !File.exist?(options["config"])
       puts "Specified config file #{options["config"]} not found."
@@ -164,7 +165,11 @@ class CLI < Thor
 
     parser = new_parser_with_streams
     parse_photos(parser)
-    renderer = Piccle::JsRenderer.new(parser)
+    renderer = if Piccle.config.ruby_renderer?
+                 Piccle::Renderer.new(parser)
+               else
+                Piccle::JsRenderer.new(parser)
+               end
 
     FileUtils.mkdir_p(Piccle.config.output_dir)
     generate_templates(renderer)

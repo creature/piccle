@@ -51,6 +51,10 @@ module Piccle
       get_option("debug", false)
     end
 
+    def ruby_renderer?
+      get_option("ruby-renderer", false)
+    end
+
     # Generate an Atom feed if we're in debug mode and have a home URL, or if we've set it to something other than
     # example.com.
     def atom?
