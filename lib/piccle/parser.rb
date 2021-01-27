@@ -50,6 +50,7 @@ module Piccle
                                     created_at: photo.created_at,
                                     aperture: photo.aperture,
                                     shutter_speed: photo.friendly_shutter_speed,
+                                    focal_length: photo.friendly_focal_length,
                                     iso: photo.iso,
                                     city: photo.city,
                                     state: photo.state,

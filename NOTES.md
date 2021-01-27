@@ -4,8 +4,6 @@
 
 v0.1
 - Test it works on other computers
-- Show focal length in metadata. I wonder if we can see whether a camera has a fixed lens in the metadata?
-- Downcase location names
 - Better iPad display
 - Update readme
 - Remove "noindex" tag in header.
@@ -40,6 +38,7 @@ v0.4
 - Write a readme.
 - Add "collapsed" view for events so they show up in one tile. 
 - Add links to event tiles that link to the event page.
+- Can we detect fixed focal length cameras in the metadata? 
 - Maybe combine substream path with include prefix? So we don't have to do two {{foo}}{{bar}} on every link.
 - Put current stream first on photo page
 - Update nav to render subnav too, for current section.
