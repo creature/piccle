@@ -63,25 +63,22 @@ const logFile = fs.open(path.resolve(__dirname, "debug.log"), "a", (err, fd) => 
 
             try {
                 let templateVars = JSON.parse(line);
-                let attempts = 0;
-                while (attempts <= 3) {
-                    try {
-                        if ("render_index" == state.command) {
-                            fs.writeSync(process.stdout.fd, templates["index"](templateVars));
-                        } else if ("render_show" == state.command) {
-                            fs.writeSync(process.stdout.fd, templates["show"](templateVars));
-                        }
-                        fs.writeSync(process.stdout.fd, "\n\x1C\n");
-                    } catch (e) {
-                        if (e instanceof Error && 'EAGAIN' == e.code && attempts < 3) {
-                            log(`Failed write attempt ${attempts} for ${state.command}`);
-                            attempts += 1;
-                        } else {
-                            throw e;
-                        }
-                    }
+                let sendSeparator = () => {
+                    process.stdout.write("\n\x1C\n");
+                    log("Finished writing template, awaiting next command");
+                };
+                let renderedTemplate;
+                if ("render_index" == state.command) {
+                    renderedTemplate = templates["index"](templateVars);
+                } else if ("render_show" == state.command) {
+                    renderedTemplate = templates["show"](templateVars);
                 }
-                log("Finished writing template, awaiting next command");
+
+                if (!process.stdout.write(renderedTemplate)) {
+                    process.stdout.once('drain', sendSeparator);
+                } else {
+                    process.nextTick(sendSeparator);
+                }
                 state.mode = AWAITING_COMMAND;
             } catch (e) {
                 log(`Couldn't generate template for ${state.command}: our input line was ${line}`);
