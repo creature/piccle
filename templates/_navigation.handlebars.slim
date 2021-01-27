@@ -8,7 +8,7 @@ nav
         <h2>{{nav_item.friendly_name}}</h2>
         <ul>
           {{#each nav_item.entries as |entry|}}
-            <li><a href="{{../../include_prefix}}{{entry.link}}" title="{{entry.photo_count}} photos">{{entry.friendly_name}}</a></li>
+            <li><a href="{{../../include_prefix}}{{entry.link}}" title="{{entry.photo_count}} {{#ifEqual entry.photo_count 1}}photo{{else}}photos{{/ifEqual}}">{{entry.friendly_name}}</a></li>
           {{/each}}
         </ul>
         </section>

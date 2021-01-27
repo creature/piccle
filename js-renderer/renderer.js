@@ -19,7 +19,9 @@ const templateDir = process.argv[2];
 // Set up Handlebars templates
 Handlebars.registerHelper("ifEqual", function(a, b, options) {
     if (a == b) {
-        options.fn(this);
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
     }
 });
 Handlebars.registerHelper("join", (items, separator) => {

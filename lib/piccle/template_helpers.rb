@@ -65,6 +65,8 @@ class Piccle::TemplateHelpers
       @@handlebars.register_helper(:ifEqual) do |context, arg1, arg2, block|
         if arg1 == arg2
           block.fn(context)
+        else
+          block.inverse(context)
         end
       end
 
