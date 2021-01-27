@@ -12,21 +12,21 @@ class Piccle::Streams::LocationStream < Piccle::Streams::BaseStream
       data = { namespace => {
                :friendly_name => "By Location",
                :interesting => false,
-               photo.country => {
+               photo.country.downcase => {
                  :friendly_name => photo.country,
                  :interesting => true,
                  :photos => [photo.md5]
                },
              }}
       if photo.state
-        data[namespace][photo.country][photo.state] = {
+        data[namespace][photo.country.downcase][photo.state.downcase] = {
           :friendly_name => photo.state,
           :interesting => false,
           :photos => [photo.md5]
         }
 
         if photo.city
-          data[namespace][photo.country][photo.state][photo.city] = {
+          data[namespace][photo.country.downcase][photo.state.downcase][photo.city.downcase] = {
             :friendly_name => photo.city,
             :interesting => false,
             :photos => [photo.md5]
@@ -42,13 +42,13 @@ class Piccle::Streams::LocationStream < Piccle::Streams::BaseStream
     metadata = []
 
     if photo.country
-      metadata << { friendly_name: photo.country, type: :location_country, selector: [namespace, photo.country] }
+      metadata << { friendly_name: photo.country, type: :location_country, selector: [namespace, photo.country.downcase] }
 
       if photo.state
-        metadata << { friendly_name: photo.state, type: :location_state, selector: [namespace, photo.country, photo.state] }
+        metadata << { friendly_name: photo.state, type: :location_state, selector: [namespace, photo.country.downcase, photo.state.downcase] }
 
         if photo.city
-          metadata << { friendly_name: photo.city, type: :location_city, selector: [namespace, photo.country, photo.state, photo.city] }
+          metadata << { friendly_name: photo.city, type: :location_city, selector: [namespace, photo.country.downcase, photo.state.downcase, photo.city.downcase] }
         end
       end
     end
