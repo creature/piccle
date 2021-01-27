@@ -4,28 +4,22 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'piccle/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "piccle"
-  spec.version       = Piccle::VERSION
-  spec.authors       = ["Alex Pounds"]
-  spec.email         = ["alex+git@alexpounds.com"]
-  spec.executables   = ["piccle"]
+  spec.name = "piccle"
+  spec.version = Piccle::VERSION
+  spec.authors = ["Alex Pounds"]
+  spec.email = ["piccle@alexpounds.com"]
+  spec.executables = ["piccle"]
 
-  spec.summary       = %q{A static site generator for photographers}
+  spec.summary  = "A static site generator for photographers"
+  spec.description = "Piccle uses the EXIF data present in your photographs and uses it to build a website that lets
+  visitors browse by camera, tag, location, and more."
+  spec.homepage = "https://piccle.alexpounds.com/"
 
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
-  else
-    raise "RubyGems 2.0 or newer is required to protect against " \
-      "public gem pushes."
-  end
-
-  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
+  spec.files  = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
   end
-  spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.bindir = "bin"
+  spec.executables = ["piccle"]
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.13"
@@ -33,8 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov" # Code coverage calculator
   spec.add_development_dependency "simplecov-console" # Output stats on the console
   spec.add_development_dependency "pry-byebug", "~> 3.5" # Debugging aid; only needed by developers.
-  spec.add_development_dependency "ruby-prof"
-
+  spec.add_development_dependency "ruby-prof" # Performance profiling.
 
   spec.add_dependency "exifr", "~> 1.3" # EXIF reading library
   spec.add_dependency "handlebars" # Templating engine, usable both backend and frontend.
