@@ -44,7 +44,7 @@ class Piccle::Photo < Sequel::Model
     p[:md5] = Digest::MD5.file(path_to_file).to_s
     p[:width] = exif_info.width
     p[:height] = exif_info.height
-    p[:camera_name] = exif_info.model || "Unknown"
+    p[:camera_name] = exif_info.model || "Unknown camera"
     p[:description] = exif_info.image_description
     p[:aperture] = exif_info.aperture_value
     p[:iso] = exif_info.iso_speed_ratings
@@ -147,7 +147,17 @@ class Piccle::Photo < Sequel::Model
 
   # Munge the shutter speed data into a human-readable string.
   def friendly_shutter_speed
-    "#{shutter_speed_numerator}/#{shutter_speed_denominator}s"
+    if shutter_speed_numerator && shutter_speed_denominator
+      if shutter_speed_denominator > 1
+        "#{shutter_speed_numerator}/#{shutter_speed_denominator}s"
+      else
+        "#{shutter_speed_numerator}s"
+      end
+    end
+  end
+
+  def friendly_focal_length
+    "#{focal_length.round(1)} mm"
   end
 
   # Does this image have both a lat-long pair, AND at least one of (city, state, country)?
