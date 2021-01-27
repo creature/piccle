@@ -23,7 +23,7 @@ feed xmlns="http://www.w3.org/2005/Atom"
           - if photo[:description]
             p = photo[:description]
           - if photo[:has_location]
-            p #{[photo[:city], photo[:state], photo[:country]].join(", ")}.
+            p #{[photo[:city], photo[:state], photo[:country]].compact.join(", ")}.
           - if photo[:taken_at]
             p Taken #{photo[:taken_at].strftime("%-d %B, %Y.")}
 
