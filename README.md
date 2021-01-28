@@ -1,3 +1,5 @@
+![Piccle logo](https://github.com/creature/piccle/blob/master/assets/icons/android-chrome-192x192.png?raw=true)
+
 # Piccle
 
 Piccle is a static photo gallery generator. Purposefully designed with no admin interface, it builds the gallery from 
@@ -17,10 +19,24 @@ though these are unlikely to be added unless you set them up first.
 
 ## Getting started
 
+### Quickstart 
+
+```bash
+gem install piccle --pre
+piccle generate -i path/to/your/image/dir # Produces a site in generated/
+piccle help # To see more options
+```
+
+### Installing Piccle
+
 Piccle requires a modern(ish) version of Ruby. If you don't have one already, then I like [rbenv](https://github.com/rbenv/rbenv#readme) 
 as a Ruby version manager. 
 
-1. Run `gem install piccle` to install the software. 
+The default renderer relies on [NodeJS](https://nodejs.org/en/) being available in your `$PATH`. If this isn't possible
+for you, you can run Piccle with `--ruby-renderer` – but this is typically 10 times slower.
+
+
+1. Run `gem install piccle --pre` to install the software. 
 1. Piccle can run from anywhere, but things will be easier if you created a dedicated directory for it: 
     ```bash
     mkdir -p piccle/images
@@ -36,6 +52,8 @@ as a Ruby version manager.
 1. Take the output in `generated/` and deploy it to your web server of choice. You can preview the gallery locally; 
    open `generated/index.html` in your browser.
 1. You're done! 
+
+## Available Options
 
 Piccle has two subcommands, `generate` and `geocode`. `generate` is the default task and is the same as running 
 without specifying a subcommand. `geocode` uses the Data Science Toolkit to look up locations in the database. 
@@ -54,6 +72,8 @@ without specifying a subcommand. `geocode` uses the Data Science Toolkit to look
   (so people can subscribe to updates) and OpenGraph tags (which give nice embeds on social media) require a full URL. 
   They won't be generated if this is not set. 
 * `--debug` turns on debug mode, which adds some extra logging.
+* `--ruby-renderer` uses a rendering engine that does not require your system to have NodeJS installed (instead, it 
+  uses a [wrapper for libv8](https://github.com/rubyjs/therubyracer)). The output is the same, but it's much slower.
 
 
 ## Metadata Used
@@ -96,37 +116,37 @@ tool for managing metadata yet, but here are some options:
 ### Adobe Bridge
 
 Pros
-: Available for free, without a paid Creative Cloud subscription
-: Lets you build a library of keywords, with a nested heirarchy, so it's easier to use a set of standard tags with your photos
-: Can [edit titles, descriptions, and locations](https://helpx.adobe.com/ca/bridge/using/metadata-adobe-bridge.html)
-: Good filtering support: it's easy to find pictures lacking metadata
+- Available for free, without a paid Creative Cloud subscription
+- Lets you build a library of keywords, with a nested heirarchy, so it's easier to use a set of standard tags with your photos
+- Can [edit titles, descriptions, and locations](https://helpx.adobe.com/ca/bridge/using/metadata-adobe-bridge.html)
+- Good filtering support: it's easy to find pictures lacking metadata
 
 Cons
-: You still need a Creative Cloud account to download it
-: You must install the Adobe Creative Cloud stuff to get Bridge
-: Can't place photos on a map for adding latitude/longitude.
+- You still need a Creative Cloud account to download it
+- You must install the Adobe Creative Cloud stuff to get Bridge
+- Can't place photos on a map for adding latitude/longitude.
 
 
 ### macOS Preview
 
 Pros
-: If you use macOS you already have it
-: Access the inspector (⌘-I or File → Inspect) and choose the "Keywords" panel to add/remove keywords
+- If you use macOS you already have it
+- Access the inspector (⌘-I or File → Inspect) and choose the "Keywords" panel to add/remove keywords
 
 Cons 
-: Can't edit title, description, or location
-: Can't build a library of tags
+- Can't edit title, description, or location
+- Can't build a library of tags
 
 
 ### Affinity Photo
 
 Pros
-: Lets you edit titles, descriptions, locations, keywords, and add latitude/longitude via a map
-: Is generally a delightful image editor
+- Lets you edit titles, descriptions, locations, keywords, and add latitude/longitude via a map
+- Is generally a delightful image editor
 
 Cons
-: Longwinded for bulk edits: open photo, switch to Develop mode, change to metadata tab, switch between "File" and "IPTC (Image)" sections
-: No tag library - you must type in a comma-separated string
+- Longwinded for bulk edits: open photo, switch to Develop mode, change to metadata tab, switch between "File" and "IPTC (Image)" sections
+- No tag library - you must type in a comma-separated string
 
 
 ## Automation
