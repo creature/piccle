@@ -393,5 +393,16 @@ ul.location li:last-of-type:after {
     margin-left: 1rem;
     margin-right: 1rem;
   }
+}
 
+/* Smaller margins on smallish displays (like iPads) */
+@media(max-width: 1024px) {
+  body {
+    margin: 0 30px;
+  }
+
+  nav {
+    margin-right: 15px;
+    max-width: 150px;
+  }
 }

@@ -3,8 +3,6 @@
 ## Roadmap
 
 v0.1
-- Test it works on other computers
-- Better iPad display
 - Update readme
 
 v0.2
