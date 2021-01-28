@@ -1,3 +1,3 @@
 module Piccle
-  VERSION = "0.1.0.pre"
+  VERSION = "0.1.0.rc1"
 end
