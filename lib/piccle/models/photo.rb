@@ -157,7 +157,7 @@ class Piccle::Photo < Sequel::Model
   end
 
   def friendly_focal_length
-    "#{focal_length.round(1)} mm"
+    "#{focal_length.round(1)} mm" if focal_length.positive?
   end
 
   # Does this image have both a lat-long pair, AND at least one of (city, state, country)?
