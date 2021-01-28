@@ -6,7 +6,6 @@ v0.1
 - Test it works on other computers
 - Better iPad display
 - Update readme
-- Remove "noindex" tag in header.
 
 v0.2
 - Paginated indexes
