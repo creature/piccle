@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 
-const DEBUG = true;
+const DEBUG = false;
 
 const AWAITING_COMMAND = 1;
 const AWAITING_DATA = 2;
