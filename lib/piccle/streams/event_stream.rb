@@ -14,8 +14,12 @@ class Piccle::Streams::EventStream < Piccle::Streams::BaseStream
     @events = if File.exist?(Piccle.config.events_file)
                 YAML.load_file(Piccle.config.events_file).map do |event| # Convert keys to symbols; bring dates to life.
                   event = event.map { |k, v| [k.to_sym, v] }.to_h
-                  event[:from] = event[:from].to_datetime
-                  event[:to] = event[:to].to_datetime
+                  if event[:from].is_a? Date
+                    event[:from] = DateTime.new(event[:from].year, event[:from].month, event[:from].day, 0, 0, 0)
+                  end
+                  if event[:to].is_a? Date
+                    event[:to] = DateTime.new(event[:to].year, event[:to].month, event[:to].day, 23, 59, 59)
+                  end
                   event
                 end
               else
