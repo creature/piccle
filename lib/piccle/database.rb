@@ -13,13 +13,13 @@ class Piccle::Database
   # Is our DB up to date?
   def needs_migration?
     Sequel.extension :migration
-    !Sequel::Migrator.is_current?(@db, Bundler.root.join("db", "migrations"))
+    !Sequel::Migrator.is_current?(@db, Piccle.config.gem_root_join("db", "migrations"))
   end
 
   # Apply any outstanding migrations to the database.
   def migrate!
     Sequel.extension :migration
-    Sequel::Migrator.run(@db, Bundler.root.join("db", "migrations"))
+    Sequel::Migrator.run(@db, Piccle.config.gem_root_join("db", "migrations"))
   end
 
   # Proxy any unknown methods through to the Sequel DB object, where possible.

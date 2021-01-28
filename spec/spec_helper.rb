@@ -11,8 +11,8 @@ end
 
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "piccle"
-Piccle.config = Piccle::Config.new("database" => "piccle_test.db", "working_directory" => Bundler.root.join("spec"),
-                                  "home_directory" => Bundler.root.join("spec"))
+Piccle.config = Piccle::Config.new("database" => "piccle_test.db", "working_directory" => Piccle.config.gem_root_join("spec"),
+                                  "home_directory" => Piccle.config.gem_root_join("spec"))
 
 RSpec.configure do |config|
   config.around(:each) do |example|
@@ -20,7 +20,7 @@ RSpec.configure do |config|
   end
 
   config.after(:suite) do
-    if Pathname.new(Piccle.config.database_file).absolute? && Piccle.config.database_file.start_with?(Bundler.root.to_s)
+    if Pathname.new(Piccle.config.database_file).absolute? && Piccle.config.database_file.start_with?(Piccle.config.gem_root_join)
       File.delete(Piccle.config.database_file)
     end
   end

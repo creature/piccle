@@ -103,6 +103,11 @@ module Piccle
       @db ||= Piccle::Database.new(database_file)
     end
 
+    # Gets a path from the root of our gem to one of its subdirectories.
+    def gem_root_join(*args)
+      File.expand_path(File.join(File.dirname(__dir__), "../", *args))
+    end
+
     protected
 
     # If cli_var is set, use it. Otherwise, look for the option in the config file. Otherwise, use the default.

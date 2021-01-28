@@ -18,26 +18,26 @@ class Piccle::TemplateHelpers
 
   # Renders a partial template. Partial templates do NOT have their variables interpolated via Handlebars.
   def self.render_partial(template_name, args = {})
-    @@slim_partials[template_name] ||= Tilt['slim'].new { File.read("templates/_#{template_name}.handlebars.slim") }
+    @@slim_partials[template_name] ||= Tilt['slim'].new { File.read(Piccle.config.gem_root_join("templates/_#{template_name}.handlebars.slim")) }
     @@slim_partials[template_name].render(Object.new, args)
   end
 
   # Renders an entire template out
   def self.render(template_name, data = {})
     options = { code_attr_delims: { '(' => ')', '[' => ']'}, attr_list_delims: { '(' => ')', '[' => ']' } }
-    @@slim_pages[template_name] ||= Tilt['slim'].new(options) { File.read("templates/#{template_name}.html.handlebars.slim") }.render
+    @@slim_pages[template_name] ||= Tilt['slim'].new(options) { File.read(Piccle.config.gem_root_join("templates/#{template_name}.html.handlebars.slim")) }.render
     template = handlebars.compile(@@slim_pages[template_name])
     template.call(data)
   end
 
   def self.render_rss(template_name, data = {})
-    @@slim_pages["rss_#{template_name}"] ||= Tilt['slim'].new { File.read("templates/#{template_name}.atom.slim") }
+    @@slim_pages["rss_#{template_name}"] ||= Tilt['slim'].new { File.read(Piccle.config.gem_root_join("templates/#{template_name}.atom.slim")) }
     @@slim_pages["rss_#{template_name}"].render(Object.new, data)
   end
 
   # Gets a Handlebars version of the template. No variable replacement!
   def self.compile_template(name)
-    slim_template = Tilt['slim'].new { File.read("templates/#{name}.html.handlebars.slim") }
+    slim_template = Tilt['slim'].new { File.read(Piccle.config.gem_root_join("templates/#{name}.html.handlebars.slim")) }
     slim_template.render(Object.new, {})
   end
 

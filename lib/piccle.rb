@@ -39,7 +39,7 @@ module Piccle
     Sequel::Model.db = Piccle.config.db
 
     if %i[Photo Keyword Location].include?(name)
-      Dir[Bundler.root.join("lib", "piccle", "models", "*.rb")].each { |f| require f.delete_prefix("lib/").delete_suffix(".rb") }
+      Dir[Piccle.config.gem_root_join("lib", "piccle", "models", "*.rb")].each { |f| require f.delete_prefix("lib/").delete_suffix(".rb") }
       models = [Piccle::Photo, Piccle::Keyword, Piccle::Location]
       models.each(&:finalize_associations)
       models.each(&:freeze)

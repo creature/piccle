@@ -17,7 +17,7 @@ class CLI < Thor
   # Prints a banner describing Piccle. qv. https://github.com/erikhuda/thor/issues/612
   def help(*)
     print_wrapped <<~INTRO
-      Piccle: a static website generator for photographers.
+      Piccle #{Piccle::VERSION}: a static website generator for photographers.
 
       Piccle reads the metadata from your photos and uses it to generate a gallery that lets people explore
       your photos by date, keyword, location, etc. Run "piccle help generate" for more details, or see
@@ -337,7 +337,7 @@ class CLI < Thor
 
   def copy_asset_type(type)
     FileUtils.mkdir_p(File.join(Piccle.config.output_dir, type))
-    Dir.glob("#{Bundler.root.join("assets", type)}/**").each do |f|
+    Dir.glob("#{Piccle.config.gem_root_join("assets", type)}/**").each do |f|
       FileUtils.cp(f, File.join(Piccle.config.output_dir, type, File.basename(f)))
     end
   end
@@ -349,6 +349,7 @@ class CLI < Thor
                               state: photo.state, country: photo.country)
     end
   end
+
 end
 
 CLI.start(ARGV)
