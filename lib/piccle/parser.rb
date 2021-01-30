@@ -132,6 +132,11 @@ module Piccle
       end
     end
 
+    # Determines whether the given subsection is marked as "collapsed". This is currently specific to event streams.
+    def subsection_collapsed?(subsection_path)
+      @data.dig(*subsection_path).fetch(:collapsed, false)
+    end
+
     # Given an MD5 hash, returns an array of arrays. Each array is a set of strings that, combined with the MD5, gives a link to the photo.
     # So for instance, with a date stream parser, if a photo was taken on 2016-04-19 you'll get back:
     # [["by-date", "2016"], ["by-date", "2016", "4"], ["by-date", "2016", "4", "19"]]

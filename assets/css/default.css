@@ -143,9 +143,16 @@ section h2 {
   overflow: hidden;
 }
 
+.event_block:hover a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+
 .event_block a {
   color: #ddd;
   text-decoration: none;
+  transition: all 0.22s;
 }
 
 .event_block.event_start {
@@ -164,6 +171,18 @@ section h2 {
 .event_block.event_end:after {
   content: '\27fc';
   padding-left: 1rem;
+}
+
+.event_block.collapsed {
+  background-image: var(--bg-image); /* Set as inline CSS */
+  background-size: cover;
+}
+
+.event_block.collapsed a {
+  -webkit-backdrop-filter: blur(5px) contrast(40%);
+  backdrop-filter: blur(5px);
+  border-radius: 5px;
+  padding: 1rem;
 }
 
 .keywords {

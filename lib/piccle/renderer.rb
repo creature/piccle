@@ -46,7 +46,7 @@ module Piccle
     # Returns all the data we pass into the main index to render.
     def render_main_index_template_vars
       template_vars = {
-        photos: @parser.data[:photos],
+        photos: @extractor.main_index_photos,
         event_starts: @parser.data[:event_starts],
         event_ends: @parser.data[:event_ends],
         nav_items: @extractor.navigation,

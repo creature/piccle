@@ -19,15 +19,29 @@ html
           {{#each photos as |photo|}}
             {{#if (lookup ../event_ends photo.hash)}}
               {{#with (lookup ../event_ends hash)}}
-                <p class="event_block event_end"><a href="{{../include_prefix}}{{join selector '/'}}/index.html">{{name}}</a></p>
+                {{#if collapsed}} {{! Collapsed events don't show photos, only an initial end tile. }}
+                  <p class="event_block collapsed" style="--bg-image: url('{{../include_prefix}}{{join selector '/'}}/quilt.jpg')">
+                    <a href="{{../include_prefix}}{{join selector '/'}}/index.html">{{name}}</a>
+                  </p>
+                {{else}} {{! Not collapsed, show the photo here }}
+                  <p class="event_block event_end">
+                    <a href="{{../include_prefix}}{{join selector '/'}}/index.html">{{name}}</a>
+                  </p>
+                  <a href="{{../include_prefix}}{{../selector_path}}{{photo.hash}}.html#photo">
+                    <img class="thumbnail" src="{{../include_prefix}}images/thumbnails/{{photo.hash}}.{{photo.file_name}}" alt="{{photo.title}}" />
+                  </a>
+                {{/if}}
               {{/with}}
+            {{else}} {{! Not an event end tile, always show the photo }}
+              <a href="{{../include_prefix}}{{../selector_path}}{{photo.hash}}.html#photo">
+                <img class="thumbnail" src="{{../include_prefix}}images/thumbnails/{{photo.hash}}.{{photo.file_name}}" alt="{{photo.title}}" />
+              </a>
             {{/if}}
-            <a href="{{../include_prefix}}{{../selector_path}}{{photo.hash}}.html#photo">
-              <img class="thumbnail" src="{{../include_prefix}}images/thumbnails/{{photo.hash}}.{{photo.file_name}}" alt="{{photo.title}}" />
-            </a>
             {{#if (lookup ../event_starts photo.hash)}}
               {{#with (lookup ../event_starts hash)}}
-                <p class="event_block event_start"><a href="{{../include_prefix}}{{join selector '/'}}/index.html">{{name}}</a></p>
+                {{#unless collapsed}}
+                  <p class="event_block event_start"><a href="{{../include_prefix}}{{join selector '/'}}/index.html">{{name}}</a></p>
+                {{/unless}}
               {{/with}}
             {{/if}}
           {{/each}}

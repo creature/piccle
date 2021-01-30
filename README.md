@@ -85,6 +85,31 @@ without specifying a subcommand. `geocode` uses the Data Science Toolkit to look
 * **Location** is shown. If your photos have a city/state/country specified in their data, then that's used; otherwise, 
   Piccle will attempt to geocode them based on embedded latitude/longitude.
 
+## Events 
+
+Piccle allows you to create named events in a separate [YAML file](https://learnxinyminutes.com/docs/yaml/). Each event 
+gets a dedicated index page, and a callout on the main index. It's useful for highlighting pictures from a particular 
+photoshoot, or drawing attention to a trip. 
+
+Events must have a name, and must either be `at` a particular date or within a particular date span (`from` and `to`). 
+Events may also be marked as `collapsed`; collapsed events don't show all their photos on an index page. Instead, they 
+show a quilt tile with some of the photos. It's a good way to avoid flooding your front page with a lot of 
+similar-looking photos. 
+
+This `events.yaml` file defines two events: a photoshoot I did themed around googly eyes, and a trip to the UK in 2019. 
+(The example shows dates only, but you can include times too.)
+
+```yaml
+-
+  name: Googly Eyes
+  at: 2019-03-23
+  collapsed: true
+-
+  name: UK 2019
+  from: 2019-01-24
+  to: 2019-02-09
+```
+
 -------
 
 ## Credits

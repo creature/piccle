@@ -295,6 +295,10 @@ class CLI < Thor
   # Generates "quilts" - stitched together images for each section, which we use in OpenGraph tags.
   def generate_quilts(parser)
     puts "Generating gallery quilts (preview images for sharing galleries on social media)..."
+    unless Piccle.config.open_graph?
+      puts "    Not generating most quilts, because no home URL is set."
+    end
+
     if Piccle.config.open_graph?
       thumbnail_path_proc = Proc.new { |k, v| File.join(Piccle.config.output_dir, "images", "thumbnails", "#{v[:hash]}.#{v[:file_name]}") }
 
@@ -303,19 +307,18 @@ class CLI < Thor
       main_quilt = Piccle::QuiltGenerator.generate_for(main_thumbnails)
       main_quilt.write(File.join(Piccle.config.output_dir, "quilt.jpg"))
       puts " Done."
+    end
 
-      parser.subsections.each do |subsection|
-        thumbnails = parser.subsection_photos(subsection).map(&thumbnail_path_proc)
-        if thumbnails.any?
-          output_path = File.join(Piccle.config.output_dir, *subsection, "quilt.jpg")
-          print "    ... Creating gallery quilt #{output_path}..."
-          quilt = Piccle::QuiltGenerator.generate_for(thumbnails.first(9))
-          quilt.write(output_path)
-          puts " Done."
-        end
+    parser.subsections.each do |subsection|
+      thumbnails = parser.subsection_photos(subsection).map(&thumbnail_path_proc)
+      # All sections get quilts if we're rendering OpenGraph tags; otherwise just collapsed sections.
+      if thumbnails.any? && (Piccle.config.open_graph? || parser.subsection_collapsed?(subsection))
+        output_path = File.join(Piccle.config.output_dir, *subsection, "quilt.jpg")
+        print "    ... Creating gallery quilt #{output_path}..."
+        quilt = Piccle::QuiltGenerator.generate_for(thumbnails.first(9))
+        quilt.write(output_path)
+        puts " Done."
       end
-    else
-      puts "    Not generating gallery quilt images, because no home URL is set."
     end
   end
 

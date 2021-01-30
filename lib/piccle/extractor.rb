@@ -70,6 +70,15 @@ module Piccle
       end
     end
 
+    # Gets the photos to show on the main index page. This is everything, except for photos within a collapsed event.
+    # We keep the first photo, but this is typically rendererd as a quilt tile rather than the photo itself.
+    def main_index_photos
+      all_photos = @parser.data[:photos]
+      collapsed_events = @parser.data[:events].select { |ev| ev[:collapsed] }
+      removable_hashes = collapsed_events.flat_map { |ev| @parser.subsection_photo_hashes(ev[:selector]).drop(1) }
+      all_photos.reject { |k, _v| removable_hashes.include?(k) }
+    end
+
     # Gets a (currently top-level only) navigation structure. All entries have at least one photo.
     def navigation
       navigation_entries = @parser.faceted_data.map do |k, v|
