@@ -396,7 +396,7 @@ ul.location li:last-of-type:after {
 }
 
 /* Smaller margins on smallish displays (like iPads) */
-@media(max-width: 1024px) {
+@media(min-width: 689px) and (max-width: 1024px) {
   body {
     margin: 0 30px;
   }
