@@ -2,9 +2,6 @@
 
 ## Roadmap
 
-v0.1
-- Update readme
-
 v0.2
 - Paginated indexes
 - Render subnav (ie. if you're in 2020 view, it'll show the months)
@@ -13,7 +10,6 @@ v0.2
 
 v0.3
 - Track hash changes, generate redirects and htaccess file
-- Collapsible events on the front page (maybe)
 - Better display of streams on photo show page
 
 v0.4
