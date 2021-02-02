@@ -184,6 +184,22 @@ section h2 {
   padding: 1rem;
 }
 
+.pagination {
+  display: flex;
+  margin: 2rem;
+  justify-content: center;
+}
+
+.pagination ol {
+  list-style-type: none;
+  margin: 0 1rem;
+  padding: 0;
+}
+
+.pagination ol li {
+  display: inline-block;
+}
+
 .keywords {
   margin: 72px 72px 18px;
   line-height: 2;
