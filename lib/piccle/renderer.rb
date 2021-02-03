@@ -111,22 +111,30 @@ module Piccle
     # - Returns an array of template vars.
     def paginate(template_vars)
       slices = template_vars[:photos].each_slice(100)
-      pages = (0...slices.count).map { |i| { label: i + 1, page_name: index_page_name_for(i) } }
+      if slices.count > 1
+        pages = (0...slices.count).map { |i| { label: i + 1, page_name: index_page_name_for(i) } }
 
-      slices.map.with_index do |slice, i|
-        pages_with_current = pages.map.with_index { |page, index| page.merge(is_current: (i == index)) }
+        slices.map.with_index do |slice, i|
+          pages_with_current = pages.map.with_index { |page, index| page.merge(is_current: (i == index)) }
+          is_first = i.zero?
+          is_last = i == slices.count - 1
 
-        # TODO: add prev_link and next_link, if present.
-        template_vars.merge(photos: slice.to_h,
-                            pagination: {
-                              page_name: index_page_name_for(i),
-                              pages: pages_with_current,
-                              is_first_page: i.zero?,
-                              is_last_page: i == slices.count - 1,
-                              previous_page_name: index_page_name_for(i-1),
-                              next_page_name: index_page_name_for(i+1),
-                              total_pages: slices.count
-                            })
+          new_vars = { photos: slice.to_h }
+          new_vars[:prev_link] = "#{index_page_name_for(i-1)}.html" unless is_first
+          new_vars[:next_link] = "#{index_page_name_for(i+1)}.html" unless is_last
+
+          pagination = { pagination: { page_name: index_page_name_for(i),
+                                      pages: pages_with_current,
+                                      is_first_page: is_first,
+                                      is_last_page: is_last,
+                                      previous_page_name: index_page_name_for(i-1),
+                                      next_page_name: index_page_name_for(i+1),
+                                      total_pages: slices.count }}
+
+          template_vars.merge(new_vars, pagination)
+        end
+      else # Just the one page, no point in adding any pagination.
+        [template_vars]
       end
     end
 

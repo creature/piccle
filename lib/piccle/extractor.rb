@@ -51,7 +51,7 @@ module Piccle
 
       index = hashes.index(photo_hash)
       if index && index > 0
-        "#{(selector + [hashes[index-1]]).join("/")}.html"
+        "#{hashes[index-1]}.html"
       else
         nil
       end
@@ -64,7 +64,7 @@ module Piccle
 
       index = hashes.index(photo_hash)
       if index && index < (hashes.length - 1)
-        "#{(selector + [hashes[index + 1]]).join("/")}.html"
+        "#{hashes[index + 1]}.html"
       else
         nil
       end
