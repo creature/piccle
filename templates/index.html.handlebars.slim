@@ -46,9 +46,9 @@ html
       <div class="pagination">
         {{#unless pagination.is_first_page}}
           {{#if selector}}
-            <a href="{{include_prefix}}{{join selector '/'}}/{{pagination.previous_page_name}}.html">&laquo; Previous</a>
+            <a href="{{include_prefix}}{{join selector '/'}}/{{pagination.previous_page_name}}.html">&laquo;&nbsp;Previous</a>
           {{else}}
-            <a href="{{include_prefix}}{{pagination.previous_page_name}}.html">&laquo; Previous</a>
+            <a href="{{include_prefix}}{{pagination.previous_page_name}}.html">&laquo;&nbsp;Previous</a>
           {{/if}}
         {{/unless}}
         <ol>
@@ -66,9 +66,9 @@ html
         </ol>
         {{#unless pagination.is_last_page}}
           {{#if selector}}
-            <a href="{{include_prefix}}{{join selector '/'}}/{{pagination.next_page_name}}.html">Next &raquo;</a>
+            <a href="{{include_prefix}}{{join selector '/'}}/{{pagination.next_page_name}}.html">Next&nbsp;&raquo;</a>
           {{else}}
-            <a href="{{include_prefix}}{{pagination.next_page_name}}.html">Next &raquo;</a>
+            <a href="{{include_prefix}}{{pagination.next_page_name}}.html">Next&nbsp;&raquo;</a>
           {{/if}}
         {{/unless}}
       </div>
