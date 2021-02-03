@@ -1,64 +1,66 @@
-== Piccle::TemplateHelpers.render_partial "header"
+doctype html
+html lang="en"
+  == Piccle::TemplateHelpers.render_partial "header"
 
-body.photo_show
-  header
-    h1
-      a href="{{include_prefix}}index.html" Photography by {{site_metadata.author_name}}
-    == Piccle::TemplateHelpers.render_partial "breadcrumbs"
-  main#photo
-    h2
-      | {{photo.title}}
-    .photo_with_pagination
-      | {{#if prev_link}}
-        <a class="navigation_arrow" href="{{include_prefix}}{{prev_link}}#photo">&laquo;</a>
-        {{else}}
-        <span class="navigation_arrow">&nbsp;</span>
+  body.photo_show
+    header
+      h1
+        a href="{{include_prefix}}index.html" Photography by {{site_metadata.author_name}}
+      == Piccle::TemplateHelpers.render_partial "breadcrumbs"
+    main#photo
+      h2
+        | {{photo.title}}
+      .photo_with_pagination
+        | {{#if prev_link}}
+          <a class="navigation_arrow" href="{{include_prefix}}{{prev_link}}#photo">&laquo;</a>
+          {{else}}
+          <span class="navigation_arrow">&nbsp;</span>
+          {{/if}}
+        img src="{{include_prefix}}images/photos/{{photo.hash}}.{{photo.file_name}}"
+        | {{#if next_link}}
+          <a class="navigation_arrow" href="{{include_prefix}}{{next_link}}#photo">&raquo;</a>
+          {{else}}
+          <span class="navigation_arrow">&nbsp;</span>
+          {{/if}}
+
+      p.description
+        | {{photo.description}}
+      p.settings
+        | {{#if camera_link}}
+          <a href="{{include_prefix}}{{camera_link.link}}">{{camera_link.friendly_name}}</a>{{/if}}{{#if photo.focal_length}}, {{photo.focal_length}}{{/if}}{{#if photo.aperture}}, f/{{photo.aperture}}{{/if}}{{#if photo.shutter_speed}}, {{photo.shutter_speed}}{{/if}}{{#if photo.iso}}, ISO {{photo.iso}}{{/if}}.
+      | {{#if photo.taken_at}}
+          <p class="date">
+            {{#if day_link}}<a href="{{include_prefix}}{{day_link.link}}">{{day_link.friendly_name}}</a>{{/if}}
+            {{#if month_link}}<a href="{{include_prefix}}{{month_link.link}}">{{month_link.friendly_name}}</a>, {{/if}}
+            {{#if year_link}}<a href="{{include_prefix}}{{year_link.link}}">{{year_link.friendly_name}}</a>.{{/if}}
+          </p>
         {{/if}}
-      img src="{{include_prefix}}images/photos/{{photo.hash}}.{{photo.file_name}}"
-      | {{#if next_link}}
-        <a class="navigation_arrow" href="{{include_prefix}}{{next_link}}#photo">&raquo;</a>
-        {{else}}
-        <span class="navigation_arrow">&nbsp;</span>
+        {{#if photo.has_location}}
+          <ul class="location">
+            {{#if city_link}}<li><a href="{{include_prefix}}{{city_link.link}}">{{city_link.friendly_name}}</a></li>{{/if}}
+            {{#if state_link}}<li><a href="{{include_prefix}}{{state_link.link}}">{{state_link.friendly_name}}</a></li>{{/if}}
+            {{#if country_link}}<li><a href="{{include_prefix}}{{country_link.link}}">{{country_link.friendly_name}}</a></li>{{/if}}
+          </ul>
         {{/if}}
 
-    p.description
-      | {{photo.description}}
-    p.settings
-      | {{#if camera_link}}
-        <a href="{{include_prefix}}{{camera_link.link}}">{{camera_link.friendly_name}}</a>{{/if}}{{#if photo.focal_length}}, {{photo.focal_length}}{{/if}}{{#if photo.aperture}}, f/{{photo.aperture}}{{/if}}{{#if photo.shutter_speed}}, {{photo.shutter_speed}}{{/if}}{{#if photo.iso}}, ISO {{photo.iso}}{{/if}}.
-    | {{#if photo.taken_at}}
-        <p class="date">
-          {{#if day_link}}<a href="{{include_prefix}}{{day_link.link}}">{{day_link.friendly_name}}</a>{{/if}}
-          {{#if month_link}}<a href="{{include_prefix}}{{month_link.link}}">{{month_link.friendly_name}}</a>, {{/if}}
-          {{#if year_link}}<a href="{{include_prefix}}{{year_link.link}}">{{year_link.friendly_name}}</a>.{{/if}}
-        </p>
-      {{/if}}
-      {{#if photo.has_location}}
-        <ul class="location">
-          {{#if city_link}}<li><a href="{{include_prefix}}{{city_link.link}}">{{city_link.friendly_name}}</a></li>{{/if}}
-          {{#if state_link}}<li><a href="{{include_prefix}}{{state_link.link}}">{{state_link.friendly_name}}</a></li>{{/if}}
-          {{#if country_link}}<li><a href="{{include_prefix}}{{country_link.link}}">{{country_link.friendly_name}}</a></li>{{/if}}
-        </ul>
-      {{/if}}
-
-    | {{#if keywords}}
-        <div class="keywords">
-          {{#each keywords as |keyword|}}
-            <a href="{{../include_prefix}}{{keyword.link}}">{{keyword.friendly_name}}</a>
-          {{/each}}
-        </div>
-      {{/if}}
-
-    .streams
-      |
-        {{#each substreams as |stream|}}
-        <section>
-          <h2>{{stream.title}}</h2>
-          <div class="stream">
-      == Piccle::TemplateHelpers.render_partial "substream"
-      |
+      | {{#if keywords}}
+          <div class="keywords">
+            {{#each keywords as |keyword|}}
+              <a href="{{../include_prefix}}{{keyword.link}}">{{keyword.friendly_name}}</a>
+            {{/each}}
           </div>
-        </section>
-        {{/each}}
+        {{/if}}
 
-== Piccle::TemplateHelpers.render_partial "footer"
+      .streams
+        |
+          {{#each substreams as |stream|}}
+          <section>
+            <h2>{{stream.title}}</h2>
+            <div class="stream">
+        == Piccle::TemplateHelpers.render_partial "substream"
+        |
+            </div>
+          </section>
+          {{/each}}
+
+  == Piccle::TemplateHelpers.render_partial "footer"
