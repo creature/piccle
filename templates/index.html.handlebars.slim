@@ -1,15 +1,10 @@
 doctype html
-html
+html lang="en"
   == Piccle::TemplateHelpers.render_partial "header"
 
   body.photos_index
     header
-      |
-        {{#if selector}}
-          <h1><a href="{{include_prefix}}index.html">Photography by {{site_metadata.author_name}}</a></h1>
-        {{else}}
-          <h1>Photography by {{site_metadata.author_name}}</a></h1>
-        {{/if}}
+      | <h1><a href="{{include_prefix}}index.html">Photography by {{site_metadata.author_name}}</a></h1>
       == Piccle::TemplateHelpers.render_partial "breadcrumbs"
     main
       == Piccle::TemplateHelpers.render_partial "navigation"
@@ -28,13 +23,13 @@ html
                     <a href="{{../include_prefix}}{{join selector '/'}}/index.html">{{name}}</a>
                   </p>
                   <a href="{{../include_prefix}}{{../selector_path}}{{photo.hash}}.html#photo">
-                    <img class="thumbnail" src="{{../include_prefix}}images/thumbnails/{{photo.hash}}.{{photo.file_name}}" alt="{{photo.title}}" />
+                    <img class="thumbnail" src="{{../include_prefix}}images/thumbnails/{{photo.hash}}.{{photo.file_name}}" alt="{{photo.title}}" width="#{Piccle::THUMBNAIL_SIZE}" height="#{Piccle::THUMBNAIL_SIZE}" />
                   </a>
                 {{/if}}
               {{/with}}
             {{else}} {{! Not an event end tile, always show the photo }}
               <a href="{{../include_prefix}}{{../selector_path}}{{photo.hash}}.html#photo">
-                <img class="thumbnail" src="{{../include_prefix}}images/thumbnails/{{photo.hash}}.{{photo.file_name}}" alt="{{photo.title}}" />
+                <img class="thumbnail" src="{{../include_prefix}}images/thumbnails/{{photo.hash}}.{{photo.file_name}}" alt="{{photo.title}}" width="#{Piccle::THUMBNAIL_SIZE}" height="#{Piccle::THUMBNAIL_SIZE}" />
               </a>
             {{/if}}
             {{#if (lookup ../event_starts photo.hash)}}
@@ -45,6 +40,39 @@ html
               {{/with}}
             {{/if}}
           {{/each}}
+
+    |
+      {{#if pagination}}
+      <div class="pagination">
+        {{#unless pagination.is_first_page}}
+          {{#if selector}}
+            <a href="{{include_prefix}}{{join selector '/'}}/{{pagination.previous_page_name}}.html">&laquo;&nbsp;Previous</a>
+          {{else}}
+            <a href="{{include_prefix}}{{pagination.previous_page_name}}.html">&laquo;&nbsp;Previous</a>
+          {{/if}}
+        {{/unless}}
+        <ol>
+          {{#each pagination.pages}}
+            {{#if this.is_current}}
+              <li class="current">{{this.label}}</li>
+            {{else}}
+              {{#if selector}}
+                <li><a href="{{include_prefix}}{{join selector '/'}}/{{this.page_name}}.html">{{this.label}}</a></li>
+              {{else}}
+                <li><a href="{{include_prefix}}{{this.page_name}}.html">{{this.label}}</a></li>
+              {{/if}}
+            {{/if}}
+          {{/each}}
+        </ol>
+        {{#unless pagination.is_last_page}}
+          {{#if selector}}
+            <a href="{{include_prefix}}{{join selector '/'}}/{{pagination.next_page_name}}.html">Next&nbsp;&raquo;</a>
+          {{else}}
+            <a href="{{include_prefix}}{{pagination.next_page_name}}.html">Next&nbsp;&raquo;</a>
+          {{/if}}
+        {{/unless}}
+      </div>
+      {{/if}}
 
     == Piccle::TemplateHelpers.render_partial "footer"
 

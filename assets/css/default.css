@@ -184,6 +184,22 @@ section h2 {
   padding: 1rem;
 }
 
+.pagination {
+  display: flex;
+  margin: 2rem;
+  justify-content: center;
+}
+
+.pagination ol {
+  list-style-type: none;
+  margin: 0 1rem;
+  padding: 0;
+}
+
+.pagination ol li {
+  display: inline-block;
+}
+
 .keywords {
   margin: 72px 72px 18px;
   line-height: 2;
@@ -385,6 +401,14 @@ ul.location li:last-of-type:after {
     grid-template-columns: repeat(3, 1fr);
   }
 
+  .pagination {
+    justify-content: space-evenly;
+  }
+
+  .pagination ol { /* No page numbers on tiny displays, just next/previous */
+    display: none;
+  }
+
   .event_block {
     font-size: 18px;
   }
@@ -422,5 +446,20 @@ ul.location li:last-of-type:after {
   nav {
     margin-right: 15px;
     max-width: 150px;
+  }
+}
+
+/* More room for pages on smallish screens (ie. phones or tablets, probably) */
+@media(max-width: 1024px) {
+  .pagination {
+    justify-content: space-between;
+  }
+
+  .pagination ol li {
+    margin-right: 1rem;
+  }
+
+  .pagination ol li:last-child {
+    margin-right: 0;
   }
 }

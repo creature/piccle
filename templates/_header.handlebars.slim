@@ -14,14 +14,14 @@ head
     {{#if canonical}}
     <link rel="canonical" href="{{include_prefix}}{{canonical}}" />
     {{/if}}
-    {{#if prev_link}}
-    <link rel="prev" href="{{include_prefix}}{{prev_link}}" />
+    {{#if prev_link}} {{! Previous and next links don't need the include prefix; they're always in the current directory. }}
+    <link rel="prev" href="{{prev_link}}" />
     {{/if}}
     {{#if next_link}}
-    <link rel="next" href="{{include_prefix}}{{next_link}}" />
+    <link rel="next" href="{{next_link}}" />
     {{/if}}
     {{#if site_url}}
-    <link rel="alternate" type="application/atom+xml" href="{{include_prefix}}/feed.atom" title="All photos">
+    <link rel="alternate" type="application/atom+xml" href="{{include_prefix}}feed.atom" title="All photos">
     {{/if}}
     {{#if open_graph}}
     <meta property="og:type" content="website" />

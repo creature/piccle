@@ -206,16 +206,24 @@ class CLI < Thor
   # Given a parser object, generate some HTML index pages from the data it contains.
   def generate_html_indexes(parser, renderer)
     puts "    ... generating HTML indexes ..."
-    print "        ... generating main index ... "
-    File.write(File.join(Piccle.config.output_dir, "index.html"), renderer.render_main_index)
+    print "        ... generating main index "
+    paginated_main_index = renderer.render_main_index
+    print "(#{paginated_main_index.count} page(s)) ... "
+    paginated_main_index.each_with_index do |page, index|
+      File.write(File.join(Piccle.config.output_dir, "#{renderer.index_page_name_for(index)}.html"), page)
+    end
     puts "Done."
 
     parser.subsections.each do |subsection|
       if parser.subsection_photo_hashes(subsection).any?
         subdir = File.join(Piccle.config.output_dir, *subsection)
-        print "        ... generating #{subdir} index ... "
+        print "        ... generating #{subdir} index "
         FileUtils.mkdir_p(subdir)
-        File.write(File.join(subdir, "index.html"), renderer.render_index(subsection))
+        paginated_subsection_index = renderer.render_index(subsection)
+        print "(#{paginated_subsection_index.count} page(s)) ... "
+        paginated_subsection_index.each_with_index do |page, index|
+          File.write(File.join(subdir, "#{renderer.index_page_name_for(index)}.html"), page)
+        end
         puts "Done."
       end
     end

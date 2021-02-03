@@ -9,11 +9,13 @@ module Piccle
     end
 
     def render_main_index
-      call_nodejs("index", render_main_index_template_vars)
+      template_vars = paginate(render_main_index_template_vars)
+      template_vars.map { |page_template_vars| call_nodejs("index", page_template_vars) }
     end
 
     def render_index(selector)
-      call_nodejs("index", render_index_template_vars(selector))
+      template_vars = paginate(render_index_template_vars(selector))
+      template_vars.map { |page_template_vars| call_nodejs("index", page_template_vars) }
     end
 
     def render_photo(hash, selector = [])

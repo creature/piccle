@@ -12,12 +12,14 @@ module Piccle
     # For instance, if selector was ["by-date", "2015"] you'd get an index page of photos
     # for 2015 based on the data held by the parser.
     def render_index(selector)
-      Piccle::TemplateHelpers.render("index", render_index_template_vars(selector))
+      template_vars = paginate(render_index_template_vars(selector))
+      template_vars.map { |page_template_vars| Piccle::TemplateHelpers.render("index", page_template_vars) }
     end
 
     # Renders the "main" index – the front page of our site.
     def render_main_index
-      Piccle::TemplateHelpers.render("index", render_main_index_template_vars)
+      template_vars = paginate(render_main_index_template_vars)
+      template_vars.map { |page_template_vars| Piccle::TemplateHelpers.render("index", page_template_vars) }
     end
 
     # Renders an Atom feed of the given subsection.
@@ -39,6 +41,12 @@ module Piccle
     # Render a page for a specific photo.
     def render_photo(hash, selector=[])
       Piccle::TemplateHelpers.render("show", render_photo_template_vars(hash, selector))
+    end
+
+    # What should we call this index page? The first page is "index" (ie. index.html), later ones have a number
+    # (eg. "index-02"). NB! Our indexes are 0 based, but our pages are 1 based. (0 → index, 1 → index-02, 2 → index-03).
+    def index_page_name_for(index)
+      index.zero? ? "index" : "index-#{sprintf("%02d", index + 1)}"
     end
 
     protected
@@ -95,6 +103,39 @@ module Piccle
       end
 
       template_vars
+    end
+
+    # Given a set of template variables, paginate them. Specifically:
+    # - Take the :photos key, and break it into chunks
+    # - Add a :pagination key with details of all the pages
+    # - Returns an array of template vars.
+    def paginate(template_vars)
+      slices = template_vars[:photos].each_slice(100)
+      if slices.count > 1
+        pages = (0...slices.count).map { |i| { label: i + 1, page_name: index_page_name_for(i) } }
+
+        slices.map.with_index do |slice, i|
+          pages_with_current = pages.map.with_index { |page, index| page.merge(is_current: (i == index)) }
+          is_first = i.zero?
+          is_last = i == slices.count - 1
+
+          new_vars = { photos: slice.to_h }
+          new_vars[:prev_link] = "#{index_page_name_for(i-1)}.html" unless is_first
+          new_vars[:next_link] = "#{index_page_name_for(i+1)}.html" unless is_last
+
+          pagination = { pagination: { page_name: index_page_name_for(i),
+                                      pages: pages_with_current,
+                                      is_first_page: is_first,
+                                      is_last_page: is_last,
+                                      previous_page_name: index_page_name_for(i-1),
+                                      next_page_name: index_page_name_for(i+1),
+                                      total_pages: slices.count }}
+
+          template_vars.merge(new_vars, pagination)
+        end
+      else # Just the one page, no point in adding any pagination.
+        [template_vars]
+      end
     end
 
     # Returns all the template vars we use to render a photo page.

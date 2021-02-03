@@ -3,7 +3,6 @@
 ## Roadmap
 
 v0.2
-- Paginated indexes
 - Render subnav (ie. if you're in 2020 view, it'll show the months)
 - People browser
 - Show most recently added photos
@@ -19,6 +18,7 @@ v0.4
 ## Bugs
 - Don't fail horribly if there are no images.
   - More useful error output if the given images directory does not exist.
+- Figure out timezones around collapsed events
 
 
 ## Improvements
@@ -29,8 +29,6 @@ v0.4
 - Add a cleanup function that removes old images/HTML.
 - Make keywords case insensitive.
 - Write a readme.
-- Add "collapsed" view for events so they show up in one tile. 
-- Add links to event tiles that link to the event page.
 - Can we detect fixed focal length cameras in the metadata? 
 - Maybe combine substream path with include prefix? So we don't have to do two {{foo}}{{bar}} on every link.
 - Put current stream first on photo page
@@ -46,7 +44,6 @@ v0.4
 ----- All the notes below are kind of outdated ------
 
 - JS slideshow at the top of the index page??
-- Convert database.rake tasks over to the Sequel way of doing things
 - Our current find-or-create for photos relates to the file name/path. It should probably use that, and/or the MD5. 
 - Focal length is currently available as a fraction in the EXIF, but we're storing it as a float. Maybe we'd like to store it as a fraction instead?
 
