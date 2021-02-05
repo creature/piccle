@@ -8,6 +8,7 @@ require 'json'
 # Represents an image in the system. Reading info from an image? Inferring something based on the data? Put it here.
 class Piccle::Photo < Sequel::Model
   many_to_many :keywords
+  many_to_many :people
   attr_accessor :changed_hash # Has this file been modified?
   attr_accessor :freshly_created # Have we just generated this file?
 
@@ -29,7 +30,10 @@ class Piccle::Photo < Sequel::Model
     photo.freshly_created = freshly_created
 
     # Pull out keywords for this file, if it's new or changed.
-    photo.generate_keywords if freshly_created || photo.changed_hash?
+    if freshly_created || photo.changed_hash?
+      photo.sync_keywords
+      photo.sync_people
+    end
 
     photo
   end
@@ -183,16 +187,36 @@ class Piccle::Photo < Sequel::Model
   end
 
   # Read the keywords from the photo file, and ensure they're included in the DB.
-  # TODO: remove any keywords that aren't currently in the file.
-  def generate_keywords
+  def sync_keywords
     exif_info = EXIFR::JPEG.new(original_photo_path)
     xmp = XMP.parse(exif_info)
 
     if xmp && xmp.namespaces && xmp.namespaces.include?("dc") && xmp.dc.attributes.include?("subject")
-      xmp.dc.subject.each do |keyword|
+      # Add new keywords
+      downcased_keywords = xmp.dc.subject.map(&:downcase)
+      downcased_keywords.each do |keyword|
         keyword = Piccle::Keyword.find_or_create(name: keyword)
         add_keyword(keyword) unless keywords.include?(keyword)
       end
+
+      # Remove old keywords
+      keywords.each { |keyword| remove_keyword(keyword) unless downcased_keywords.include?(keyword.name.downcase) }
+    end
+  end
+
+  def sync_people
+    exif_info = EXIFR::JPEG.new(original_photo_path)
+    xmp = XMP.parse(exif_info)
+
+    if xmp && xmp.namespaces && xmp.namespaces.include?("Iptc4xmpExt") && xmp.Iptc4xmpExt.attributes.include?("PersonInImage")
+      people_names = xmp.Iptc4xmpExt.PersonInImage
+      people_names.each do |name|
+        person = Piccle::Person.find(Sequel.ilike(:name, name)) || Piccle::Person.create(name: name)
+        add_person(person) unless people.include?(person)
+      end
+
+      downcased_names = people_names.map(&:downcase)
+      people.each { |person| remove_person(person) unless downcased_names.include?(person.name.downcase) }
     end
   end
 

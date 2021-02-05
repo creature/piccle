@@ -190,6 +190,7 @@ class CLI < Thor
       p.add_stream(Piccle::Streams::LocationStream)
       p.add_stream(Piccle::Streams::EventStream)
       p.add_stream(Piccle::Streams::CameraStream)
+      p.add_stream(Piccle::Streams::PersonStream)
       p.add_stream(Piccle::Streams::KeywordStream)
     end
   end

@@ -84,6 +84,8 @@ without specifying a subcommand. `geocode` uses the Data Science Toolkit to look
 * **Keywords** are shown, and exposed as "topics". 
 * **Location** is shown. If your photos have a city/state/country specified in their data, then that's used; otherwise, 
   Piccle will attempt to geocode them based on embedded latitude/longitude.
+* **People** are browsable, based on the "Person Shown" IPTC field.
+
 
 ## Events 
 
