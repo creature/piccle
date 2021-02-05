@@ -64,13 +64,13 @@ describe Piccle::Photo do
       it "returns true if a photo has any EXIF info for the city, state, or country"
     end
 
-    describe "#generate_keywords" do
+    describe "#sync_keywords" do
       it "does not create anything when a photo has no tags" do
-        expect { elephant_photo.generate_keywords }.not_to change { Piccle::Keyword.count }
+        expect { elephant_photo.sync_keywords }.not_to change { Piccle::Keyword.count }
       end
 
       it "creates 3 keywords for an image with 3 EXIF tags" do
-        expect { sahara_photo.generate_keywords }.to change { Piccle::Keyword.count }.by(3)
+        expect { sahara_photo.sync_keywords }.to change { Piccle::Keyword.count }.by(3)
       end
     end
   end

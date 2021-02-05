@@ -13,6 +13,7 @@ require "piccle/streams/date_stream"
 require "piccle/streams/event_stream"
 require "piccle/streams/keyword_stream"
 require "piccle/streams/location_stream"
+require "piccle/streams/person_stream"
 require "piccle/template_helpers"
 require "piccle/version"
 
@@ -38,9 +39,9 @@ module Piccle
   def Piccle.const_missing(name)
     Sequel::Model.db = Piccle.config.db
 
-    if %i[Photo Keyword Location].include?(name)
+    if %i[Keyword Location Person Photo].include?(name)
       Dir[Piccle.config.gem_root_join("lib", "piccle", "models", "*.rb")].each { |f| require f.delete_prefix("lib/").delete_suffix(".rb") }
-      models = [Piccle::Photo, Piccle::Keyword, Piccle::Location]
+      models = [Piccle::Keyword, Piccle::Location, Piccle::Person, Piccle::Photo]
       models.each(&:finalize_associations)
       models.each(&:freeze)
     end
