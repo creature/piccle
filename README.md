@@ -118,8 +118,9 @@ This `events.yaml` file defines two events: a photoshoot I did themed around goo
 
 Geolocation is provided by the free [Data Science Toolkit API](http://www.datasciencetoolkit.org/developerdocs#coordinates2politics).
 The test images are public domain images by [Sasin Tipchai](https://pixabay.com/photos/elephant-animals-asia-large-1822636/), 
-[Timo Schlüter](https://pixabay.com/photos/kingfisher-bird-blue-plumage-1905255/), and 
-[Jill Wellington](https://pixabay.com/photos/spring-bird-bird-spring-blue-2295431/). 
+[Timo Schlüter](https://pixabay.com/photos/kingfisher-bird-blue-plumage-1905255/),
+[Jill Wellington](https://pixabay.com/photos/spring-bird-bird-spring-blue-2295431/), and 
+[Pascal Vannevel](https://pixabay.com/photos/usa-canyonlands-mesa-arch-natuur-5009894/). 
 
 
 ## License
