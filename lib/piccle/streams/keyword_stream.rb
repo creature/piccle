@@ -10,7 +10,8 @@ class Piccle::Streams::KeywordStream < Piccle::Streams::BaseStream
   def data_for(photo)
     result = { namespace => {
                :friendly_name => "By Topic",
-               :interesting => true
+               :interesting => true,
+               :min_for_nav => 2
              }}
     photo.keywords.each do |kw|
       result[namespace][slugify(kw.name)] = { friendly_name: kw.name, interesting: true, photos: [photo.md5] }

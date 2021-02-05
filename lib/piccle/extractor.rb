@@ -83,12 +83,12 @@ module Piccle
     def navigation
       navigation_entries = @parser.faceted_data.map do |k, v|
                              { friendly_name: v[:friendly_name],
-                               entries: entries_for(v, k)
+                               min_for_nav: v[:min_for_nav],
+                               entries: entries_for(v, k),
                              }
                            end
-      # A hack, to only show keywords that have more than one image.
       navigation_entries.each do |nav_entry|
-        nav_entry[:entries].keep_if { |entry| entry[:photo_count] > 1 } if "By Topic" == nav_entry[:friendly_name]
+        nav_entry[:entries].keep_if { |entry| entry[:photo_count] >= nav_entry[:min_for_nav] } if nav_entry[:min_for_nav]
       end
     end
 
