@@ -9,7 +9,7 @@ html lang="en"
     main
       == Piccle::TemplateHelpers.render_partial "navigation"
 
-      .photos
+      #photos
         |
           {{#each photos as |photo|}}
             {{#if (lookup ../event_ends photo.hash)}}
@@ -46,9 +46,9 @@ html lang="en"
       <div class="pagination">
         {{#unless pagination.is_first_page}}
           {{#if selector}}
-            <a href="{{include_prefix}}{{join selector '/'}}/{{pagination.previous_page_name}}.html">&laquo;&nbsp;Previous</a>
+            <a href="{{include_prefix}}{{join selector '/'}}/{{pagination.previous_page_name}}.html#photos">&laquo;&nbsp;Previous</a>
           {{else}}
-            <a href="{{include_prefix}}{{pagination.previous_page_name}}.html">&laquo;&nbsp;Previous</a>
+            <a href="{{include_prefix}}{{pagination.previous_page_name}}.html#photos">&laquo;&nbsp;Previous</a>
           {{/if}}
         {{/unless}}
         <ol>
@@ -57,18 +57,18 @@ html lang="en"
               <li class="current">{{this.label}}</li>
             {{else}}
               {{#if selector}}
-                <li><a href="{{include_prefix}}{{join selector '/'}}/{{this.page_name}}.html">{{this.label}}</a></li>
+                <li><a href="{{include_prefix}}{{join selector '/'}}/{{this.page_name}}.html#photos">{{this.label}}</a></li>
               {{else}}
-                <li><a href="{{include_prefix}}{{this.page_name}}.html">{{this.label}}</a></li>
+                <li><a href="{{include_prefix}}{{this.page_name}}.html#photos">{{this.label}}</a></li>
               {{/if}}
             {{/if}}
           {{/each}}
         </ol>
         {{#unless pagination.is_last_page}}
           {{#if selector}}
-            <a href="{{include_prefix}}{{join selector '/'}}/{{pagination.next_page_name}}.html">Next&nbsp;&raquo;</a>
+            <a href="{{include_prefix}}{{join selector '/'}}/{{pagination.next_page_name}}.html#photos">Next&nbsp;&raquo;</a>
           {{else}}
-            <a href="{{include_prefix}}{{pagination.next_page_name}}.html">Next&nbsp;&raquo;</a>
+            <a href="{{include_prefix}}{{pagination.next_page_name}}.html#photos">Next&nbsp;&raquo;</a>
           {{/if}}
         {{/unless}}
       </div>
