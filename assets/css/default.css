@@ -173,7 +173,6 @@ section h2 {
 }
 
 .event_block.collapsed {
-  background-image: var(--bg-image); /* Set as inline CSS */
   background-size: cover;
 }
 
