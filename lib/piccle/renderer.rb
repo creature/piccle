@@ -53,18 +53,20 @@ module Piccle
 
     # Returns all the data we pass into the main index to render.
     def render_main_index_template_vars
+      page_description = "A gallery of photos by #{Piccle.config.author_name}"
       template_vars = {
         photos: @extractor.main_index_photos,
         event_starts: @parser.data[:event_starts],
         event_ends: @parser.data[:event_ends],
         nav_items: @extractor.navigation,
-        site_metadata: site_metadata
+        site_metadata: site_metadata,
+        page_description: page_description
       }
 
       if Piccle.config.open_graph?
         width, height = Piccle::QuiltGenerator.dimensions_for(@parser.data[:photos].length)
         template_vars[:open_graph] = open_graph_for(title: site_title(),
-                                                    description: "A gallery of photos by #{Piccle.config.author_name}",
+                                                    description: page_description,
                                                     image_url: "#{Piccle.config.home_url}quilt.jpg",
                                                     image_alt: "A quilt of the most recent images in this gallery.",
                                                     width: width,
@@ -78,6 +80,7 @@ module Piccle
     def render_index_template_vars(selector)
       breadcrumbs = @extractor.breadcrumbs_for(selector)
       selector_path = "#{selector.join('/')}/"
+      page_description = "A gallery of photos by #{Piccle.config.author_name}"
       template_vars = {
         photos: @parser.subsection_photos(selector),
         event_starts: [],
@@ -88,13 +91,14 @@ module Piccle
         breadcrumbs: breadcrumbs,
         site_url: Piccle.config.home_url,
         include_prefix: Piccle::TemplateHelpers.include_prefix(selector),
-        site_metadata: site_metadata
+        site_metadata: site_metadata,
+        page_description: page_description
       }
 
       if Piccle.config.open_graph?
         width, height = Piccle::QuiltGenerator.dimensions_for(@parser.subsection_photo_hashes(selector).length)
         template_vars[:open_graph] = open_graph_for(title: site_title(breadcrumbs),
-                                                    description: "A gallery of photos by #{Piccle.config.author_name}",
+                                                    description: page_description,
                                                     image_url: "#{Piccle.config.home_url}#{selector_path}quilt.jpg",
                                                     image_alt: "A quilt of the most recent images in this gallery.",
                                                     width: width,
@@ -142,6 +146,11 @@ module Piccle
     def render_photo_template_vars(hash, selector)
       photo_data = @parser.data[:photos][hash]
       substreams = [@parser.substream_for(hash)] + @parser.links_for(hash).map { |selector| @parser.interesting_substream_for(hash, selector) }.compact
+      page_description = if photo_data[:description] && photo_data[:description].strip.length > 0
+                           photo_data[:description]
+                         else
+                           "A photo by #{Piccle.config.author_name}"
+                         end
 
       template_vars = {
         photo: photo_data,
@@ -160,8 +169,9 @@ module Piccle
         prev_link: @extractor.prev_link(hash, selector),
         next_link: @extractor.next_link(hash, selector),
         include_prefix: Piccle::TemplateHelpers.include_prefix(selector),
-        canonical: "photos/#{hash}.html", # TODO: Other paths live in piccle.rake. Why's this one here?
-        site_metadata: site_metadata
+        canonical: "#{hash}.html",
+        site_metadata: site_metadata,
+        page_description: page_description
       }
 
       photo_title = photo_data[:title] || ""
@@ -170,7 +180,7 @@ module Piccle
 
       if Piccle.config.open_graph?
         template_vars[:open_graph] = open_graph_for(title: photo_data[:title] || "A photo by #{Piccle.config.author_name}",
-                                                    description: photo_data[:description],
+                                                    description: page_description,
                                                     image_url: "#{Piccle.config.home_url}images/photos/#{hash}.#{photo_data[:file_name]}",
                                                     width: photo_data[:width],
                                                     height: photo_data[:height],

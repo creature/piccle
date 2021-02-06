@@ -4,7 +4,6 @@
 
 v0.2
 - Render subnav (ie. if you're in 2020 view, it'll show the months)
-- People browser
 - Show most recently added photos
 
 v0.3
