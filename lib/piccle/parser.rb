@@ -120,7 +120,8 @@ module Piccle
 
     # Get photo hashes in a given subsection, given a diggable path.
     def subsection_photo_hashes(subsection_path)
-      @data.dig(*subsection_path).fetch(:photos, [])
+      subsection = @data.dig(*subsection_path)
+      subsection ? subsection.fetch(:photos, []) : []
     end
 
     # Gets the actual photo objects for a given subsection.

@@ -15,18 +15,7 @@ class Piccle::Streams::EventStream < Piccle::Streams::BaseStream
                 YAML.load_file(Piccle.config.events_file).map do |event| # Convert keys to symbols; bring dates to life.
                   event = event.map { |k, v| [k.to_sym, v] }.to_h
                   event[:selector] = selector_for(event[:name])
-                  if event[:at]
-                    event[:from] = DateTime.new(event[:at].year, event[:at].month, event[:at].day, 0, 0, 0)
-                    event[:to] = DateTime.new(event[:at].year, event[:at].month, event[:at].day, 23, 59, 59)
-                  elsif event[:from] && event[:to]
-                    if event[:from].is_a? Date
-                      event[:from] = DateTime.new(event[:from].year, event[:from].month, event[:from].day, 0, 0, 0)
-                    end
-                    if event[:to].is_a? Date
-                      event[:to] = DateTime.new(event[:to].year, event[:to].month, event[:to].day, 23, 59, 59)
-                    end
-                  end
-                  event
+                  transform_dates(event)
                 end
               else
                 []
@@ -76,5 +65,25 @@ class Piccle::Streams::EventStream < Piccle::Streams::BaseStream
     end
 
     [event_starts, event_ends]
+  end
+
+  protected
+
+  # Given an event, munge the dates appropriately.
+  # - If we have an "at" date specified, make the from/to fields match the start and end of the day.
+  # - If we have "from"/"to" specified as dates, line them up with the start/end of the day.
+  def transform_dates(event)
+    if event[:at]
+      event[:from] = DateTime.new(event[:at].year, event[:at].month, event[:at].day, 0, 0, 0)
+      event[:to] = DateTime.new(event[:at].year, event[:at].month, event[:at].day, 23, 59, 59)
+    elsif event[:from] && event[:to]
+      if event[:from].is_a? Date
+        event[:from] = DateTime.new(event[:from].year, event[:from].month, event[:from].day, 0, 0, 0)
+      end
+      if event[:to].is_a? Date
+        event[:to] = DateTime.new(event[:to].year, event[:to].month, event[:to].day, 23, 59, 59)
+      end
+    end
+    event
   end
 end

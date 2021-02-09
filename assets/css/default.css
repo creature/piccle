@@ -333,6 +333,7 @@ ul.location li:last-of-type:after {
   object-fit: contain;
   min-width: 0;
   max-width: 100%;
+  max-height: 100vh;
 }
 
 /* --------- Mobile styles ---------- */
