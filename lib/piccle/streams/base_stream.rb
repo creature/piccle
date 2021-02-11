@@ -28,7 +28,7 @@ class Piccle::Streams::BaseStream
   # Each stream is expected to only meddle within its own namespace, but this is not enforced.
   def order(data)
     if data.key?(namespace)
-      data[namespace] = data[namespace].sort_by(&length_sort_proc(data)).reverse.to_h
+      data[namespace] = data[namespace].sort_by(&length_sort_proc(data)).to_h
       data[namespace].each do |k, v|
         data[namespace][k][:photos] = data[namespace][k][:photos].sort_by(&date_sort_proc(data)).reverse if k.is_a?(String)
       end
@@ -39,9 +39,13 @@ class Piccle::Streams::BaseStream
 
   protected
 
-  # A sort proc designed for hashes. Sorts all string keys in order of how many photos they contain.
+  # A sort proc designed for hashes. Sorts all string keys in order of how many photos they contain, then alphabetically.
   def length_sort_proc(data)
-    Proc.new { |k, v| k.is_a?(String) ? data.dig(namespace, k, :photos)&.length : 0 }
+    Proc.new do |k, v|
+      length = k.is_a?(String) ? data.dig(namespace, k, :photos)&.length || 0 : 0
+      name = k.is_a?(String) ? k.downcase : ""
+      [length * -1, name]
+    end
   end
 
   # A date sort designed for arrays. Sorts all photo hashes in order of the date they were taken.

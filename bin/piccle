@@ -164,7 +164,7 @@ class CLI < Thor
     puts "Generating website..."
 
     FileUtils.mkdir_p(Piccle.config.output_dir)
-    generate_templates(renderer)
+    generate_templates
 
     parser = new_parser_with_streams
     parse_photos(parser)
@@ -332,7 +332,7 @@ class CLI < Thor
     end
   end
 
-  def generate_templates(_renderer)
+  def generate_templates
     puts "    ... generating templates..."
     FileUtils.mkdir_p(File.join(Piccle.config.output_dir, "js"))
     File.write(File.join(Piccle.config.output_dir, "js", "index.handlebars"), Piccle::TemplateHelpers.compile_template("index"))

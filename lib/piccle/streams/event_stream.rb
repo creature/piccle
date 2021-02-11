@@ -28,7 +28,7 @@ class Piccle::Streams::EventStream < Piccle::Streams::BaseStream
       result = { namespace => { friendly_name: "By Event", interesting: true }}
       relevant_events.each do |ev|
         result[namespace][slugify(ev[:name])] = { friendly_name: ev[:name], interesting: true, photos: [photo.md5],
-                                                  collapsed: ev[:collapsed] }
+                                                  collapsed: ev[:collapsed], sort_date: ev[:from] }
       end
 
       result
@@ -39,7 +39,14 @@ class Piccle::Streams::EventStream < Piccle::Streams::BaseStream
 
   # Sorts most recent events first; then organises photos by date. TODO
   def order(data)
-    super(data)
+    if data.key?(namespace)
+      data[namespace] = data[namespace].sort_by { |k, v| k.is_a?(String) ? v[:sort_date] : DateTime.new(1826, 1, 1) }.reverse.to_h
+      data[namespace].each do |k, v|
+        data[namespace][k][:photos] = data[namespace][k][:photos].sort_by(&date_sort_proc(data)).reverse if k.is_a?(String)
+      end
+    end
+
+    data
   end
 
   # Given an event name, get a selector hash for this event.
