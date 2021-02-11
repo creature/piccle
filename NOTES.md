@@ -13,6 +13,9 @@ v0.3
 v0.4
 - Client-side rendering
 
+v0.5
+- Section browse pages
+
 
 ## Bugs
 - Don't fail horribly if there are no images.
@@ -22,15 +25,15 @@ v0.4
 
 ## Improvements
 
+- Add "section browse" pages?
+- Collapse "collapsed" sections everywhere, EXCEPT that particular stream.
 - Add ordering to all the various substreams. Almost done, apart from sorting days and months in the datestream.
-- Update the photo update method so it also REMOVES keywords from files.
-  - Store changed MD5 hashes, generate redirect pages for those.
+- Store changed MD5 hashes, generate redirect pages for those.
 - Add a cleanup function that removes old images/HTML.
-- Make keywords case insensitive.
-- Write a readme.
 - Can we detect fixed focal length cameras in the metadata? 
 - Maybe combine substream path with include prefix? So we don't have to do two {{foo}}{{bar}} on every link.
 - Put current stream first on photo page
+  - Generally improve the stream display on photo page. Filter out samey streams, maybe only show a maximum of 4?
 - Update nav to render subnav too, for current section.
 - Finish commenting the BaseStream.
 
@@ -48,8 +51,6 @@ v0.4
 
 # Development notes
 
-- The EXIF tag calls the camera model "model", but in the DB schema we called it "camera_name". We might want to unify this.
-  - NB. Sequel will throw a wobbly if we use "model" as a method name.
 - Add a meaningful "alt" tag in the photo thumbnail.
 
 - Streams should maybe be able to generate "top-level" pages, so we could have paths like "example.com/2008" rather than "example.com/by-date/2008".
