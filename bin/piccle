@@ -163,6 +163,9 @@ class CLI < Thor
     start_time = Time.now
     puts "Generating website..."
 
+    FileUtils.mkdir_p(Piccle.config.output_dir)
+    generate_templates(renderer)
+
     parser = new_parser_with_streams
     parse_photos(parser)
     renderer = if Piccle.config.ruby_renderer?
@@ -171,8 +174,6 @@ class CLI < Thor
                 Piccle::JsRenderer.new(parser)
                end
 
-    FileUtils.mkdir_p(Piccle.config.output_dir)
-    generate_templates(renderer)
     generate_atom_feeds(parser, renderer)
     generate_html_indexes(parser, renderer)
     generate_html_photos(parser, renderer)
